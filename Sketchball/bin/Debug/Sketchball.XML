@@ -1,0 +1,2310 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sketchball</name>
+    </assembly>
+    <members>
+        <member name="T:Sketchball.Collision.BoundingBox">
+            <summary>
+            This class defines the common of all bounding box variants
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingBox.BoundingContainer">
+            <summary>
+            Parent container which holds the bounding boxes
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingBox.BounceFactor">
+            <summary>
+            Defines how hard something is reflected
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.move(System.Windows.Vector)">
+            <summary>
+            Move the bounding box in this direction
+            </summary>
+            <param name="moveVec">direction and distance to move</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.AssignToContainer(Sketchball.Collision.BoundingContainer)">
+            <summary>
+            assigne this bounding box to a container
+            </summary>
+            <param name="bc">The container which this bounding box shall be assigned to</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.Intersect(Sketchball.Collision.IBoundingBox,System.Windows.Vector@)">
+            <summary>
+            Finds out if this bounding box intersects with bB and saves the estimated hitPoint in hitPoint
+            </summary>
+            <param name="bB">Bounding box to check intersection</param>
+            <param name="hitPoint">the point where bB and this bounding box intersected the first time</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.Intersect(Sketchball.Collision.IBoundingBox,System.Windows.Vector@,System.Windows.Vector)">
+            <summary>
+            Finds out if this bounding box intersects with bB and saves the estimated hitPoint in hitPoint
+            </summary>
+            <param name="bB">Bounding box to check intersection</param>
+            <param name="hitPoint">the point where bB and this bounding box intersected the first time</param>
+            <param name="velocity">Speed of the object intersecting</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.Reflect(System.Windows.Vector,System.Windows.Vector,System.Windows.Vector)">
+            <summary>
+            Method that calculated a reflection of a ball
+            </summary>
+            <param name="vecIn">Velocity of the ball</param>
+            <param name="hitPoint">Point where the ball hits this bounding box</param>
+            <param name="ballpos">Position of the ball</param>
+            <returns>Reflection vector</returns>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.GetOutOfAreaPush(System.Int32,System.Windows.Vector,System.Windows.Vector,System.Windows.Vector)">
+            <summary>
+            Calculates a push back vector that assures that the ball does not still intersect the same element after reflection
+            </summary>
+            <param name="diameterBall">Diameter of the ball</param>
+            <param name="hitPoint">Point where the ball hit the bounding box</param>
+            <param name="velocity">Velocity of the ball (after reflection)</param>
+            <param name="ballPos">Position of the ball</param>
+            <returns>Push back vector</returns>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.Rotate(System.Double,System.Windows.Vector)">
+            <summary>
+            Rotates this bounding box
+            </summary>
+            <param name="rad">Amount of rad</param>
+            <param name="center">Center of rotation</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.LineIntersect(Sketchball.Collision.BoundingLine,System.Windows.Vector@)">
+            <summary>
+            Submethod of intersect => checks for an intersection of this bounding box and a Bounding line
+            </summary>
+            <param name="bL">Bounding line which might intersect this bounding box</param>
+            <param name="hitPoint">Point where this bounding box intersects with bL</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingBox.CircleIntersect(Sketchball.Collision.BoundingCircle,System.Windows.Vector@,System.Windows.Vector)">
+            <summary>
+            Submethod of intersect => checks for an intersection of this bounding box and a Bounding circle
+            </summary>
+            <param name="bC">Bounding circle which might intersect with this bounding box</param>
+            <param name="hitPoint">Point where this bounding box intersects with bC</param>
+            <param name="velocity">Speed of the object intersecting</param>
+            <returns></returns>
+        </member>
+        <member name="T:Sketchball.Collision.BoundingCircle">
+            <summary>
+            Circle variant
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingCircle.#ctor(System.Int32,System.Windows.Vector)">
+            <summary>
+            Creates new bounding circle
+            </summary>
+            <param name="radius">Radius of the bounding circle</param>
+            <param name="position">position based on pinballElement</param>
+        </member>
+        <member name="T:Sketchball.Collision.BoundingContainer">
+            <summary>
+            Holds boundingboxes of a pinball element
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingContainer.Rotation">
+            <summary>
+            Amount that this bounding container is rotated
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingContainer.BoundingBoxes">
+            <summary>
+            All bounding boxes of this container
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingContainer.ParentElement">
+            <summary>
+            Reference to the Pinball element which belongs to this bounding container
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.#ctor(Sketchball.Elements.PinballElement)">
+            <summary>
+            Construtor to create new bounding container
+            </summary>
+            <param name="parent">Parent of this container</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.Rotate(System.Double,System.Windows.Vector)">
+            <summary>
+            Rotates all of this containers bounding boxes  around the given center
+            </summary>
+            <param name="rad">Determines how much that is rotated in rad</param>
+            <param name="center">Center of rotation</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.move(System.Windows.Vector)">
+            <summary>
+            Moves all bounding boxes
+            </summary>
+            <param name="moveVec">Direction and distance to be moved</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.Sync">
+            <summary>
+            Synchronize points with the assigned parent element.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.AddBoundingBox(Sketchball.Collision.IBoundingBox)">
+            <summary>
+            Adds a bounding box to this container
+            </summary>
+            <param name="bL">The bounding box to add</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.AddPolyline(System.Single[])">
+            <summary>
+            Creates bounding lines for given coordinates that define a polygon
+            </summary>
+            <param name="coords">points that define the polygon</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingContainer.Intersects(Sketchball.Collision.BoundingContainer)">
+            <summary>
+            Checks if two bounding container intersect each other.
+            </summary>
+            <param name="bC"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sketchball.Collision.BoundingField">
+            <summary>
+            Has references of all bounding boxes that cross this field
+            </summary>
+        </member>
+        <member name="F:Sketchball.Collision.BoundingField.bBReferences">
+            <summary>
+            Ref on BoundingBoxes of all Pinballelements Boundingboxes that intersect this raster
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingField.x">
+            <summary>
+            idx in raster
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingField.y">
+            <summary>
+            idx in raster
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingField.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="x">idx x</param>
+            <param name="y">idx y</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingField.addReference(Sketchball.Collision.IBoundingBox)">
+            <summary>
+            Adds a reference to bounding box to this field
+            </summary>
+            <param name="bB"></param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingField.removeReference(Sketchball.Collision.IBoundingBox)">
+            <summary>
+            Removes a reference to a bounding box from this field
+            </summary>
+            <param name="bB"></param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingField.getReferences">
+            <summary>
+            Gets all references to bounding  boxes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sketchball.Collision.BoundingLine">
+            <summary>
+            Line variant of bounding box
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingRaster.Rows">
+            <summary>
+            Defines amount of rows (must be in sync with height and fieldHeight)
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingRaster.Cols">
+            <summary>
+            Defines amount of cols (must be in sync with width and fieldWidth)
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingRaster.Width">
+            <summary>
+            Defines width of form (must be in sync with cols and fieldWidth)
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingRaster.height">
+            <summary>
+            Defines height of form (must be in sync with rows and fieldHeight)
+            </summary>
+        </member>
+        <member name="F:Sketchball.Collision.BoundingRaster.animatedObjects">
+            <summary>
+            List of all animated objects
+            </summary>
+        </member>
+        <member name="F:Sketchball.Collision.BoundingRaster.fields">
+            <summary>
+            Fields on the raster that hold reference to bounding boxes
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingRaster.FieldWidth">
+            <summary>
+            Gets the width of one field
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.BoundingRaster.FieldHeight">
+            <summary>
+            Gets the height of one field
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.#ctor(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="cols">Amount of columns</param>
+            <param name="rows">Amount of rows</param>
+            <param name="width">Width of the form</param>
+            <param name="height">Height of the form</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.TakeOverBoundingContainer(Sketchball.Collision.BoundingContainer)">
+            <summary>
+            Goes though the bounding container and takes over his bounding boxes.
+            Animated Objects do not need to be taken over
+            </summary>
+            <param name="bC">Container that holds bounding boxes to add</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.takeOverBoundingBoxes(System.Collections.Generic.IEnumerable{Sketchball.Elements.PinballElement})">
+            <summary>
+            Goes through all elements given and adds their bounding boxes to the raster.
+            Animated Objects do not need to be taken over
+            </summary>
+            <param name="eles">Elements to add</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.takeOverBoundingLineLeftToRight(System.Windows.Vector,System.Double,System.Double,System.Int32@,System.Int32@,Sketchball.Collision.BoundingLine,System.Windows.Vector)">
+            <summary>
+            Submethod to TakeOverBoundingContainer - not intended to be called outside of TakeOverBoundingContainer
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.takeOverBoundingLineRightToLeft(System.Windows.Vector,System.Double,System.Double,System.Int32@,System.Int32@,Sketchball.Collision.BoundingLine,System.Windows.Vector)">
+            <summary>
+            Submethod to TakeOverBoundingContainer - not intended to be called outside of TakeOverBoundingContainer
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.HandleCollision(Sketchball.Elements.Ball)">
+            <summary>
+            This method takes a ball and handles the collision of it with all other bounding boxes in this raster
+            </summary>
+            <param name="ball">Ball that causes collisions</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.AddAnimatedObject(Sketchball.Collision.IBoundingBox)">
+            <summary>
+            Adds an animated object to the raster (no need to call take over bounding boxes on this.
+            </summary>
+            <param name="aO">Element to add</param>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.getAnimatedObjects">
+            <summary>
+            Returns all animated objects
+            </summary>
+            <returns>List of animated objects</returns>
+        </member>
+        <member name="M:Sketchball.Collision.BoundingRaster.RemoveAnimatedObject(Sketchball.Collision.IBoundingBox)">
+            <summary>
+            Removes an animated object
+            </summary>
+            <param name="aO">The object to be removed</param>
+        </member>
+        <member name="P:Sketchball.Collision.IBoundingBox.BoundingContainer">
+            <summary>
+            Parent bounding container
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.IBoundingBox.BounceFactor">
+            <summary>
+            Defines how hard something is reflected
+            </summary>
+        </member>
+        <member name="P:Sketchball.Collision.IBoundingBox.Position">
+            <summary>
+            Position of the bounding box
+            </summary>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.AssignToContainer(Sketchball.Collision.BoundingContainer)">
+            <summary>
+            Method to assigne this bounding box to a container
+            </summary>
+            <param name="bc">Container to add this bounding box</param>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.Intersect(Sketchball.Collision.IBoundingBox,System.Windows.Vector@)">
+            <summary>
+            Checks for an intersection of this element with bB and saves the estimated hitpoint to hitPoint)
+            </summary>
+            <param name="bB">Bounding box to check for intersection with this</param>
+            <param name="hitPoint">Point where those two boxes might have intersected the first time</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.Intersect(Sketchball.Collision.IBoundingBox,System.Windows.Vector@,System.Windows.Vector)">
+            <summary>
+            Checks for an intersection of this element with bB and saves the estimated hitpoint to hitPoint)
+            </summary>
+            <param name="bB">Bounding box to check for intersection with this</param>
+            <param name="hitPoint">Point where those two boxes might have intersected the first time</param>
+            <param name="velocity">Velocity of an object intersecting</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.LineIntersect(Sketchball.Collision.BoundingLine,System.Windows.Vector@)">
+            <summary>
+            Intersec for lines (more specific version)
+            </summary>
+            <param name="bL">Bounding box to check for intersection with this</param>
+            <param name="hitPoint">Point where those two boxes might have intersected the first time</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.CircleIntersect(Sketchball.Collision.BoundingCircle,System.Windows.Vector@,System.Windows.Vector)">
+            <summary>
+            Intersec for circles (more specific version)
+            </summary>
+            <param name="bL">Bounding box to check for intersection with this</param>
+            <param name="hitPoint">Point where those two boxes might have intersected the first time</param>
+            <param name="velocity">Speed of the object intersecting</param>
+            <returns>true if intersection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.Reflect(System.Windows.Vector,System.Windows.Vector,System.Windows.Vector)">
+            <summary>
+            Calculates reflection of an round object on this bounding box
+            </summary>
+            <param name="vecIn">Velocity of the object that hits this</param>
+            <param name="hitPoint">Point of first intersection</param>
+            <param name="ballpos">Position of the object</param>
+            <returns>Velocity after reflection</returns>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.GetOutOfAreaPush(System.Int32,System.Windows.Vector,System.Windows.Vector,System.Windows.Vector)">
+            <summary>
+            Calculates the vector to push an element out of area
+            </summary>
+            <param name="diameterBall">Diameter of the ball</param>
+            <param name="hitPoint">Point of estimated first intersection</param>
+            <param name="velocity">Velocity of ball</param>
+            <param name="ballPos">Position of ball</param>
+            <returns>Vector that represents push of object out of crictical zone</returns>
+        </member>
+        <member name="M:Sketchball.Collision.IBoundingBox.Rotate(System.Double,System.Windows.Vector)">
+            <summary>
+            Rotation for this bounding box
+            </summary>
+            <param name="rad">Amount of roation in rad</param>
+            <param name="center">Center of rotation relative to the parent coordinates</param>
+        </member>
+        <member name="T:Sketchball.Controls.MyToolStripControlHost">
+            <summary>
+            Class that exists to work around VS's oddities. Used by ToolStripTrackBarItem.cs
+            </summary>
+        </member>
+        <member name="T:Sketchball.Controls.ElementInspector">
+            <summary>
+            Control that inherits from PropertyGrid. Originally, it was intended to add some additional properties here.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Controls.ManagedWPFControl">
+            <summary>
+            Stub WPF control used by WPFContainer. Adds some disposal logic.
+            </summary>
+            <summary>
+            ManagedWPFControl
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.ManagedWPFControl.Dispose">
+            <summary>
+            Disposes this element.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.ManagedWPFControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Sketchball.Controls.ToolStripTrackBarItem">
+            <summary>
+            Adds trackbar to toolstrip stuff
+            </summary>
+        </member>
+        <member name="T:Sketchball.Controls.WPFContainer">
+            <summary>
+            Provides an interface between the GDI+ and the WPF world.s
+            </summary>
+        </member>
+        <member name="T:Sketchball.Controls.PinballControl">
+            <summary>
+            Represents a control that houses a pinball machine.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.PinballControl.Draw(System.Windows.Media.DrawingContext)">
+            <summary>
+            Draws the pinball control.
+            </summary>
+            <param name="g"></param>
+        </member>
+        <member name="T:Sketchball.Controls.PinballEditControl">
+            <summary>
+            Is to the editor what GameView is to the game. Contains a pinball machine and
+                1.) Draws it
+                2.) Provides a history and an API to make modifications to the PBM.
+            </summary>
+        </member>
+        <member name="E:Sketchball.Controls.PinballEditControl.SelectionChanged">
+            <summary>
+            Occurs when the selection changes.
+            </summary>
+        </member>
+        <member name="E:Sketchball.Controls.PinballEditControl.Paint">
+            <summary>
+            Occurs when the control is drawn.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Controls.PinballEditControl.History">
+            <summary>
+            Gets the history of changes.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Controls.PinballEditControl.SelectedElement">
+            <summary>
+            Gets or sets the currently selected element. null = no element selected
+            </summary>
+        </member>
+        <member name="P:Sketchball.Controls.PinballEditControl.ScaleFactor">
+            <summary>
+            Gets or sets the current scale factor.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Controls.PinballEditControl.PinballMachine">
+            <summary>
+            Gets the pinball machine currently in the making. To start anew, use <see cref="!:LoadMachine(PinballMachine machine)"/>.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.Invalidate">
+            <summary>
+            Shortcut for InvalidateVisual() to maintain the naming scheme of GDI+. 
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.AddElement(Sketchball.Elements.PinballElement)">
+            <summary>
+            Adds a new element to the pinball machine AND keeps track of it.
+            </summary>
+            <param name="element"></param>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.RemoveElement(Sketchball.Elements.PinballElement)">
+            <summary>
+            Removes an element from the pinball machine AND keeps track of it.
+            </summary>
+            <param name="element"></param>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.PointToPinball(System.Windows.Point)">
+            <summary>
+            Computes the location of the specified client point into pinball coordinates. 
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.PointToPinball(System.Windows.Vector)">
+            <summary>
+            Computes the location of the specified client point into pinball coordinates. 
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.PointToEditor(System.Windows.Point)">
+            <summary>
+            Computes the location of the specified pinball point into editor coordinates. 
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.PointToEditor(System.Windows.Vector)">
+            <summary>
+            Computes the location of the specified pinball point into editor coordinates. 
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.LengthToEditor(System.Double)">
+            <summary>
+            Takes a double from the pinball coordinate system and converts it into the editor coordinate system.
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.LengthToEditor(System.Single)">
+            <summary>
+            LEGACY FUNCTION: Takes a float from the pinball coordinate system and converts it into the editor coordinate system.
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.LengthToPinball(System.Double)">
+            <summary>
+            Takes a double from the editor coordinate system and converts it into the pinball coordinate system.
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.LengthToPinball(System.Single)">
+            <summary>
+            LEGACY FUNCTION: Takes a double from the editor coordinate system and converts it into the pinball coordinate system.
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Controls.PinballEditControl.LoadMachine(Sketchball.Elements.PinballMachine)">
+            <summary>
+            Loads a fresh machine into the editor.
+            </summary>
+            <param name="machine">Machine to be loaded.</param>
+        </member>
+        <member name="T:Sketchball.Controls.GameView">
+            <summary>
+            Control that houses a game of pinball and provides a view on it.
+            </summary>
+        </member>
+        <member name="F:Sketchball.Controls.GameView.MAX_FPS">
+            <summary>
+            Arbitrarily chosen FPS number that controls the update interval. We only have lose control over the visual update process
+            i.e. we don't know when the update is done. If we use an update worker, we may be too fast and thus block user input. Furthermore,
+            we would have to use a Dispatcher, which would make the application more prone to errors.
+            By using a common timer with a certain tick rate, we may lose some accuracy, but in exchange Windows can take care of it all.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Controls.GameView.Camera">
+            <summary>
+            The camera being used to look at the scene.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.GameView.#ctor(Sketchball.GameComponents.Game)">
+            <summary>
+            Creates a new PinballGameControl based on a machine template.
+            </summary>
+            <param name="machine">Template for the game machine.</param>
+        </member>
+        <member name="M:Sketchball.Controls.GameView.HandleKeyDown(System.Object,System.Windows.Input.KeyEventArgs)">
+            <summary>
+            Handles key presses (used to initiate a new game)
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Sketchball.Controls.ElementControl" -->
+        <member name="M:Sketchball.Controls.ElementControl.#ctor(Sketchball.Elements.PinballElement,System.String,System.Drawing.Font)">
+            <summary>
+            Creates a new ElementControl that can create clones of el.
+            </summary>
+            <param name="el">Element that should be cloned.</param>
+            <param name="label">Label for the element.</param>
+            <param name="font">Font used for the label.</param>
+        </member>
+        <member name="M:Sketchball.Controls.ElementControl.Draw(System.Drawing.Graphics)">
+            <summary>
+            Draws the control.
+            </summary>
+            <param name="g"></param>
+        </member>
+        <member name="M:Sketchball.Controls.ElementControl.DrawThumb(System.Windows.Media.DrawingContext,System.Int32,System.Int32)">
+            <summary>
+            Draws the thumbnail part of the control.
+            </summary>
+            <param name="g">Graphics object to draw to</param>
+            <param name="width">Max width of the thumb</param>
+            <param name="height">Max height of the thumb</param>
+        </member>
+        <member name="M:Sketchball.Controls.ElementControl.GetImage(System.Int32,System.Int32)">
+            <summary>
+            Returns the thumbnail image for use outside of the control. 
+            </summary>
+            <param name="width">Required width of the bitmap</param>
+            <param name="height">Required height of the bitmap</param>
+            <returns>The bitmap depicting the thumbnail.</returns>
+        </member>
+        <member name="M:Sketchball.Controls.ElementControl.GetInstance">
+            <summary>
+            Creates a new instance of the element linked to this control.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:Sketchball.Controls.ElementControl.components">
+            <summary> 
+            Erforderliche Designervariable.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Controls.ElementControl.Dispose(System.Boolean)">
+            <summary> 
+            Verwendete Ressourcen bereinigen.
+            </summary>
+            <param name="disposing">True, wenn verwaltete Ressourcen gelöscht werden sollen; andernfalls False.</param>
+        </member>
+        <member name="M:Sketchball.Controls.ElementControl.InitializeComponent">
+            <summary> 
+            Erforderliche Methode für die Designerunterstützung. 
+            Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.CompoundChange">
+            <summary>
+            Represents a change that consists of other changes.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.NoScrollOnFocusPanel">
+            <summary>
+            Special panel that will NOT scroll into view when focused. Required to make a fluent transition between the GDI+ and the WPF world.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.PropertyChange">
+            <summary>
+            Represents a change to a property.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.CreationChange">
+            <summary>
+            Change that handles the creation of an element.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.DeletionChange">
+            <summary>
+            Represents change that handles deletion of elements,
+            </summary>
+        </member>
+        <member name="M:Sketchball.Editor.DeletionChange.#ctor(Sketchball.Elements.ElementCollection,Sketchball.Elements.PinballElement)">
+            <summary>
+            Creates a new deletion.
+            </summary>
+            <param name="collection">Collection from which the element should disappear.</param>
+            <param name="element">Element to disappear.</param>
+        </member>
+        <member name="T:Sketchball.Editor.SelectionTool">
+            <summary>
+            The omnipotent tool for selecting elements.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.CircleTool">
+            <summary>
+            Represents a tool used to draw circles.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Editor.CircleTool.#ctor(Sketchball.Controls.PinballEditControl)">
+            <summary>
+            Instantiates a new circle tool.
+            </summary>
+            <param name="control">Control where this tool operates on.</param>
+        </member>
+        <member name="T:Sketchball.Editor.LineTool">
+            <summary>
+            Represents a tool that can draw line segments.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.MultiLineTool">
+            <summary>
+            Represents a tool that can draw multiple lines, i.e. a shammed polygon.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Editor.Tool">
+            <summary>
+            Represents a tool that can be used to perform an action on a PinballEditControl.
+            </summary>
+        </member>
+        <member name="F:Sketchball.Editor.Tool.Editor">
+            <summary>
+            The control we work on.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Editor.Tool.Label">
+            <summary>
+            Gets the label of this tool.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Editor.Tool.Icon">
+            <summary>
+            Gets an icon that belongs to this tool.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Editor.Tool.Enter">
+            <summary>
+            Activates this tool. (-> Setup)
+            </summary>
+        </member>
+        <member name="M:Sketchball.Editor.Tool.Leave">
+            <summary>
+            Deactivates this tool. (-> Teardown)
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.CustomElement">
+            <summary>
+            An element drawn by the user.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.CustomElement.Geometry">
+            <summary>
+            Gets the geometry that describes the shape of the element.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.ValidationProblem">
+            <summary>
+            Represents a problem with the validation.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.ValidationProblem.Message">
+            <summary>
+            Gets the message that describes the problem.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.ValidationProblem.ElementsInvolved">
+            <summary>
+            Gets a list of elements involved in the problem.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.ValidationProblem.#ctor(System.String,System.Collections.Generic.IEnumerable{Sketchball.Elements.PinballElement})">
+            <summary>
+            Iniializes a new problem with the given properties.
+            </summary>
+            <param name="msg">Describes the problem.</param>
+            <param name="elements">List of elements involved.</param>
+        </member>
+        <member name="M:Sketchball.Elements.ValidationProblem.#ctor(System.String,Sketchball.Elements.PinballElement)">
+            <summary>
+            
+            </summary>
+            <param name="msg">Describes the problem.</param>
+            <param name="element">Element involved.</param>
+        </member>
+        <member name="T:Sketchball.Elements.WideHole">
+            <summary>
+            Represents a wide hole, which, in contrast to a normal hole, is rectangular.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.AnimatedObject">
+            <summary>
+            Represents an object that can be animated.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.AnimatedObject.Rotation">
+            <summary>
+            Gets the (additional) rotation currently applied to the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.AnimatedObject.AngularVelocityPerFrame">
+            <summary>
+            Gets the angular velocity per frame.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.AnimatedObject.AngularVelocity">
+            <summary>
+            Gets the current angular velocity.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.AnimatedObject.Animating">
+            <summary>
+            Gets a bool whether or not this element is currently animating.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.AnimatedObject.CurrentRotationCenter">
+            <summary>
+            Gets the center for the animated rotation.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.Ball">
+            <summary>
+            Represents the game ball.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.Ball.Velocity">
+            <summary>
+            Gets or sets the ball's velocity.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.Ball.#ctor">
+            <summary>
+            Creates a new ball at (0, 0)
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.Ball.Mass">
+            <summary>
+            Gets or sets the ball's mass. Fairly irrelevant.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.Bumper">
+            <summary>
+            Represents a bumper that bounces the ball away.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.Circle">
+            <summary>
+            Represents an arbitrary circle usually drawn by the user.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.DefaultLayout">
+            <summary>
+            Represents the default implementation of IMachineLayout.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.DefaultLayout.Apply(Sketchball.Elements.PinballMachine)">
+            <summary>
+            Initializes the machine with a layout.
+            !!! Only use once on a machine !!!
+            </summary>
+            <param name="machine"></param>
+        </member>
+        <member name="T:Sketchball.Elements.ElementCollection">
+            <summary>
+            Collection that maintains a list of elements and makes sure the bidirectional connection stays intact.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.ElementCollection.Owner">
+            <summary>
+            Gets the owner of the element list.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.ElementCollection.#ctor(Sketchball.Elements.PinballMachine)">
+            <summary>
+            Creates a new element collection that belongs to owner.
+            </summary>
+            <param name="parent"></param>
+        </member>
+        <member name="M:Sketchball.Elements.ElementCollection.MoveToTail(Sketchball.Elements.PinballElement)">
+            <summary>
+            Moves an element to the tail of the collection, i.e. causing it to be drawn last.
+            </summary>
+            <param name="element"></param>
+        </member>
+        <member name="M:Sketchball.Elements.ElementCollection.MoveToHead(Sketchball.Elements.PinballElement)">
+            <summary>
+            Moves an element to the head of the collection.
+            </summary>
+            <param name="element"></param>
+        </member>
+        <member name="T:Sketchball.Elements.Flipper">
+            <summary>
+            Abstract flipper class that handles the rough setup code for flippers.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.Hole">
+            <summary>
+            Represents a hole into which a ball can fall.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.IMachineLayout">
+            <summary>
+            Layout for a pinball machine. Every instance can be used on only one machine.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.IMachineLayout.Width">
+            <summary>
+            Gets the width of the layout design.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.IMachineLayout.Height">
+            <summary>
+            Gets the height of the layout design.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.IMachineLayout.Ramp">
+            <summary>
+            Gets a reference to the starting ramp associated with this layout.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.IMachineLayout.Apply(Sketchball.Elements.PinballMachine)">
+            <summary>
+            Applies the layout by filling the machine's static elements list.
+            </summary>
+            <param name="machine"></param>
+        </member>
+        <member name="T:Sketchball.Elements.LeftFlipper">
+            <summary>
+            Represents the left flipper element.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.Line">
+            <summary>
+            Represents an arbitrary line typically drawn by the user.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.Line.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Creates a new line from (x0, y0) to (x1, y1)
+            </summary>
+            <param name="x0"></param>
+            <param name="y0"></param>
+            <param name="x1"></param>
+            <param name="y1"></param>
+        </member>
+        <member name="T:Sketchball.Elements.PinballGameMachine">
+            <summary>
+            Represents a pinball machine with additional game logic, i.e. physics.
+            </summary>
+        </member>
+        <member name="E:Sketchball.Elements.PinballGameMachine.Collision">
+            <summary>
+            Occurs then the machine detects a collision.
+            </summary>
+        </member>
+        <member name="E:Sketchball.Elements.PinballGameMachine.GameOver">
+            <summary>
+            Occurs when the ball gets thrown out of the field.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballGameMachine.prepareForLaunch">
+            <summary>
+            No more elements can be added after this function call 
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballGameMachine.KillBall(Sketchball.Elements.Ball)">
+            <summary>
+            Removes a ball from the field and fires a GameOver event.
+            </summary>
+            <param name="ball"></param>
+        </member>
+        <member name="T:Sketchball.Elements.PinballMachine">
+            <summary>
+            Represents a pinball machine that can be customized.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.DynamicElements">
+            <summary>
+            Gets the elements that were added by the user.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.StaticElements">
+            <summary>
+            Gets the elements that are static and can't be changed.
+            (Usually added through the layout)
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Balls">
+            <summary>
+            Gets the balls currently added.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Elements">
+            <summary>
+            Gets _all_ elements added to this pinball machine.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Layout">
+            <summary>
+            Gets the layout used to define this pinball machine.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Width">
+            <summary>
+            Gets the width of this machine.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Height">
+            <summary>
+            Gets the height of this machine.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Angle">
+            <summary>
+            Tilt of the pinball machine in radians.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.AngleProperty">
+            <summary>
+            Don't use outside the editor!
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Acceleration">
+            <summary>
+            Gets the calculated acceleration based on the gravity and the angle.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.Highscores">
+            <summary>
+            Gets the highscore list.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.#ctor">
+            <summary>
+            Creates a new pinball machine with the default layout.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.#ctor(Sketchball.Elements.IMachineLayout)">
+            <summary>
+            Creates a new pinball machine with a given layout.
+            </summary>
+            <param name="layout"></param>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.Dispose">
+            <summary>
+            Disposes the pinball machine and frees all resources used by it.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.Save(System.String)">
+            <summary>
+            Saves the pinball machine to a file.
+            </summary>
+            <param name="path">Path of the file.</param>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.Save(System.IO.Stream)">
+            <summary>
+            Saves the machine to an output stream.
+            </summary>
+            <param name="output"></param>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.FromFile(System.String)">
+            <summary>
+            Loads a pinball machine from a file.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.FromStream(System.IO.Stream)">
+            <summary>
+            Loads a pinball machine from an input stream.
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.IsValid">
+            <summary>
+            Gets whether or not this is a valid pinball machine. You can query the problem found with LastProblem.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Sketchball.Elements.PinballMachine.LastProblem">
+            <summary>
+            Last problem that was detected. ALWAYS use in conjunction with IsValid().
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballMachine.BringToFront(Sketchball.Elements.PinballElement)">
+            <summary>
+            Brings an element to front for drawing.
+            </summary>
+            <param name="element"></param>
+        </member>
+        <member name="T:Sketchball.Elements.RightFlipper">
+            <summary>
+            Represents a right flipper.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.SlingshotLeft">
+            <summary>
+            Represents a left slingshot.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.SlingshotRight">
+            <summary>
+            Represents a right slingshot.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.StartingRamp">
+            <summary>
+            Represents a starting ramp. This ramp is not usually placed by the user but by the layout.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.StartingRamp.IntroduceBall(Sketchball.Elements.Ball)">
+            <summary>
+            Positions a ball so that it will fall into the ramp.
+            </summary>
+            <param name="ball"></param>
+        </member>
+        <member name="M:Sketchball.Elements.StartingRamp.Contains(Sketchball.Elements.Ball)">
+            <summary>
+            Checks if the ramp contains a ball currently.
+            </summary>
+            <param name="ball"></param>
+            <returns>Whether or not the ball is in this ramp.</returns>
+        </member>
+        <member name="T:Sketchball.Elements.WormholeEntry">
+            <summary>
+            Represents a wormhole entry that sends the ball to the other end.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.WormholeEntry.WormholeExit">
+            <summary>
+            Gets or sets the exit associated with this entry.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.WormholeExit">
+            <summary>
+            Represents a destination for a wormhole entry.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.WormholeExit.Entries">
+            <summary>
+            Gets a list of entries associated with this exit.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.RotationOrigin">
+            <summary>
+            Allowed origins for rotation. Powers of 2 to make them flags.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Elements.PinballElement">
+            <summary>
+            Central element class that is inherited by all elements on the play field.
+            </summary>
+        </member>
+        <member name="F:Sketchball.Elements.PinballElement.Location">
+            <summary>
+            Gets or sets the current location of the element in internal coordinates.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.BaseSize">
+            <summary>
+            Gets the original size of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.BaseWidth">
+            <summary>
+            Gets the original width of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.BaseHeight">
+            <summary>
+            Gets the original height of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.Width">
+            <summary>
+            Gets or sets the effective width of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.Height">
+            <summary>
+            Gets or sets the effective height of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.X">
+            <summary>
+            Gets or sets the X position of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.Y">
+            <summary>
+            Gets or sets the Y position of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.Image">
+            <summary>
+            Gets or sets the image linked to this element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.BaseRotation">
+            <summary>
+            Gets or sets how much the element is rotated (in degrees)
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.Origin">
+            <summary>
+            Gets or sets the origin for rotation.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.Scale">
+            <summary>
+            Sets or gets the scale of this element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.pureIntersection">
+            <summary>
+            Gets whether or not this element reflects the ball.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.World">
+            <summary>
+            Gets or sets the pinball machine this element is attached to. Don't tinker with this property.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.GameWorld">
+            <summary>
+            Gets the current game machine. Helper property.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.BounceFactor">
+            <summary>
+            Gets or sets the bounce factor of the element.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Elements.PinballElement.BoundingContainer">
+            <summary>
+            Gets the bounding container of this element.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.InitResources">
+            <summary>
+            Loads all required resources into the memory. Always gets called from the STA thread and BEFORE the actual draw.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.GetRotationOrigin">
+            <summary>
+            Returns the exact coordinates of the origin where the element is to be rotated.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.Contains(System.Windows.Point)">
+            <summary>
+            Checks whether or not a point lies within an element. This method conducts a *real* pixel check.
+            </summary>
+            <param name="point"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.Init">
+            <summary>
+            Initializes an element. It is important to understand the difference between Init() and the costructor.
+            - The constructor is *only* called when the element is first created. Use it to initialize fields that will be serialized.
+            - The Init() method is called _before_ the child constructor and after each deserialization. Use it to initialize fields that are NOT serialized. (e.g. bounding boxes)
+            </summary>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.OnClone(Sketchball.Elements.PinballElement)">
+            <summary>
+            Does additional stuff when an element is cloned.
+            </summary>
+            <param name="element"></param>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.EnterGame(Sketchball.Elements.PinballGameMachine)">
+            <summary>
+            Sets up event listeners when a new machine is entered.
+            </summary>
+            <param name="machine"></param>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.LeaveGame(Sketchball.Elements.PinballGameMachine)">
+            <summary>
+            Removes event listeners when a machine is left
+            </summary>
+            <param name="machine"></param>
+        </member>
+        <member name="M:Sketchball.Elements.PinballElement.RegenerateBounds">
+            <summary>
+            Regenerates all bounding boxes of this element. Calls Init() and thus might
+            also do other things.
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.GameWorld">
+            <summary>
+            Represents the "world"/"scene" in which the pinball machine is placed. Purely of graphical relevance.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.GameWorld.Draw(System.Windows.Media.DrawingContext)">
+            <summary>
+            Draws the entire world with the PinballMachine at (0,0). Refer to Width and Height to get the notebook-aware dimensions.
+            </summary>
+            <param name="g"></param>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameWorld.Width">
+            <summary>
+            Gets the notebook-aware width (width + paddings and margins)
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameWorld.Height">
+            <summary>
+            Gets the notebook-aware height (height + paddings + margins)
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameWorld.Offset">
+            <summary>
+            Gets the offset from (0, 0) to the pinball machine, i.e. the position where it is drawn at PinballMachine.Size without all the margins and paddings.
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.Camera">
+            <summary>
+            Represents a camera that cna draw part of a GameWorld.+
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.GameStatus">
+            <summary>
+            States/Phases the game can assume
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.Game">
+            <summary>
+            Control that houses a game of pinball.
+            </summary>
+        </member>
+        <member name="E:Sketchball.GameComponents.Game.ScoreChanged">
+            <summary>
+            Occurs when the score has changed.
+            </summary>
+        </member>
+        <member name="E:Sketchball.GameComponents.Game.LivesChanged">
+            <summary>
+            Occurs when the number of lives has changed.
+            </summary>
+        </member>
+        <member name="E:Sketchball.GameComponents.Game.GameOver">
+            <summary>
+            Occurs when the current game is over.
+            </summary>
+        </member>
+        <member name="E:Sketchball.GameComponents.Game.StatusChanged">
+            <summary>
+            Occurs when the game status changed.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Sketchball.GameComponents.Game.TOTAL_LIVES" -->
+        <member name="P:Sketchball.GameComponents.Game.Status">
+            <summary>
+            Gets the current game status.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.Game.Machine">
+            <summary>
+            Gets or sets the machine currently displayed.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.Game.Score">
+            <summary>
+            Gets the score of the current game.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.Game.Lives">
+            <summary>
+            Gets the number of remaining lives of the current game.
+            </summary>
+        </member>
+        <member name="F:Sketchball.GameComponents.Game.OriginalMachine">
+            <summary>
+            Original machine from which the game machines are made.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.Start">
+            <summary>
+            Starts a new game.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.OnGameOver">
+            <summary>
+            Add a new ball if needed when ball gets lost.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.OnScore(Sketchball.Elements.PinballElement)">
+            <summary>
+            Increment score when a collision happened.
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.Pause">
+            <summary>
+            Pauses the game.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.Resume">
+            <summary>
+            Resumes the game if paused.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.Update(System.Double)">
+            <summary>
+            Updates positions and checks for collisions, etc.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.Game.IsRunning">
+            <summary>
+            Gets if the game is currently running.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.Game.BeginUpdate">
+            <summary>
+            Update-Loop (has its own thread)
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.GameHUD">
+            <summary>
+            Visual element that takes care of the head-up display.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameHUD.Width">
+            <summary>
+            Gets the width of the HUD. Setting is not currently supported.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameHUD.Height">
+            <summary>
+            Gets the height of the HUD. Setting is not currently supported.
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.HighscoreEntry">
+            <summary>
+            Represents an entry in the highscore list
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.HighscoreEntry.Player">
+            <summary>
+            Gets the player associated with this highscore entry.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.HighscoreEntry.Score">
+            <summary>
+            Gets the score made by this player.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.HighscoreEntry.Date">
+            <summary>
+            Gets the date when the score was achieved.
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.HighscoreList">
+            <summary>
+            Represents a descending list of highscore entries with a max entry count of 30.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.HighscoreList.Add(Sketchball.GameComponents.HighscoreEntry)">
+            <summary>
+            Adds a highscore entry to the list. A score of 0 is ignored.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="T:Sketchball.GameComponents.SoundManager">
+            <summary>
+            Manager that helps to keep the sound replay sane.
+            </summary>
+        </member>
+        <member name="F:Sketchball.GameComponents.SoundManager.MIN_INTERVAL">
+            <summary>
+            The minimum interval between to equivalent sounds.
+            </summary>
+        </member>
+        <member name="T:Sketchball.GameComponents.InputManager">
+            <summary>
+            Listens to Windows' application-wide input messages and lets you bind event handlers to them.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.InputManager.#ctor">
+            <summary>
+            Initializes a new InputManager with a given control to listen to.
+            </summary>
+            <param name="control"></param>
+        </member>
+        <member name="P:Sketchball.GameComponents.InputManager.Enabled">
+            <summary>
+            Gets or sets the listening status.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.InputManager.Instance">
+            <summary>
+            Gets an instance of the manager.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sketchball.GameComponents.GameFieldCamera">
+            <summary>
+            Represents a view on the GameWorld. It's your responsibility to feed it with the right screen sizes.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameFieldCamera.Translocation">
+            <summary>
+            Gets or sets the (additional) translation of the camera.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameFieldCamera.Scale">
+            <summary>
+            Gets or sets the (additional) scale of the camera.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameFieldCamera.Size">
+            <summary>
+            Gets or sets the size of this camera.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameFieldCamera.Width">
+            <summary>
+            Gets the current width.
+            </summary>
+        </member>
+        <member name="P:Sketchball.GameComponents.GameFieldCamera.Height">
+            <summary>
+            Gets the current height.
+            </summary>
+        </member>
+        <member name="M:Sketchball.GameComponents.GameFieldCamera.#ctor(Sketchball.GameComponents.GameWorld,Sketchball.GameComponents.GameHUD)">
+            <summary>
+            Initializes a new camera.
+            </summary>
+            <param name="world">World the camera looks at.</param>
+            <param name="hud">HUD to display somewhere.</param>
+        </member>
+        <member name="M:Sketchball.GameComponents.GameFieldCamera.Draw(System.Windows.Media.DrawingContext)">
+            <summary>
+            Draws the view.
+            </summary>
+            <param name="g"></param>
+        </member>
+        <member name="T:Sketchball.Booster">
+            <summary>
+            Helper class that was created to improve the overall performance.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Booster.OptimizeImage(System.Drawing.Image)">
+            <summary>
+            Optimizes an image by converting it into the right pixel format.
+            </summary>
+            <param name="src"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Booster.LoadImage(System.String)">
+            <summary>
+            Loads a WPF image found at [path].
+            </summary>
+            <param name="path">Resource name relative to the Resources/Images directory.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Booster.GetText(System.String,System.Windows.Media.FontFamily,System.Double,System.Windows.Media.Brush)">
+            <summary>
+            Gets a text object with the given parameters.
+            </summary>
+            <param name="text"></param>
+            <param name="family"></param>
+            <param name="size"></param>
+            <param name="color"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.Booster.DrawingToBitmap(System.Windows.Media.Drawing,System.Int32,System.Int32,System.Windows.Media.Stretch)">
+            <summary>
+            Conerts a drawing into a bitmap object compatible with System.Drawing.
+            </summary>
+            <param name="drawing"></param>
+            <param name="width"></param>
+            <param name="height"></param>
+            <param name="stretch"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Sketchball.IChange">
+            <summary>
+            Interface for changes that can be kept track of in the history.
+            </summary>
+        </member>
+        <member name="M:Sketchball.IChange.Do">
+            <summary>
+            Executes the change.
+            </summary>
+        </member>
+        <member name="M:Sketchball.IChange.Undo">
+            <summary>
+            Undoes the change.
+            </summary>
+        </member>
+        <member name="T:Sketchball.EditorForm">
+            <summary>
+            The form that contains all editing functionality.
+            </summary>
+        </member>
+        <member name="P:Sketchball.EditorForm.FileName">
+            <summary>
+            Gets or sets the current filename of the pinball machine file.
+            </summary>
+        </member>
+        <member name="M:Sketchball.EditorForm.AppropriateFont(System.Single,System.Single,System.Drawing.Size,System.String,System.Drawing.Font,System.Drawing.SizeF@)">
+            <summary>
+            Finds an appropriate font size for a given size. Taken from:
+            http://tech.pro/tutorial/691/csharp-tutorial-font-scaling
+            </summary>
+            <param name="minFontSize"></param>
+            <param name="maxFontSize"></param>
+            <param name="layoutSize"></param>
+            <param name="s"></param>
+            <param name="f"></param>
+            <param name="extent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.EditorForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="F:Sketchball.EditorForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Sketchball.EditorForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Sketchball.History">
+            <summary>
+            A history that can be used to keep track of changes. Provides methods to redo and undo.
+            </summary>
+        </member>
+        <member name="F:Sketchball.History._dirty">
+            <summary>
+            *Signed* distance from the current point to the last "save point".
+            </summary>
+        </member>
+        <member name="M:Sketchball.History.#ctor(System.Int32)">
+            <summary>
+            Creates a new history with a certain capacity. Warning: capacity is not implemented yet.
+            </summary>
+            <param name="capacity"></param>
+        </member>
+        <member name="M:Sketchball.History.CanUndo">
+            <summary>
+            Checks if there is an element in the undo queue.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.History.CanRedo">
+            <summary>
+            Checks if there is an element in the redo queue.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sketchball.History.Undo">
+            <summary>
+            Undoes a change if possible.
+            </summary>
+        </member>
+        <member name="M:Sketchball.History.Redo">
+            <summary>
+            Redoes a change if possible.
+            </summary>
+        </member>
+        <member name="M:Sketchball.History.Add(Sketchball.IChange)">
+            <summary>
+            Adds a new change to the history. It is expected that it was already executed.
+            </summary>
+            <param name="change"></param>
+        </member>
+        <member name="M:Sketchball.History.Clear">
+            <summary>
+            Clears the history list.
+            </summary>
+        </member>
+        <member name="M:Sketchball.History.HasChanged">
+            <summary>
+            Gets if the history has changed since the last call to ClearStatus().
+            </summary>
+            <returns>Whether or not the history has changed.</returns>
+        </member>
+        <member name="M:Sketchball.History.ClearStatus">
+            <summary>
+            Resets the "dirty" flag.
+            </summary>
+        </member>
+        <member name="M:Sketchball.History.AddAndDo(Sketchball.IChange)">
+            <summary>
+            Adds a change and immediately executes it.
+            </summary>
+            <param name="change"></param>
+        </member>
+        <member name="T:Sketchball.PlayForm">
+            <summary>
+            Form that houses the actual game of pinball.
+            </summary>
+        </member>
+        <member name="M:Sketchball.PlayForm.ActivateScoreTracking(System.String)">
+            <summary>
+            If activated, the game will track the high score and keep the file updated.
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:Sketchball.PlayForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="F:Sketchball.PlayForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Sketchball.PlayForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:Sketchball.Program.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:Sketchball.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.BackgroundScharf">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.BallWithAlpha">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.bfhLogo2">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Bumper">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.circle_outline_512">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.control_play">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Courgette_Regular">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.EditorSchrift2">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Exit">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.FlipperLeft">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.FlipperRight">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.hole">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.LineTool">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Logo_BFH">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.MultiLineTool">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Notebook_bot">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Notebook_Ende">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Notebook_Ringe">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.PlaySchrift1">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Rampe">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Rampe_pencil">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Redo_icon">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SBumper">
+            <summary>
+              Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SHole">
+            <summary>
+              Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SlingshotLeft">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SlingshotRight">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SSlingshot">
+            <summary>
+              Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SWomholeEntry">
+            <summary>
+              Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.SWormholeExit">
+            <summary>
+              Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.TableSlim">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Undo_icon">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.Very_Basic_Cursor_icon">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.WormholeEntry">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:Sketchball.Properties.Resources.WormholeExit">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:Sketchball.SelectionForm">
+            <summary>
+            Entry form that gives the user some choices and acts as the parent window of all following windows.
+            </summary>
+        </member>
+        <member name="M:Sketchball.SelectionForm.CloseManagedForm">
+            <summary>
+            Closes the currently managed form.
+            </summary>
+        </member>
+        <member name="M:Sketchball.SelectionForm.OpenEditor(Sketchball.Elements.PinballMachine)">
+            <summary>
+            CLoses the currently managed form  and opens an editor.
+            </summary>
+            <param name="pbm"></param>
+        </member>
+        <member name="M:Sketchball.SelectionForm.OpenGame(Sketchball.Elements.PinballMachine,System.String)">
+            <summary>
+            Closes the currently managed form and opens a game.
+            </summary>
+            <param name="pbm"></param>
+            <param name="fileName"></param>
+        </member>
+        <member name="F:Sketchball.SelectionForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Sketchball.SelectionForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Sketchball.SelectionForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Sketchball.TranslationChange">
+            <summary>
+            Represents a change to the position of an element.
+            </summary>
+        </member>
+        <member name="T:GlideTween.Ease">
+            <summary>
+            Static class with useful easer functions that can be used by Tweens.
+            </summary>
+        </member>
+        <member name="M:GlideTween.Ease.ElasticIn(System.Single)">
+            <summary>
+            Elastic in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.ElasticOut(System.Single)">
+            <summary>
+            Elastic out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.ElasticInOut(System.Single)">
+            <summary>
+            Elastic in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuadIn(System.Single)">
+            <summary>
+            Quadratic in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuadOut(System.Single)">
+            <summary>
+            Quadratic out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuadInOut(System.Single)">
+            <summary>
+            Quadratic in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.CubeIn(System.Single)">
+            <summary>
+            Cubic in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.CubeOut(System.Single)">
+            <summary>
+            Cubic out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.CubeInOut(System.Single)">
+            <summary>
+            Cubic in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuartIn(System.Single)">
+            <summary>
+            Quart in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuartOut(System.Single)">
+            <summary>
+            Quart out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuartInOut(System.Single)">
+            <summary>
+            Quart in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuintIn(System.Single)">
+            <summary>
+            Quint in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuintOut(System.Single)">
+            <summary>
+            Quint out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.QuintInOut(System.Single)">
+            <summary>
+            Quint in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.SineIn(System.Single)">
+            <summary>
+            Sine in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.SineOut(System.Single)">
+            <summary>
+            Sine out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.SineInOut(System.Single)">
+            <summary>
+            Sine in and out
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.BounceIn(System.Single)">
+            <summary>
+            Bounce in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.BounceOut(System.Single)">
+            <summary>
+            Bounce out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.BounceInOut(System.Single)">
+            <summary>
+            Bounce in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.CircIn(System.Single)">
+            <summary>
+            Circle in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.CircOut(System.Single)">
+            <summary>
+            Circle out
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.CircInOut(System.Single)">
+            <summary>
+            Circle in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.ExpoIn(System.Single)">
+            <summary>
+            Exponential in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.ExpoOut(System.Single)">
+            <summary>
+            Exponential out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.ExpoInOut(System.Single)">
+            <summary>
+            Exponential in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.BackIn(System.Single)">
+            <summary>
+            Back in.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.BackOut(System.Single)">
+            <summary>
+            Back out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Ease.BackInOut(System.Single)">
+            <summary>
+            Back in and out.
+            </summary>
+            <param name="t">Time elapsed.</param>
+            <returns>Eased timescale.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Tween(System.Object,System.Object,System.Single,System.Single)">
+            <summary>
+            Tweens a set of numeric properties on an object.
+            </summary>
+            <param name="target">The object to tween.</param>
+            <param name="values">The values to tween to, in an anonymous type ( new { prop1 = 100, prop2 = 0} ).</param>
+            <param name="duration">Duration of the tween in seconds.</param>
+            <param name="delay">Delay before the tween starts, in seconds.</param>
+            <returns>The tween created, for setting properties on.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Timer(System.Single,System.Single)">
+            <summary>
+            Starts a simple timer for setting up callback scheduling.
+            </summary>
+            <param name="duration">How long the timer will run for, in seconds.</param>
+            <param name="delay">How long to wait before starting the timer, in seconds.</param>
+            <returns>The tween created, for setting properties.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Update(System.Single)">
+            <summary>
+            Updates the tweener and all objects it contains.
+            </summary>
+            <param name="secondsElapsed">Seconds elapsed since last update.</param>
+        </member>
+        <member name="M:GlideTween.Glide.From(System.Object)">
+            <summary>
+            Apply target values to a starting point before tweening.
+            </summary>
+            <param name="values">The values to apply, in an anonymous type ( new { prop1 = 100, prop2 = 0} ).</param>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Ease(System.Func{System.Single,System.Single})">
+            <summary>
+            Set the easing function.
+            </summary>
+            <param name="ease">The Easer to use.</param>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.OnBegin(System.Action)">
+            <summary>
+            Set a function to call when the tween begins (useful when using delays).
+            </summary>
+            <param name="callback">The function that will be called when the tween starts, after the delay.</param>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.OnComplete(System.Action)">
+            <summary>
+            Set a function to call when the tween finishes.
+            If the tween repeats infinitely, this will be called each time; otherwise it will only run when the tween is finished repeating.
+            </summary>
+            <param name="callback">The function that will be called on tween completion.</param>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.OnUpdate(System.Action)">
+            <summary>
+            Set a function to call as the tween updates.
+            </summary>
+            <param name="callback">The function to use.</param>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Repeat(System.Int32)">
+            <summary>
+            Enable repeating.
+            </summary>
+            <param name="times">Number of times to repeat. Leave blank or pass a negative number to repeat infinitely.</param>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Reflect">
+            <summary>
+            Sets the tween to reverse every other time it repeats. Repeating must be enabled for this to have any effect.
+            </summary>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Reverse">
+            <summary>
+            Swaps the start and end values of the tween.
+            </summary>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Rotation">
+            <summary>
+            Whether this tween handles rotation.
+            </summary>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Round">
+            <summary>
+            Whether tweened values should be rounded to integer values.
+            </summary>
+            <returns>A reference to this.</returns>
+        </member>
+        <member name="M:GlideTween.Glide.Cancel">
+            <summary>
+            Remove tweens from the tweener without calling their complete functions.
+            </summary>
+        </member>
+        <member name="M:GlideTween.Glide.CancelAndComplete">
+            <summary>
+            Assign tweens their final value and remove them from the tweener.
+            </summary>
+        </member>
+        <member name="M:GlideTween.Glide.Pause">
+            <summary>
+            Set tweens to pause. They won't update and their delays won't tick down.
+            </summary>
+        </member>
+        <member name="M:GlideTween.Glide.PauseToggle">
+            <summary>
+            Toggle tweens' paused value.
+            </summary>
+        </member>
+        <member name="M:GlideTween.Glide.Resume">
+            <summary>
+            Resumes tweens from a paused state.
+            </summary>
+        </member>
+        <member name="M:GlideTween.Glide.TargetCancel(System.Object[])">
+            <summary>
+            Look up tweens by the objects they target, and cancel them.
+            </summary>
+            <param name="targets">The objects being tweened that you want to cancel.</param>
+        </member>
+        <member name="M:GlideTween.Glide.TargetCancelAndComplete(System.Object[])">
+            <summary>
+            Look up tweens by the objects they target, cancel them, set them to their final values, and call the complete callback.
+            </summary>
+            <param name="targets">The objects being tweened that you want to cancel and complete.</param>
+        </member>
+        <member name="M:GlideTween.Glide.TargetPause(System.Object[])">
+            <summary>
+            Look up tweens by the objects they target, and pause them.
+            </summary>
+            <param name="targets">The objects being tweened that you want to pause.</param>
+        </member>
+        <member name="M:GlideTween.Glide.TargetPauseToggle(System.Object[])">
+            <summary>
+            Look up tweens by the objects they target, and toggle their paused states.
+            </summary>
+            <param name="targets">The objects being tweened that you want to toggle pause.</param>
+        </member>
+        <member name="M:GlideTween.Glide.TargetResume(System.Object[])">
+            <summary>
+            Look up tweens by the objects they target, and resume them from paused.
+            </summary>
+            <param name="targets">The objects being tweened that you want to resume.</param>
+        </member>
+    </members>
+</doc>

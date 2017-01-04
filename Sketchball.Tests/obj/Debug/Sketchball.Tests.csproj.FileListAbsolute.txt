@@ -1,0 +1,12 @@
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Machines\Default.pmf
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Resources\Courgette-Regular.ttf
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Sketchball.Tests.dll
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Sketchball.Tests.pdb
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Sketchball.exe
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\MouseKeyboardActivityMonitor.dll
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Sketchball.pdb
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\Sketchball.xml
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\bin\Debug\MouseKeyboardActivityMonitor.xml
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\obj\Debug\Sketchball.Tests.csprojResolveAssemblyReference.cache
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\obj\Debug\Sketchball.Tests.dll
+C:\Users\pbr.Q-RAYNET\Documents\Projects\Sketchball-master\Sketchball.Tests\obj\Debug\Sketchball.Tests.pdb
