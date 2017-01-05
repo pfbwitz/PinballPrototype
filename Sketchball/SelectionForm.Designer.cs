@@ -44,7 +44,7 @@ namespace Sketchball
             this.CloseButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CloseButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.CloseButton.InitialImage = null;
-            this.CloseButton.Location = new System.Drawing.Point(323, 23);
+            this.CloseButton.Location = new System.Drawing.Point(184, 12);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(72, 69);
             this.CloseButton.TabIndex = 2;
@@ -57,7 +57,7 @@ namespace Sketchball
             this.picBEditor.BackgroundImage = global::Sketchball.Properties.Resources.EditorSchrift2;
             this.picBEditor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBEditor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picBEditor.Location = new System.Drawing.Point(136, 253);
+            this.picBEditor.Location = new System.Drawing.Point(12, 246);
             this.picBEditor.Name = "picBEditor";
             this.picBEditor.Size = new System.Drawing.Size(168, 111);
             this.picBEditor.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -71,7 +71,7 @@ namespace Sketchball
             this.picBGame.BackgroundImage = global::Sketchball.Properties.Resources.PlaySchrift1;
             this.picBGame.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.picBGame.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picBGame.Location = new System.Drawing.Point(113, 82);
+            this.picBGame.Location = new System.Drawing.Point(12, 102);
             this.picBGame.Name = "picBGame";
             this.picBGame.Size = new System.Drawing.Size(145, 129);
             this.picBGame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -86,7 +86,7 @@ namespace Sketchball
             this.BackColor = System.Drawing.Color.Gray;
             this.BackgroundImage = global::Sketchball.Properties.Resources.BackgroundScharf;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(532, 440);
+            this.ClientSize = new System.Drawing.Size(264, 367);
             this.ControlBox = false;
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.picBEditor);

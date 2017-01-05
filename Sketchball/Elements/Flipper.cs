@@ -73,6 +73,27 @@ namespace Sketchball.Elements
             }
         }
 
+        public void DoRotate()
+        {
+            if (!Animating)
+            {
+                Animating = true;
+
+                Action endRot = () => {
+                    this.Rotate(-Rotation, origin, 0.05f, () => { Animating = false; });
+                };
+
+                this.Rotate(RotationRange, origin, 0.05f, null);
+            }
+        }
+
+        public void UndoRotate()
+        {
+            if (Animating)
+            {
+                this.Rotate(-Rotation, origin, 0.1f, () => { Animating = false; });
+            }
+        }
 
         protected override Size BaseSize
         {

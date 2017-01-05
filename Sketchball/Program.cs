@@ -12,6 +12,8 @@ namespace Sketchball
 {
     static class Program
     {
+        public static bool ReleaseMode = true;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

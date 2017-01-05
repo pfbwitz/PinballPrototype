@@ -27,6 +27,18 @@ namespace Sketchball
         public SelectionForm()
         {
             InitializeComponent();
+
+#if DEBUG
+            Program.ReleaseMode = false;
+#endif
+            if (Program.ReleaseMode)
+            {
+                Enabled = false;
+
+                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + "machine1.pmf";
+                PinballMachine pbm = PinballMachine.FromFile(file);
+                OpenGame(pbm, file);
+            }
         }
 
         void picBGame_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -134,6 +146,7 @@ namespace Sketchball
             ((PlayForm)childForm).ActivateScoreTracking(fileName);
 
             childForm.WindowState = FormWindowState.Maximized;
+
             childForm.Show();
             
             childForm.FormClosed += onChildClose;

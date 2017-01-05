@@ -56,7 +56,9 @@ namespace Sketchball
             this.selectionForm = selectionForm;
         
             debugModeButton.Checked =  Properties.Settings.Default.Debug;
-            
+
+            if (Program.ReleaseMode)
+                enterFullscreen();
         }
 
         private void onMouseMove(object sender, System.Windows.Input.MouseEventArgs e)

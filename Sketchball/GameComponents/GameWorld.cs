@@ -49,8 +49,9 @@ namespace Sketchball.GameComponents
         {
             double height = Height + MARGIN * 6; // we're adding margins _again_ just to be sure.
             double width  = height / BG.Height * BG.Width;
-
-            g.DrawImage(BG, new Rect( (Width - width) / 2, 0, width, height));
+            var r = new Rect((Width - width) / 2, 0, width, height);
+             
+            g.DrawImage(BG, r);
 
             // Draw other stuff
             double coffeeWidth = Width * 0.7;
@@ -82,7 +83,6 @@ namespace Sketchball.GameComponents
 
             double logoHeight = PADDING / 2d;
             double logoWidth  = logoHeight / BG_LogoTop.Height * BG_LogoTop.Width;
-
 
             // Draw book
             g.PushTransform(new TranslateTransform(MARGIN, MARGIN));

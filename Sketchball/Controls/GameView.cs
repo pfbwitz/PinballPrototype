@@ -72,12 +72,66 @@ namespace Sketchball.Controls
             timer.Start();
 
             // Wire up a few event listeners
+
+            MouseDown += GameView_MouseDown;
+            MouseUp += GameView_MouseUp;
             PreviewKeyDown += HandleKeyDown;
             SizeChanged += ResizeCamera;
             Game.StatusChanged += delegate { Dispatcher.Invoke(delegate { InvalidateVisual(); }, System.Windows.Threading.DispatcherPriority.Render); };
 
             // Let's draw with high quality
             SetValue(RenderOptions.BitmapScalingModeProperty, BitmapScalingMode.HighQuality);
+        }
+
+        private void GameView_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var p = Mouse.GetPosition(this);
+            var pos = PointToScreen(Mouse.GetPosition(this));
+
+            var flipper = GetFlipper(pos);
+            flipper.UndoRotate();
+        }
+
+        private void GameView_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var p = Mouse.GetPosition(this);
+            var pos = PointToScreen(Mouse.GetPosition(this));
+
+            var flipper = GetFlipper(pos);
+            flipper.DoRotate();
+            //HandleKeyDown(null, new System.Windows.Input.KeyEventArgs(Keyboard.PrimaryDevice,
+            // System.Windows.PresentationSource.FromVisual((Visual)Keyboard.FocusedElement), 0, key));
+
+                             // Key to send
+            //var target = Keyboard.FocusedElement;    // Target element
+            //var routedEvent = Keyboard.KeyDownEvent; // Event to send
+
+            //target.RaiseEvent(new System.Windows.Input.KeyEventArgs(Keyboard.PrimaryDevice,
+            // System.Windows.PresentationSource.FromVisual((Visual)target), 0, key)
+            //{ RoutedEvent = routedEvent });
+
+            var scale = Camera.Scale;
+            
+        }
+
+        private Flipper GetFlipper(Point pos)
+        {
+            Flipper flipper = null;
+            if (pos.X > Width / 2) //right
+            {
+                if (pos.Y > Height / 2) // bottom
+                    flipper = Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(0);
+                else
+                    flipper = Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(1);
+            }
+            else // left
+            {
+                if (pos.Y < Height / 2) // top 
+                    flipper = Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(1);
+                else
+                    flipper = Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(0);
+            }
+            return flipper;
         }
 
         private void ResizeCamera(object sender, System.Windows.SizeChangedEventArgs e)

@@ -88,7 +88,7 @@ namespace Sketchball.Elements
         public int Height { get { return Layout.Height; } }
 
 
-        private const float DEFAULT_GRAVITY = 9.81f;
+        private const float DEFAULT_GRAVITY = 0f;//9.81f;
         [DataMember]
         [Browsable(true), Description("The gravity used in this pinball machine.")]
         public float Gravity { get; set; }
