@@ -66,6 +66,12 @@ namespace Sketchball.Elements
             wplayer.controls.play();
         }
 
+        public void Stop()
+        {
+            wplayer.controls.stop();
+            wplayer.close();
+        }
+
         private void Player_PlayStateChange(int NewState)
         {
             if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded)

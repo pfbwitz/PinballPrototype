@@ -224,9 +224,11 @@ namespace Sketchball.GameComponents
                 Machine.GameOver += OnGameOver;
 
                 Machine.IntroduceBall(Machine.Width / 4);
-                Machine.IntroduceBall(Machine.Width / 3);
-                Machine.IntroduceBall(Machine.Width / 2);
+                
                 Machine.IntroduceBall(Machine.Width);
+
+                Machine.IntroduceBall(Machine.Width - 100);
+                Machine.IntroduceBall(Machine.Width - 200);
                 Lives--;
             }
         }

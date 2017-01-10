@@ -29,7 +29,7 @@ namespace Sketchball
             {
                 Enabled = false;
 
-                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + "machine6.pmf";
+                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + "machine7.pmf";
                 PinballMachine pbm = PinballMachine.FromFile(file);
                 OpenGame(pbm, file);
             }

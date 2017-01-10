@@ -185,8 +185,15 @@ namespace Sketchball
                 game.Resume();
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            game.Machine.Stop();
+            base.OnClosing(e);
+        }
+
         private void onExitClicked(object sender, EventArgs e)
         {
+           
             this.Close();
         }
         

@@ -220,6 +220,9 @@
     <None Include="Machines\machine6.pmf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Machines\machine7.pmf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Machines\test1.pmf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

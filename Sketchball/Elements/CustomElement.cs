@@ -37,7 +37,6 @@ namespace Sketchball.Elements
         [DataMember]
         private System.Drawing.Color _color = System.Drawing.Color.Black;
 
-
         private Pen myPen;
 
         [Browsable(true), Category("Appearance"), Description("Sets the width of the line")]
@@ -69,7 +68,12 @@ namespace Sketchball.Elements
 
         private void createPen()
         {
-            myPen = new Pen(new SolidColorBrush(System.Windows.Media.Color.FromRgb(Color.R, Color.G, Color.B)), LineWidth);
+#if DEBUG
+              byte opacity = 255;
+#else
+            byte opacity = 0;
+#endif
+            myPen = new Pen(new SolidColorBrush(System.Windows.Media.Color.FromArgb(opacity, Color.R, Color.G, Color.B)), LineWidth);
         }
 
         protected override void OnDraw(DrawingContext g)
