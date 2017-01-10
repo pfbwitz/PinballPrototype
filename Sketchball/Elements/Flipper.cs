@@ -18,6 +18,7 @@ namespace Sketchball.Elements
     [DataContract]
     public abstract class Flipper : AnimatedObject
     {
+        public string Name { get; set; }
         private static readonly Size size = new Size(70, 70);
         private static readonly SoundPlayer sound = new SoundPlayer(Properties.Resources.SWormholeExit);
 
@@ -63,6 +64,7 @@ namespace Sketchball.Elements
         {
             if ( (e.KeyCode == Trigger) && !Animating)
             {
+                GameWorld.Sfx.Play(sound);
                 Animating = true;
 
                 Action endRot = () => {
@@ -77,6 +79,7 @@ namespace Sketchball.Elements
         {
             if (!Animating)
             {
+                GameWorld.Sfx.Play(sound);
                 Animating = true;
 
                 Action endRot = () => {
@@ -114,6 +117,7 @@ namespace Sketchball.Elements
 
         public override void OnIntersection(Ball b)
         {
+            b.Flipper = this;
             GameWorld.Sfx.Play(sound);
         }
 

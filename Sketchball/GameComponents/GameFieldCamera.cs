@@ -83,7 +83,7 @@ namespace Sketchball.GameComponents
 
             // Calculate the scale factor we need to show the entire pinball machine (-> World.Height)
             double scale = Height / World.Height;
-            double dx = (Width - World.Width - HUD.Width) / 2f; // Displacement to center
+            double dx = (Width - World.Width) / 2f; // Displacement to center
 
             pushes += 2;
             
@@ -101,7 +101,8 @@ namespace Sketchball.GameComponents
             }
 
             // Move HUD next to the game field
-            g.PushTransform(new TranslateTransform(dx + World.Width / 2 + (World.Width * scale) / 2, World.Offset.Y));
+            //g.PushTransform(new TranslateTransform(dx + World.Width / 2 + (World.Width * scale) / 2, World.Offset.Y));
+            g.PushTransform(new TranslateTransform(0, World.Offset.Y));
             {
                 HUD.Draw(g);
             }

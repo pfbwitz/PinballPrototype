@@ -23,7 +23,7 @@ namespace Sketchball.Elements
 
         private class Frame : PinballElement
         {
-            private static readonly Size size = new Size(997, 1385);
+            private static readonly Size size = new Size(2 * 997, 1385);
 
             internal Frame() : base(0, 0) { }
 
@@ -32,10 +32,10 @@ namespace Sketchball.Elements
                 var totalWidth = (int)this.Width;
                 int totalHeight = (int)this.Height;
 
-                //Vector p1 = new Vector(316, 1344);
-                //Vector p2 = new Vector(107, 1207);
-                //Vector p3 = new Vector(88, 361);
-                //Vector p4 = new Vector(125, 215);
+                Vector p1 = new Vector(0, 0);
+                Vector p2 = new Vector(997, 0);
+                Vector p3 = new Vector(997, 1385);
+                Vector p4 = new Vector(0, 1385);
                 //Vector p5 = new Vector(184, 127);
                 //Vector p6 = new Vector(262, 61);
                 //Vector p7 = new Vector(417, 26);
@@ -52,10 +52,10 @@ namespace Sketchball.Elements
 
 
 
-                //BoundingLine bL1 = new BoundingLine(p1, p2);
-                //BoundingLine bL2 = new BoundingLine(p2, p3);
-                //BoundingLine bL3 = new BoundingLine(p3, p4);
-                //BoundingLine bL4 = new BoundingLine(p4, p5);
+                BoundingLine bL1 = new BoundingLine(p1, p2);
+                BoundingLine bL2 = new BoundingLine(p2, p3);
+                BoundingLine bL3 = new BoundingLine(p3, p4);
+                BoundingLine bL4 = new BoundingLine(p4, p1);
                 //BoundingLine bL5 = new BoundingLine(p5, p6);
                 //BoundingLine bL6 = new BoundingLine(p6, p7);
                 //BoundingLine bL7 = new BoundingLine(p7, p8);
@@ -72,7 +72,8 @@ namespace Sketchball.Elements
                 //this.BoundingContainer.AddBoundingBox(bL2);
                 //this.BoundingContainer.AddBoundingBox(bL3);
                 //this.BoundingContainer.AddBoundingBox(bL4);
-                //this.BoundingContainer.AddBoundingBox(bL5);
+
+
                 //this.BoundingContainer.AddBoundingBox(bL6);
                 //this.BoundingContainer.AddBoundingBox(bL7);
                 //this.BoundingContainer.AddBoundingBox(bL8);
@@ -116,37 +117,87 @@ namespace Sketchball.Elements
             _ramp.Y = Height - _ramp.Height;
 
 
+            var baseLeftX = 134;
+            var baseRightX = 242;
+            var baseTopY = 19;
+            var baseBottomtY = 105;
+            var power = 2;
             //Add flippers
-            Flipper lflipper = new LeftFlipper() { X = 148 + 20, Y = Height - 90};
+            #region left
+            Flipper lflipper = new LeftFlipper() { X = baseLeftX, Y = Height - baseBottomtY };
+            lflipper.Name = "1";
+            lflipper.BounceFactor = power;
+            lflipper.Scale = 1.7;
             _elements.Add(lflipper);
 
-            Flipper rflipper = new RightFlipper() { X = 260, Y = Height - 90 };
+            Flipper rflipper = new RightFlipper() { X = baseRightX, Y = Height - baseBottomtY };
+            rflipper.Name ="1";
+            rflipper.Scale = 1.7;
+            rflipper.BounceFactor = power;
             _elements.Add(rflipper);
 
-            Flipper lflipperTop = new LeftFlipper() { X = 260, Y = 20 };
+            Flipper lflipperTop = new LeftFlipper() { X = baseRightX, Y = -baseTopY };
+            lflipperTop.Name = "2";
+            lflipperTop.Scale = 1.7;
+            lflipperTop.BounceFactor = power;
             lflipperTop.BaseRotation = 180;
             lflipperTop.Trigger = System.Windows.Forms.Keys.E;
             _elements.Add(lflipperTop);
 
-            Flipper rflipperTop = new RightFlipper() { X = 148 + 20, Y = 20 };
+            Flipper rflipperTop = new RightFlipper() { X = baseLeftX, Y = -baseTopY };
+            rflipperTop.Scale = 1.7;
+            rflipperTop.Name = "2";
+            rflipperTop.BounceFactor = power;
             rflipperTop.BaseRotation = 180;
             rflipperTop.Trigger = System.Windows.Forms.Keys.Q;
             _elements.Add(rflipperTop);
+            #endregion
 
+            #region right
+            Flipper lflipper2 = new LeftFlipper() { X = baseLeftX + 997 / 2, Y = Height - baseBottomtY };
+            lflipper2.Scale = 1.7;
+            lflipper2.Name = "4";
+            lflipper2.BounceFactor = power;
+            lflipper2.Trigger = System.Windows.Forms.Keys.J;
+            _elements.Add(lflipper2);
+
+            Flipper rflipper2 = new RightFlipper() { X = baseRightX + 997 / 2, Y = Height - baseBottomtY };
+            rflipper2.Scale = 1.7;
+            rflipper2.Name = "4";
+            rflipper2.BounceFactor = power;
+            rflipper2.Trigger = System.Windows.Forms.Keys.L;
+            _elements.Add(rflipper2);
+
+            Flipper lflipperTop2 = new LeftFlipper() { X = baseRightX + 997 / 2, Y = -baseTopY };
+            lflipperTop2.Scale = 1.7;
+            lflipperTop2.Name = "3";
+            lflipperTop2.BounceFactor = power;
+            lflipperTop2.BaseRotation = 180;
+            lflipperTop2.Trigger = System.Windows.Forms.Keys.O;
+            _elements.Add(lflipperTop2);
+
+            Flipper rflipperTop2 = new RightFlipper() { X = baseLeftX + 997 / 2, Y = -baseTopY };
+            rflipperTop2.Scale = 1.7;
+            rflipperTop2.Name = "3";
+            rflipperTop2.BounceFactor = power;
+            rflipperTop2.BaseRotation = 180;
+            rflipperTop2.Trigger = System.Windows.Forms.Keys.U;
+            _elements.Add(rflipperTop2);
+            #endregion
             //Add Hole
-            Hole h = new WideHole() { X = 148 - 10, Y = -45};
-            h.BaseRotation = 180;
-            h.Scale = .4f;
-            _elements.Add(h);
+            //Hole h = new WideHole() { X = 148 - 10, Y = -55};
+            //h.BaseRotation = 180;
+            //h.Scale = .4f;
+            //_elements.Add(h);
 
-            Hole hBottom = new WideHole() { X = 148 - 20, Y = Height - 25 };
-            hBottom.Scale = .4f;
-            _elements.Add(hBottom);
+            //Hole hBottom = new WideHole() { X = 148 - 20, Y = Height - 25 };
+            //hBottom.Scale = .4f;
+            //_elements.Add(hBottom);
         }
 
         public int Width
         {
-            get { return 997 / 2; }
+            get { return 2 * 997 / 2; }
         }
 
         public int Height

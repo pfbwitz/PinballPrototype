@@ -509,7 +509,7 @@ namespace Sketchball.Collision
                 }
             }
             
-            return new CollisionResult(history);
+            return new CollisionResult(history) { Ball = ball };
         }
 
         private Vector getAverage(List<Vector> reflections)

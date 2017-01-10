@@ -15,6 +15,8 @@ namespace Sketchball.Elements
     /// </summary>
     public class Ball : PinballElement
     {
+        public Flipper Flipper { get; set; }
+
         public static readonly Size Size = new Size(20, 20);
 
         private readonly float friction = 0.9999f;
@@ -68,11 +70,10 @@ namespace Sketchball.Elements
         public override void Update(double delta)
         {
             base.Update(delta);
-            Velocity += World.Acceleration * (delta);
+            Velocity += World.GetAcceleration(this) * (delta);
             Velocity = new Vector(Velocity.X * (this.friction - 0.00000001f * Velocity.X * Velocity.X), Velocity.Y * (this.friction - 0.00000001f * Velocity.Y * Velocity.Y));
 
             Location += Velocity * (delta);
-
             preventDrain(delta);
         }
 
@@ -97,7 +98,7 @@ namespace Sketchball.Elements
 
                 if (distanceTraveled < SAMPLING_THRESHOLD && !World.Layout.Ramp.Contains(this))
                 {
-                    World.Layout.Ramp.IntroduceBall(this);
+                    World.Layout.Ramp.IntroduceBall(this, World.Width / 2);
                 }
 
 

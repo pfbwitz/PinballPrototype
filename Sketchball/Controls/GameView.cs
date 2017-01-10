@@ -99,39 +99,62 @@ namespace Sketchball.Controls
 
             var flipper = GetFlipper(pos);
             flipper.DoRotate();
-            //HandleKeyDown(null, new System.Windows.Input.KeyEventArgs(Keyboard.PrimaryDevice,
-            // System.Windows.PresentationSource.FromVisual((Visual)Keyboard.FocusedElement), 0, key));
-
-                             // Key to send
-            //var target = Keyboard.FocusedElement;    // Target element
-            //var routedEvent = Keyboard.KeyDownEvent; // Event to send
-
-            //target.RaiseEvent(new System.Windows.Input.KeyEventArgs(Keyboard.PrimaryDevice,
-            // System.Windows.PresentationSource.FromVisual((Visual)target), 0, key)
-            //{ RoutedEvent = routedEvent });
 
             var scale = Camera.Scale;
             
         }
 
+        private bool GetMouseXQuarter(Point pos, int position, out int squarePos)
+        {
+            var quarter = Width / 4;
+            if (pos.X > quarter * position && pos.X < quarter * (position + 1))
+            {
+                squarePos = position + 1;
+                return true;
+            }
+            squarePos = 0;
+            return false;
+        }
+
+        private bool GetMouseYQuarter(Point pos, int position, out int squarePos)
+        {
+            var half = Height / 2;
+
+            if (pos.Y > half * position && pos.Y < half * (position + 1))
+            {
+                squarePos = position + 1;
+                return true;
+            }
+            squarePos = 0;
+            return false;
+        }
+
         private Flipper GetFlipper(Point pos)
         {
-            Flipper flipper = null;
-            if (pos.X > Width / 2) //right
+            var xQuarter = 0;
+            var yQuarter = 0;
+          
+            for (var i = 0; i < 4; i++)
+                if (GetMouseXQuarter(pos, i, out xQuarter))
+                    break;
+            
+            for (var i = 0; i < 2; i++)
+                if (GetMouseYQuarter(pos, i, out yQuarter))
+                    break;
+
+            if(yQuarter == 1)
             {
-                if (pos.Y > Height / 2) // bottom
-                    flipper = Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(0);
-                else
-                    flipper = Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(1);
+                if (xQuarter == 1 || xQuarter == 3)
+                    return Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(xQuarter == 1 || xQuarter == 2 ? 1 : 3);
+                return Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(xQuarter == 1 || xQuarter == 2 ? 1 : 3);
             }
-            else // left
+            else
             {
-                if (pos.Y < Height / 2) // top 
-                    flipper = Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(1);
-                else
-                    flipper = Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(0);
+                if (xQuarter == 1 || xQuarter == 3)
+                    return Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(xQuarter == 1 || xQuarter == 2 ? 0 : 2);
+                return Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(xQuarter == 1 || xQuarter == 2 ? 0 : 2);
+
             }
-            return flipper;
         }
 
         private void ResizeCamera(object sender, System.Windows.SizeChangedEventArgs e)

@@ -2,10 +2,13 @@
 using Sketchball.GameComponents;
 using System;
 using System.Collections.Generic;
+using WMPLib;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Sketchball.Elements
 {
@@ -14,7 +17,7 @@ namespace Sketchball.Elements
     /// </summary>
     public class PinballGameMachine : PinballMachine
     {
-        public delegate void CollisionEventHandler(PinballElement sender);
+        public delegate void CollisionEventHandler(PinballElement sender, Ball ball);
         public delegate void GameOverEventHandler();
 
         /// <summary>
@@ -31,11 +34,21 @@ namespace Sketchball.Elements
         internal readonly InputManager Input = InputManager.Instance();
         internal readonly SoundManager Sfx = new SoundManager();
 
+        static WMPLib.WindowsMediaPlayer wplayer;
+
         /// <summary>
         /// No more elements can be added after this function call 
         /// </summary>
         public void prepareForLaunch()
         {
+            wplayer = new WindowsMediaPlayer();
+            wplayer.PlayStateChange +=
+        new _WMPOCXEvents_PlayStateChangeEventHandler(Player_PlayStateChange);
+            wplayer.MediaError +=
+                new _WMPOCXEvents_MediaErrorEventHandler(Player_MediaError);
+            Play();
+          
+
             LinkedList<IBoundingBox> anis = this.boundingRaster.getAnimatedObjects();
             this.boundingRaster = new BoundingRaster((int)Math.Ceiling(Width * 1f / Ball.Size.Width), (int)Math.Ceiling(Height * 1f / Ball.Size.Width), Width, Height);
             foreach (IBoundingBox b in anis)
@@ -44,6 +57,27 @@ namespace Sketchball.Elements
             }
             this.boundingRaster.takeOverBoundingBoxes(StaticElements);
             this.boundingRaster.takeOverBoundingBoxes(DynamicElements);
+        }
+
+        private void Play()
+        {
+            wplayer.URL = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Resources")).FullName + "\\Sounds\\" + "music.mp3"; ;
+            wplayer.controls.stop();
+            wplayer.controls.play();
+        }
+
+        private void Player_PlayStateChange(int NewState)
+        {
+            if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded)
+            {
+                Play();
+            }
+        }
+
+        private void Player_MediaError(object pMediaObject)
+        {
+            MessageBox.Show("Cannot play media file.");
+            
         }
 
 
@@ -76,7 +110,7 @@ namespace Sketchball.Elements
                     ball.Y = (Height - ball.Height);
                     ball.Velocity *= -0.5f;
                 }
-                if (ball.Y > Height)
+                if (ball.Y > Height || ball.Y < 0 || ball.X < 0 || ball.X > Width)
                 {
                     KillBall(ball);
                 }
@@ -123,7 +157,7 @@ namespace Sketchball.Elements
         {
             foreach (PinballElement element in result)
             {
-                raiseCollision(element);
+                raiseCollision(element, result.Ball);
             }
         }
 
@@ -133,21 +167,21 @@ namespace Sketchball.Elements
             return Balls.Count > 0;
         }
 
-        public void IntroduceBall()
+        public void IntroduceBall(int x)
         {
             Ball ball = new Ball();
 
-            Ramp.IntroduceBall(ball);
+            Ramp.IntroduceBall(ball, x);
           
             this.Balls.Add(ball);
         }
 
-        private void raiseCollision(PinballElement element)
+        private void raiseCollision(PinballElement element, Ball ball)
         {
             var handlers = Collision;
             if (handlers != null)
             {
-                handlers(element);
+                handlers(element, ball);
             }
         }
 

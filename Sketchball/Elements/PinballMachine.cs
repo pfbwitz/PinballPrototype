@@ -88,7 +88,7 @@ namespace Sketchball.Elements
         public int Height { get { return Layout.Height; } }
 
 
-        private const float DEFAULT_GRAVITY = 0f;//9.81f;
+        private const float DEFAULT_GRAVITY = 9.81f;
         [DataMember]
         [Browsable(true), Description("The gravity used in this pinball machine.")]
         public float Gravity { get; set; }
@@ -125,12 +125,17 @@ namespace Sketchball.Elements
         {
             get
             {
-                var g = Gravity;
-                if (Balls.Last().X < Width - 100 && Balls.Last().Y < Height/2)
-                    g = -g;
-
-                return new Vector(0, Math.Sin(Angle) * g * PIXELS_TO_METERS_RATIO);
+                return new Vector(0, Math.Sin(Angle) * Gravity * PIXELS_TO_METERS_RATIO);
             }
+        }
+
+        public Vector GetAcceleration(Ball ball)
+        {
+            var g = Gravity;
+            if (ball.X < Width - 100 && ball.Y < Height / 2)
+                g = -g;
+
+            return new Vector(0, Math.Sin(Angle) * g * PIXELS_TO_METERS_RATIO);
         }
 
         /// <summary>
@@ -182,15 +187,15 @@ namespace Sketchball.Elements
             // Draw contours
             var b2 = new SolidColorBrush { Color = Color.FromArgb(80, 255, 255, 255) };
             Pen pen = new Pen(b2, 1);
-            for (int y = 0; y <= Height; y += 10)
-            {
-                g.DrawLine(pen, new Point(0, y), new Point(Width, y));
-            }
+            //for (int y = 0; y <= Height; y += 10)
+            //{
+            //    g.DrawLine(pen, new Point(0, y), new Point(Width, y));
+            //}
 
-            for (int x = 0; x <= Width; x += 10)
-            {
-                g.DrawLine(pen, new Point(x, 0), new  Point(x, Height));
-            }
+            //for (int x = 0; x <= Width; x += 10)
+            //{
+            //    g.DrawLine(pen, new Point(x, 0), new  Point(x, Height));
+            //}
 
             foreach (PinballElement element in Elements)
             {

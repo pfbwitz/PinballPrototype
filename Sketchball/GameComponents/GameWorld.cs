@@ -62,7 +62,7 @@ namespace Sketchball.GameComponents
             //g.DrawImage(BG_Material, new Rect(-coffeeWidth + MARGIN + PADDING, coffeeHeight + materialHeight / 2, coffeeWidth * 0.7, materialHeight));
 
             DrawMachine(g);
-            DrawToplist(g);
+            //DrawToplist(g);
 
         }
 

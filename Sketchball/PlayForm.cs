@@ -117,7 +117,7 @@ namespace Sketchball
             //throw new NotImplementedException();
             if (Properties.Settings.Default.Debug)
             {
-                game.Machine.IntroduceBall();
+                game.Machine.IntroduceBall(20);
                 game.Machine.Balls.Last().Location = new Vector(e.GetPosition((System.Windows.IInputElement)sender).X, e.GetPosition((System.Windows.IInputElement)sender).Y);
             }
             

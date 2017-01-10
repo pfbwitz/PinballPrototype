@@ -86,17 +86,59 @@ namespace Sketchball.GameComponents
         public PinballGameMachine Machine { get; private set;}
 
 
-        private int _score = 0;
+        private int _score1 = 0;
+        private int _score2 = 0;
+        private int _score3 = 0;
+        private int _score4 = 0;
         /// <summary>
         /// Gets the score of the current game.
         /// </summary>
-        public int Score { 
+        public int Score1 { 
             get {
-                return _score;
+                return _score1;
             }
             private set
             {
-                _score = value;
+                _score1 = value;
+                RaiseScoreChanged();
+            }
+        }
+
+        public int Score2
+        {
+            get
+            {
+                return _score2;
+            }
+            private set
+            {
+                _score2 = value;
+                RaiseScoreChanged();
+            }
+        }
+
+        public int Score3
+        {
+            get
+            {
+                return _score3;
+            }
+            private set
+            {
+                _score3 = value;
+                RaiseScoreChanged();
+            }
+        }
+
+        public int Score4
+        {
+            get
+            {
+                return _score4;
+            }
+            private set
+            {
+                _score4 = value;
                 RaiseScoreChanged();
             }
         }
@@ -171,14 +213,20 @@ namespace Sketchball.GameComponents
                 Status = GameStatus.Playing;
                 Machine.Input.Enabled = true;
 
-                Score = 0;
+                Score1 = 0;
+                Score2 = 0;
+                Score3 = 0;
+                Score4 = 0;
                 Lives = TOTAL_LIVES;
 
                 // Wire up event handlers
                 Machine.Collision += OnScore;
                 Machine.GameOver += OnGameOver;
 
-                Machine.IntroduceBall();
+                Machine.IntroduceBall(Machine.Width / 4);
+                Machine.IntroduceBall(Machine.Width / 3);
+                Machine.IntroduceBall(Machine.Width / 2);
+                Machine.IntroduceBall(Machine.Width);
                 Lives--;
             }
         }
@@ -193,21 +241,21 @@ namespace Sketchball.GameComponents
             {
                 // GameOver... :(
                 Status = GameStatus.GameOver;
-                OriginalMachine.Highscores.Add(new HighscoreEntry(
-                    userName, Score, DateTime.UtcNow    
-                ));
+                //OriginalMachine.Highscores.Add(new HighscoreEntry(
+                //    userName, Score, DateTime.UtcNow    
+                //));
 
 
                 var handlers = GameOver;
                 if (handlers != null)
                 {
-                    handlers(this, Score);
+                    handlers(this, Score1);
                 }
             }
             else
             {
-                Lives--;
-                Machine.IntroduceBall();
+                //Lives--;
+                Machine.IntroduceBall(20);
             }
         }
 
@@ -215,12 +263,27 @@ namespace Sketchball.GameComponents
         /// Increment score when a collision happened.
         /// </summary>
         /// <param name="sender"></param>
-        private void OnScore(PinballElement sender)
+        private void OnScore(PinballElement sender, Ball ball)
         {
-            Score += sender.Value;
+            if(ball.Flipper != null)
+            {
+                switch (ball.Flipper.Name)
+                {
+                    case "1":
+                        Score1 += sender.Value;
+                        break;
+                    case "2":
+                        Score2 += sender.Value;
+                        break;
+                    case "3":
+                        Score3 += sender.Value;
+                        break;
+                    case "4":
+                        Score4 += sender.Value;
+                        break;
+                }
+            }
         }
-
-        
 
         /// <summary>
         /// Pauses the game.
@@ -268,12 +331,16 @@ namespace Sketchball.GameComponents
             }
         }
 
-
         private void RaiseScoreChanged()
         {
             var handlers = ScoreChanged;
             if (handlers != null)
-                handlers(this, Score);
+            {
+                handlers(this, Score1);
+                handlers(this, Score2);
+                handlers(this, Score3);
+                handlers(this, Score4);
+            }
         }
 
         private void RaiseLivesChanged()

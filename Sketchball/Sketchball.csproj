@@ -88,6 +88,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Editor\PropertyChange.cs" />
+    <Compile Include="Elements\Wall.cs" />
     <Compile Include="Elements\CustomElement.cs" />
     <Compile Include="Elements\ValidationProblem.cs" />
     <Compile Include="Elements\WideHole.cs" />
@@ -216,6 +217,9 @@
     <None Include="Machines\machine1.pmf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Machines\machine6.pmf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Machines\test1.pmf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -233,6 +237,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Images\FlipperLeft90.png" />
+    <None Include="Resources\wmp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Sounds\music.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Resource Include="Resources\Images\BackgroundScharf.png" />
     <Resource Include="Resources\Images\wide_hole.png" />
     <Resource Include="Resources\Images\smilie_happy.png" />
@@ -249,6 +259,7 @@
     <Resource Include="Resources\Images\bg_desk.jpg" />
     <Resource Include="Resources\Images\Rampe.png" />
     <Resource Include="Resources\Images\SlingshotRight.png" />
+    <Resource Include="Resources\Images\wall.png" />
     <Content Include="Resources\mechanik-Bold.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -319,7 +330,17 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <COMReference Include="WMPLib">
+      <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

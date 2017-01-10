@@ -176,8 +176,8 @@ namespace Sketchball
         {
             Font font = new Font("Arial", 10, FontStyle.Regular);
             elementPanel.Controls.Add(new ElementControl(new LeftFlipper(), "Flipper (left)", font));
-            elementPanel.Controls.Add(new ElementControl(new LeftFlipper() { Trigger = Keys.Q }, "Flipper (left) 90 degrees", font));
             elementPanel.Controls.Add(new ElementControl(new RightFlipper(), "Flipper (right)", font));     //new RightFlipper() { Rotation = 0.1f }
+            elementPanel.Controls.Add(new ElementControl(new Wall(), "Wall", font));
             elementPanel.Controls.Add(new ElementControl(new SlingshotLeft(), "Slingshot (left)", font));
             elementPanel.Controls.Add(new ElementControl(new SlingshotRight(), "Slingshot (right)", font));
             elementPanel.Controls.Add(new ElementControl(new Hole(), "Hole", font));

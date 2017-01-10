@@ -143,12 +143,10 @@ namespace Sketchball.Elements
         /// Positions a ball so that it will fall into the ramp.
         /// </summary>
         /// <param name="ball"></param>
-        public void IntroduceBall(Ball ball)
+        public void IntroduceBall(Ball ball, int x)
         {
-            var gravity = new Random().Next(0, 2) == 0 ? 50 : -50;
-            
-            ball.X = 997 / 4 - ball.Width / 2 + gravity;// X + ball.Width * 1.5;
-            ball.Y = 1385 / 4 - ball.Height / 2 + gravity;//2 * Y + 50;
+            ball.X = x + ball.Width * 1.5;
+            ball.Y = 1385 / 4 - ball.Height / 2 ;//2 * Y + 50;
         }
 
 

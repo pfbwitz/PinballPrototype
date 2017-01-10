@@ -9,7 +9,7 @@ namespace Sketchball.Collision
 {
     public class CollisionResult : IEnumerable<PinballElement>
     {
-
+        public Ball Ball { get; set; }
         private HashSet<PinballElement> elements = new HashSet<PinballElement>();
     
         public CollisionResult(IEnumerable<IBoundingBox> boundingBoxes)
