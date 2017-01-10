@@ -85,48 +85,26 @@ namespace Sketchball.Controls
 
         private void GameView_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var p = Mouse.GetPosition(this);
-            var pos = PointToScreen(Mouse.GetPosition(this));
-
-            var flipper = GetFlipper(pos);
-            flipper.UndoRotate();
+            GetFlipper(PointToScreen(Mouse.GetPosition(this))).UndoRotate();
         }
 
         private void GameView_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var p = Mouse.GetPosition(this);
-            var pos = PointToScreen(Mouse.GetPosition(this));
-
-            var flipper = GetFlipper(pos);
-            flipper.DoRotate();
-
-            var scale = Camera.Scale;
-            
+            GetFlipper(PointToScreen(Mouse.GetPosition(this))).DoRotate();
         }
 
         private bool GetMouseXQuarter(Point pos, int position, out int squarePos)
         {
-            var quarter = Width / 4;
-            if (pos.X > quarter * position && pos.X < quarter * (position + 1))
-            {
-                squarePos = position + 1;
-                return true;
-            }
-            squarePos = 0;
-            return false;
+            var result = (pos.X > Width / 4 * position && pos.X < Width / 4 * (position + 1));
+            squarePos = result ? position + 1 : 0;
+            return result;
         }
 
         private bool GetMouseYQuarter(Point pos, int position, out int squarePos)
         {
-            var half = Height / 2;
-
-            if (pos.Y > half * position && pos.Y < half * (position + 1))
-            {
-                squarePos = position + 1;
-                return true;
-            }
-            squarePos = 0;
-            return false;
+            var result = (pos.Y > Height / 2 * position && pos.Y < Height / 2 * (position + 1));
+            squarePos = result ? position + 1 : 0;
+            return result;
         }
 
         private Flipper GetFlipper(Point pos)
@@ -157,7 +135,7 @@ namespace Sketchball.Controls
             }
         }
 
-        private void ResizeCamera(object sender, System.Windows.SizeChangedEventArgs e)
+        private void ResizeCamera(object sender, SizeChangedEventArgs e)
         {
             Camera.Size = new Size((int)Width, (int)Height);
         }
@@ -172,20 +150,14 @@ namespace Sketchball.Controls
             {
                 case Key.Space:
                     if ((!Game.IsRunning) || Game.Status == GameStatus.GameOver)
-                    {
                         Game.Start();
-                    }
                     break;
 
                 case Key.Enter:
                     if (Game.Status == GameStatus.Playing)
-                    {
                         Game.Pause();
-                    }
                     else if (Game.Status == GameStatus.Paused)
-                    {
                         Game.Resume();
-                    }
                     break;
             }
 

@@ -81,7 +81,21 @@ namespace Sketchball.Elements
         {
             g.DrawImage(Image, new Rect(0, 0, BaseWidth, BaseHeight));
             var center = new Point(BaseWidth / 2, BaseHeight / 2);
+          
             g.DrawEllipse(null, new Pen(Brushes.White, 1), center, center.X, center.Y);
+
+            g.DrawEllipse(null, GetGlowPen(255, 1), center, center.X, center.Y);
+            g.DrawEllipse(null, GetGlowPen(200, 3), center, center.X, center.Y);
+            g.DrawEllipse(null, GetGlowPen(180, 5), center, center.X, center.Y);
+            g.DrawEllipse(null, GetGlowPen(100, 7), center, center.X, center.Y);
+            g.DrawEllipse(null, GetGlowPen(60, 9), center, center.X, center.Y);
+            g.DrawEllipse(null, GetGlowPen(20, 11), center, center.X, center.Y);
+            g.DrawEllipse(null, GetGlowPen(5, 13), center, center.X, center.Y);
+        }
+
+        private Pen GetGlowPen(byte opacity, int thickness)
+        {
+            return new Pen(new SolidColorBrush { Color = Color.FromArgb(opacity, 255, 255, 255) }, thickness);
         }
 
         private void preventDrain(double delta)
