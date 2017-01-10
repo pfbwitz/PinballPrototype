@@ -239,7 +239,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Images\FlipperLeft90.png" />
     <None Include="Resources\wmp.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
