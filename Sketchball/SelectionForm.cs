@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Text;
 using System.IO;
-using Sketchball.Controls;
 using Sketchball.Elements;
-
 
 namespace Sketchball
 {
@@ -27,9 +18,12 @@ namespace Sketchball
         public SelectionForm()
         {
             InitializeComponent();
-
 #if DEBUG
             Program.ReleaseMode = false;
+#else
+            BackgroundImage = null;
+            foreach(var control in Controls)
+                ((Control)control).Visible = false;
 #endif
             if (Program.ReleaseMode)
             {

@@ -47,7 +47,7 @@ namespace Sketchball
             game.GameOver += onGameOver;
             //this.MinimumSize = gameView.MinimumSize;
             gameView.MouseUp += onMouseUp;
-            gameView.MouseMove += onMouseMove;
+            //gameView.MouseMove += onMouseMove;
             // Fill entire space
             gameContainer.Dock = DockStyle.Fill;
 
@@ -61,14 +61,14 @@ namespace Sketchball
                 enterFullscreen();
         }
 
-        private void onMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (isFullScreen())
-            {
-                var pos = e.GetPosition(gameView);
-                mainContainer.TopToolStripPanelVisible = pos.Y < 50;
-            }
-        }
+        //private void onMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        //{
+        //    if (isFullScreen())
+        //    {
+        //        var pos = e.GetPosition(gameView);
+        //        mainContainer.TopToolStripPanelVisible = pos.Y < 50;
+        //    }
+        //}
 
         /// <summary>
         /// If activated, the game will track the high score and keep the file updated.
