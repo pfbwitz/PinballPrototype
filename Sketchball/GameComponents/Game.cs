@@ -186,14 +186,6 @@ namespace Sketchball.GameComponents
             Start();
         }
 
-        public HighscoreList Highscores
-        {
-            get
-            {
-                return OriginalMachine.Highscores;
-            }
-        }
-
         /// <summary>
         /// Starts a new game.
         /// </summary>
@@ -227,8 +219,11 @@ namespace Sketchball.GameComponents
                 
                 Machine.IntroduceBall(Machine.Width);
 
-                Machine.IntroduceBall(Machine.Width - 100);
-                Machine.IntroduceBall(Machine.Width - 200);
+                if (Program.IsFourPlayerMode)
+                {
+                    Machine.IntroduceBall(Machine.Width - 100);
+                    Machine.IntroduceBall(Machine.Width - 200);
+                }
                 Lives--;
             }
         }
@@ -243,11 +238,7 @@ namespace Sketchball.GameComponents
             {
                 // GameOver... :(
                 Status = GameStatus.GameOver;
-                //OriginalMachine.Highscores.Add(new HighscoreEntry(
-                //    userName, Score, DateTime.UtcNow    
-                //));
-
-
+               
                 var handlers = GameOver;
                 if (handlers != null)
                 {
@@ -384,25 +375,18 @@ namespace Sketchball.GameComponents
                         stopWatch.Restart();
                         lastSample = new TimeSpan(0);
                     }
-                    //long nowSample = stopWatch.ElapsedMilliseconds;
-                    //double ms = (stopWatch.Elapsed - lastSample).TotalMilliseconds;
-                    //if (ms > 1)
-                    //{
                     TimeSpan elapsed = stopWatch.Elapsed - lastSample;
                     if (elapsed.TotalMilliseconds > timePerPass)
                     {
                         lastSample = stopWatch.Elapsed;
                         this.Update(timePerPass / 1000d);
                     }
-                    //}
                 }
-                //Thread.Sleep(1);
             }
         }
 
         public void Dispose()
         {
-           // MessageBox.Show(MaxTime.ToString()+" "+sleepTime*1f/this.tims);
             Disposed = true;
 
             lock (this)

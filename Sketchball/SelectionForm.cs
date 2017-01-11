@@ -28,10 +28,9 @@ namespace Sketchball
             if (Program.ReleaseMode)
             {
                 Enabled = false;
-
-                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + "machine7.pmf";
-                PinballMachine pbm = PinballMachine.FromFile(file);
-                OpenGame(pbm, file);
+                var filename = Program.IsFourPlayerMode ? "4playermachine" : "2playermachine";
+                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + filename + ".pmf";
+                OpenGame(PinballMachine.FromFile(file), file);
             }
         }
 
@@ -76,7 +75,8 @@ namespace Sketchball
                 }
                 else
                 {
-                    MessageBox.Show("The pinball machine you provided is not valid: " + pbm.LastProblem.Message, "Invalid machine", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The pinball machine you provided is not valid: " + pbm.LastProblem.Message, 
+                        "Invalid machine", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             

@@ -174,7 +174,7 @@ namespace Sketchball
 
         private void populateElementPanel()
         {
-            Font font = new Font("Arial", 10, FontStyle.Regular);
+            var font = new Font("Arial", 10, FontStyle.Regular);
             elementPanel.Controls.Add(new ElementControl(new LeftFlipper(), "Flipper (left)", font));
             elementPanel.Controls.Add(new ElementControl(new RightFlipper(), "Flipper (right)", font));     //new RightFlipper() { Rotation = 0.1f }
             elementPanel.Controls.Add(new ElementControl(new Wall(), "Wall", font));
@@ -184,13 +184,9 @@ namespace Sketchball
             elementPanel.Controls.Add(new ElementControl(new Bumper(), "Bumper", font));
             elementPanel.Controls.Add(new ElementControl(new WormholeEntry(), "Wormhole (entry)", font));
             elementPanel.Controls.Add(new ElementControl(new WormholeExit(), "Wormhole (exit)", font));
-            //elementPanel.Controls.Add(new ElementControl(new TriangleTMP(), "TriDebgu", font));
 
             foreach (Control c in elementPanel.Controls)
-            {
                 c.MouseDown += onStartDragAndDrop;
-            }
-
         }
 
 

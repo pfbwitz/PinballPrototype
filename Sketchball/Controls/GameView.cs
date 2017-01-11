@@ -95,7 +95,8 @@ namespace Sketchball.Controls
 
         private bool GetMouseXQuarter(Point pos, int position, out int squarePos)
         {
-            var result = (pos.X > Width / 4 * position && pos.X < Width / 4 * (position + 1));
+            var xParam = Program.IsFourPlayerMode ? 4 : 2;
+            var result = (pos.X > Width / xParam * position && pos.X < Width / xParam * (position + 1));
             squarePos = result ? position + 1 : 0;
             return result;
         }
@@ -111,8 +112,9 @@ namespace Sketchball.Controls
         {
             var xQuarter = 0;
             var yQuarter = 0;
-          
-            for (var i = 0; i < 4; i++)
+
+            var xParam = Program.IsFourPlayerMode ? 4 : 2;
+            for (var i = 0; i < xParam; i++)
                 if (GetMouseXQuarter(pos, i, out xQuarter))
                     break;
             

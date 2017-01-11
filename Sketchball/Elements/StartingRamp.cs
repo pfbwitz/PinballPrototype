@@ -40,7 +40,7 @@ namespace Sketchball.Elements
         private readonly int pencilOffsetY = -90;
 
         
-        private static System.Drawing.Image pencilImage = Booster.OptimizeImage(Properties.Resources.Rampe_pencil, 70);
+        //private static System.Drawing.Image pencilImage = Booster.OptimizeImage(Properties.Resources.Rampe_pencil, 70);
         private ImageSource pencilImageWpf;
         private BoundingLine powerLine;
 
@@ -130,13 +130,6 @@ namespace Sketchball.Elements
             // Unbind key event
             machine.Input.KeyDown -= Charge;
             machine.Input.KeyUp -= Discharge;
-        }
-
-        protected override void OnDraw(DrawingContext g)
-        {
-            //g.DrawImage(Image, new System.Windows.Rect(0, 0, BaseWidth, BaseHeight));
-            g.DrawImage(pencilImageWpf, new System.Windows.Rect(96f / 276 * BaseWidth, (1800f + pencilOffsetY - 5) / 1934 * BaseHeight + power * pencilPullback, 
-                pencilImage.Width, pencilImage.Height));
         }
 
         /// <summary>

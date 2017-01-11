@@ -141,9 +141,9 @@ namespace Sketchball.Elements
         /// <summary>
         /// Gets the highscore list.
         /// </summary>
-        [DataMember]
-        [Browsable(false)]
-        public HighscoreList Highscores { get; private set; }
+        //[DataMember]
+        //[Browsable(false)]
+        //public HighscoreList Highscores { get; private set; }
        
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Sketchball.Elements
             Layout = layout;
             Gravity = DEFAULT_GRAVITY;
             Angle = DEFAULT_ANGLE;
-            Highscores = new HighscoreList();
+            //Highscores = new HighscoreList();
 
             Init();
         }
@@ -241,11 +241,11 @@ namespace Sketchball.Elements
             }
 
             machine.Layout = Layout.Clone() as IMachineLayout;
-            machine.Highscores = new HighscoreList();
-            foreach (var entry in Highscores)
-            {
-                machine.Highscores.Add(new HighscoreEntry(entry.Player, entry.Score, entry.Date));
-            }
+            //machine.Highscores = new HighscoreList();
+            //foreach (var entry in Highscores)
+            //{
+            //    machine.Highscores.Add(new HighscoreEntry(entry.Player, entry.Score, entry.Date));
+            //}
             return machine;
         }
 
