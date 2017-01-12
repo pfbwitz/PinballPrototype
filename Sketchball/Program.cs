@@ -6,7 +6,7 @@ namespace Sketchball
     static class Program
     {
         public static bool ReleaseMode = true;
-        public static bool IsFourPlayerMode = false;
+        public static bool IsFourPlayerMode = true;
 
         /// <summary>
         /// The main entry point for the application.
