@@ -1,4 +1,6 @@
-﻿using Sketchball.Elements;
+﻿using DepthTracker.Hands;
+using Fleck;
+using Sketchball.Elements;
 using Sketchball.GameComponents;
 using System;
 using System.Collections.Generic;
@@ -52,6 +54,11 @@ namespace Sketchball.Controls
         public GameView(Game game)
             : base()
         {
+            InitializeSockets();
+
+            foreach(var s in _sockets)
+                s.OnMessage += HandleWebSocketInput;
+            
             Game = game;
             gameWorld = new GameWorld(Game);
             HUD = new GameHUD(Game);
@@ -85,12 +92,12 @@ namespace Sketchball.Controls
 
         private void GameView_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            GetFlipper(PointToScreen(Mouse.GetPosition(this))).UndoRotate();
+            GetFlipper(PointToScreen(Mouse.GetPosition(this))).OnKeyUp();
         }
 
         private void GameView_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            GetFlipper(PointToScreen(Mouse.GetPosition(this))).DoRotate();
+            GetFlipper(PointToScreen(Mouse.GetPosition(this))).OnKeyDown();
         }
 
         private bool GetMouseXQuarter(Point pos, int position, out int squarePos)
@@ -133,9 +140,55 @@ namespace Sketchball.Controls
                 if (xQuarter == 1 || xQuarter == 3)
                     return Game.Machine.StaticElements.OfType<LeftFlipper>().ElementAt(xQuarter == 1 || xQuarter == 2 ? 0 : 2);
                 return Game.Machine.StaticElements.OfType<RightFlipper>().ElementAt(xQuarter == 1 || xQuarter == 2 ? 0 : 2);
-
             }
         }
+
+        #region sockets
+
+        static List<IWebSocketConnection> _sockets;
+        static bool _initialized = false;
+        private void InitializeSockets()
+        {
+            _sockets = new List<IWebSocketConnection>();
+
+            var server = new WebSocketServer("ws://localhost:8181");
+
+            server.Start(socket =>
+            {
+                socket.OnOpen = () =>
+                {
+                    Console.WriteLine("Connected to " + socket.ConnectionInfo.ClientIpAddress);
+                    _sockets.Add(socket);
+                };
+                socket.OnClose = () =>
+                {
+                    Console.WriteLine("Disconnected from " + socket.ConnectionInfo.ClientIpAddress);
+                    _sockets.Remove(socket);
+                };
+                socket.OnMessage += HandleWebSocketInput;
+            });
+
+            _initialized = true;
+
+            //Console.ReadLine();
+        }
+
+        private void HandleWebSocketInput(string input)
+        {
+            var tiles = TileSerializer.Deserialize(input);
+            var tileWidth = Width / (Program.IsFourPlayerMode ? 4 : 2);
+            var tileHeight = Height / 2;
+            foreach (var t in tiles)
+            {
+                //the middle of a tile
+                var point = new Point((t.Col - 1) * tileWidth + (tileWidth / 2), (t.Row - 1) * tileHeight + (tileHeight / 2));
+                var flipper = GetFlipper(point);
+
+                flipper.OnKey(t.Touch);
+            }
+        }
+
+        #endregion
 
         private void ResizeCamera(object sender, SizeChangedEventArgs e)
         {

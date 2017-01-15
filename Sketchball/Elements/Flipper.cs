@@ -75,27 +75,37 @@ namespace Sketchball.Elements
             }
         }
 
-        public void DoRotate()
+        public void OnKey(bool keyDown)
         {
-            if (!Animating)
-            {
-                GameWorld.Sfx.Play(sound);
-                Animating = true;
-
-                Action endRot = () => {
-                    this.Rotate(-Rotation, origin, 0.05f, () => { Animating = false; });
-                };
-
-                this.Rotate(RotationRange, origin, 0.05f, null);
-            }
+            if (keyDown)
+                OnKeyDown();
+            else
+                OnKeyUp();
         }
 
-        public void UndoRotate()
+        public void OnKeyDown()
         {
-            if (Animating)
-            {
-                this.Rotate(-Rotation, origin, 0.1f, () => { Animating = false; });
-            }
+            OnKeyDown(null, new KeyEventArgs(Trigger));
+            //if (!Animating)
+            //{
+            //    GameWorld.Sfx.Play(sound);
+            //    Animating = true;
+
+            //    Action endRot = () => {
+            //        this.Rotate(-Rotation, origin, 0.05f, () => { Animating = false; });
+            //    };
+
+            //    this.Rotate(RotationRange, origin, 0.05f, null);
+            //}
+        }
+
+        public void OnKeyUp()
+        {
+            OnKeyUp(null, new KeyEventArgs(Trigger));
+            //if (Animating)
+            //{
+            //    this.Rotate(-Rotation, origin, 0.1f, () => { Animating = false; });
+            //}
         }
 
         protected override Size BaseSize
