@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Drawing.Text;
 using System.IO;
 using Sketchball.Elements;
+using Sketchball.Properties;
 
 namespace Sketchball
 {
@@ -21,17 +22,13 @@ namespace Sketchball
 #if DEBUG
             Program.ReleaseMode = false;
 #else
-            BackgroundImage = null;
-            foreach(var control in Controls)
-                ((Control)control).Visible = false;
+            //BackgroundImage = null;
+            //foreach(var control in Controls)
+            //    ((Control)control).Visible = false;
+            picBGame.BackgroundImage = Resources.PlaySchrift1b;
+            picBEditor.BackgroundImage = Resources.EditorSchrift2b;
 #endif
-            if (Program.ReleaseMode)
-            {
-                Enabled = false;
-                var filename = Program.IsFourPlayerMode ? "4playermachine" : "2playermachine";
-                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + filename + ".pmf";
-                OpenGame(PinballMachine.FromFile(file), file);
-            }
+
         }
 
         void picBGame_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -56,35 +53,56 @@ namespace Sketchball
 
         private void picBGame_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fDialog = new OpenFileDialog();
-            fDialog.Title = "Select Pinball machine";
-            fDialog.Filter = "Pinball machine files|*.pmf";
-            fDialog.InitialDirectory = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName;
-            fDialog.CheckFileExists = true;
-            fDialog.CheckPathExists = true;
-
-            DialogResult result = fDialog.ShowDialog();
-
-            if (result == DialogResult.OK) // Test result.
+            if (Program.ReleaseMode)
             {
-                PinballMachine pbm = PinballMachine.FromFile(fDialog.FileName);
-                
-                if (pbm.IsValid())
+                Program.IsFourPlayerMode = false;
+                var filename = "2playermachine";
+                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + filename + ".pmf";
+                OpenGame(PinballMachine.FromFile(file), file);
+            }
+            else
+            {
+                OpenFileDialog fDialog = new OpenFileDialog();
+                fDialog.Title = "Select Pinball machine";
+                fDialog.Filter = "Pinball machine files|*.pmf";
+                fDialog.InitialDirectory = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName;
+                fDialog.CheckFileExists = true;
+                fDialog.CheckPathExists = true;
+
+                DialogResult result = fDialog.ShowDialog();
+
+                if (result == DialogResult.OK) // Test result.
                 {
-                    OpenGame(pbm, fDialog.FileName);
-                }
-                else
-                {
-                    MessageBox.Show("The pinball machine you provided is not valid: " + pbm.LastProblem.Message, 
-                        "Invalid machine", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    PinballMachine pbm = PinballMachine.FromFile(fDialog.FileName);
+
+                    if (pbm.IsValid())
+                    {
+                        OpenGame(pbm, fDialog.FileName);
+                    }
+                    else
+                    {
+                        MessageBox.Show("The pinball machine you provided is not valid: " + pbm.LastProblem.Message,
+                            "Invalid machine", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
+
+
+           
             
         }
 
         private void picBEditor_Click(object sender, EventArgs e)
         {
-            OpenEditor();
+            if (Program.ReleaseMode)
+            {
+                Program.IsFourPlayerMode = true;
+                var filename = "4playermachine";
+                var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + filename + ".pmf";
+                OpenGame(PinballMachine.FromFile(file), file);
+            }
+            else
+                OpenEditor();
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

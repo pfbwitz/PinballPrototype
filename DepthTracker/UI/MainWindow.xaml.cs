@@ -5,10 +5,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Kinect;
 using System.Collections.Generic;
-using DepthTracker.Hands;
+using DepthTracker.Tiles;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Fleck;
+using System.IO.Pipes;
+using System.IO;
+using DepthTracker.Connection;
+using System.Threading;
+using System.Text;
+using System.Windows.Input;
+using WindowsInput;
+using WindowsInput.Native;
+using System.Threading.Tasks;
 
 namespace DepthTracker.UI
 {
@@ -18,6 +26,8 @@ namespace DepthTracker.UI
         private static extern bool SetCursorPos(int X, int Y);
 
         #region attr
+
+        private PipeClient _pipeClient;
 
         public ImageSource ImageSource { get { return _depthBitmap; } }
 
@@ -29,12 +39,12 @@ namespace DepthTracker.UI
                 if (_statusText != value)
                 {
                     _statusText = value;
-                   // PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
                 }
             }
         }
 
-        private List<Tile> _tiles = new List<Tile>();
+        private List<Tile> _tiles;
 
         private const int MapDepthToByte = 8000 / 256; // Map depth range to byte range
 
@@ -56,28 +66,29 @@ namespace DepthTracker.UI
 
         public MainWindow()
         {
-            InitializeSockets();
+            InitSensor();
+            InitReader();
+            InitDepthAndBitmap();
 
-            _kinectSensor = KinectSensor.GetDefault();
-            _depthFrameReader = _kinectSensor.DepthFrameSource.OpenReader();
-            _depthFrameReader.FrameArrived += Reader_FrameArrived;
-            _depthFrameDescription = _kinectSensor.DepthFrameSource.FrameDescription;
-            _depthPixels = new byte[_depthFrameDescription.Width * _depthFrameDescription.Height];
-            _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height, 96.0, 96.0, PixelFormats.Gray8, null);
-
-            _kinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
             _kinectSensor.Open();
-
-            StatusText = _kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText : 
-                Properties.Resources.NoSensorStatusText;
 
             DataContext = this;
 
             InitializeComponent();
+
+            Sensor_IsAvailableChanged(null, null);
         }
+
+        #region handlers
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
+            _tiles.Clear();
+            if (_pipeClient != null)
+            {
+                _pipeClient.Dispose();
+                _pipeClient = null;
+            }
             if (_depthFrameReader != null)
             {
                 _depthFrameReader.Dispose();
@@ -92,22 +103,18 @@ namespace DepthTracker.UI
 
         private void Reader_FrameArrived(object sender, DepthFrameArrivedEventArgs e)
         {
-            var depthFrameProcessed = false;
 
+            var depthFrameProcessed = false;
             using (var depthFrame = e.FrameReference.AcquireFrame())
             {
                 if (depthFrame != null)
                 {
                     using (var depthBuffer = depthFrame.LockImageBuffer())
                     {
-                        // verify data and write the color data to the display bitmap
                         if (((_depthFrameDescription.Width * _depthFrameDescription.Height) == (depthBuffer.Size / _depthFrameDescription.BytesPerPixel)) &&
                             (_depthFrameDescription.Width == _depthBitmap.PixelWidth) && (_depthFrameDescription.Height == _depthBitmap.PixelHeight))
                         {
-                            ushort maxDepth = 1100;// ushort.MaxValue;
-                            ushort minDepth = 1000;// depthFrame.DepthMinReliableDistance
-
-                            ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, minDepth, maxDepth);
+                            ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, minDepth: 1000, maxDepth: 1100);
                             depthFrameProcessed = true;
                         }
                     }
@@ -117,45 +124,239 @@ namespace DepthTracker.UI
             if (depthFrameProcessed)
             {
                 RenderDepthPixels();
-                var tileWidth = _depthFrameDescription.Width / 4;
-                var tileHeight = _depthFrameDescription.Height / 2;
-
-                var json = _tiles.Serialize();
-                foreach (var socket in _sockets)
-                    socket.Send(json);
-
-                //foreach(var t in _tiles)
-
-                //    //var rectangle = new Int32Rect((t.Col - 1) * tileWidth, (t.Row - 1) * tileHeight, tileWidth, tileHeight);
-                //    //var clickX = rectangle.X + rectangle.Width / 2;
-                //    //var clickY = rectangle.Y + rectangle.Height / 2;
-                //    //SetCursorPos(clickX, clickY);
-
-                //    //MouseOperations.MouseEvent(t.Touch ? MouseOperations.MouseEventFlags.LeftDown : 
-                //    //    MouseOperations.MouseEventFlags.LeftUp);
-                //}
-                _tiles.Clear();
             }
         }
+
+        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
+        {
+            SetStatusText();
+        }
+
+        #endregion
+
+        #region methods
+
+        private void InitSensor()
+        {
+            _kinectSensor = KinectSensor.GetDefault();
+            _kinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
+        }
+
+        private void InitReader()
+        {
+            _depthFrameReader = _kinectSensor.DepthFrameSource.OpenReader();
+            _depthFrameReader.FrameArrived += Reader_FrameArrived;
+            _depthFrameDescription = _kinectSensor.DepthFrameSource.FrameDescription;
+
+            _inputSimulator = new InputSimulator();
+            _tileWidth = _depthFrameDescription.Width / 4;
+            _tileHeight = _depthFrameDescription.Height / 2;
+
+        }
+
+        private int _tileWidth;
+        private int _tileHeight;
+        InputSimulator _inputSimulator;
+
+        private void InitDepthAndBitmap()
+        {
+            _depthPixels = new byte[_depthFrameDescription.Width * _depthFrameDescription.Height];
+            _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height, 96.0, 96.0, PixelFormats.Gray8, null);
+        }
+
+        public void SetStatusText()
+        {
+            StatusText = _kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText :
+              Properties.Resources.NoSensorStatusText;
+        }
+
+        Dictionary<System.Drawing.Point, byte> pixels = new Dictionary<System.Drawing.Point, byte>();
 
         private unsafe void ProcessDepthFrameData(IntPtr depthFrameData, uint depthFrameDataSize, ushort minDepth, ushort maxDepth)
         {
             ushort* frameData = (ushort*)depthFrameData;
+            var tileWidth = _depthFrameDescription.Width / 4;
+            var tileHeight = _depthFrameDescription.Height / 2;
 
-            // convert depth to a visual representation
-            for (int i = 0; i < (int)(depthFrameDataSize / _depthFrameDescription.BytesPerPixel); ++i)
+            Loop((int)depthFrameDataSize, _depthFrameDescription.BytesPerPixel, frameData, minDepth, maxDepth);
+
+            _aPressed = false;
+            _qPressed = false;
+            _dPressed = false;
+            _ePressed = false;
+            _uPressed = false;
+            _jPressed = false;
+            _oPressed = false;
+            _lPressed = false;
+        }
+
+
+        public Dictionary<VirtualKeyCode, bool> Keys = new Dictionary<VirtualKeyCode, bool> {
+            { VirtualKeyCode.VK_Q, false},
+            { VirtualKeyCode.VK_A, false},
+            { VirtualKeyCode.VK_E, false},
+            { VirtualKeyCode.VK_D, false},
+            { VirtualKeyCode.VK_U, false},
+            { VirtualKeyCode.VK_J, false},
+            { VirtualKeyCode.VK_O, false},
+            { VirtualKeyCode.VK_L, false},
+        };
+
+        private bool _qPressed = false;
+        private bool _aPressed = false;
+        private bool _ePressed = false;
+        private bool _dPressed = false;
+        private bool _jPressed = false;
+        private bool _oPressed = false;
+        private bool _uPressed = false;
+        private bool _lPressed = false;
+
+        private unsafe void Loop(int depthFrameDataSize, uint bytesPerPixel, ushort* frameData, ushort minDepth, ushort maxDepth)
+        {
+            for (int i = 0; i < (int)(depthFrameDataSize / bytesPerPixel); ++i)
             {
                 ushort pixelDepth = frameData[i];
                 var detected = pixelDepth >= minDepth && pixelDepth <= maxDepth;
                 _depthPixels[i] = (byte)(detected ? 255 : 0);
 
-                var tile = Tile.GetInstanceForPixel(
-                    new Point(i % _depthFrameDescription.Width, i / _depthFrameDescription.Height), 
-                    new Point(_depthFrameDescription.Width, _depthFrameDescription.Height), 
-                    detected
-                    );
-                if (!_tiles.Any(t => t.Col == tile.Col && t.Row == tile.Row))
-                    _tiles.Add(tile);
+                var pixelPoint = new System.Drawing.Point(i % _depthFrameDescription.Width, i / _depthFrameDescription.Height);
+                VirtualKeyCode keyCode = VirtualKeyCode.RETURN;
+                if (pixelPoint.X > 0 && pixelPoint.X <= _tileWidth)
+                {
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    {
+                        if(!_qPressed)
+                        {
+                            _qPressed = detected;
+                            keyCode = VirtualKeyCode.VK_Q;
+                        }
+                    }
+                    else
+                    {
+                        if (!_aPressed)
+                        {
+                            _aPressed = detected;
+                            keyCode = VirtualKeyCode.VK_A;
+                        }
+                    }
+                }
+                else if (pixelPoint.X > _tileWidth && pixelPoint.X < _tileWidth * 2)
+                {
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    {
+                        if (!_ePressed)
+                        {
+                            _ePressed = detected;
+                            keyCode = VirtualKeyCode.VK_E;
+                        }
+                    }
+                    else
+                    {
+                        if (!_dPressed)
+                        {
+                            _dPressed = detected;
+                            keyCode = VirtualKeyCode.VK_D;
+                        }
+                    }
+                }
+                else if (pixelPoint.X > _tileWidth * 2 && pixelPoint.X < _tileWidth * 3)
+                {
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    {
+                        if (!_uPressed)
+                        {
+                            _uPressed = detected;
+                            keyCode = VirtualKeyCode.VK_U;
+                        }
+                    }
+                    else
+                    {
+                        if (!_jPressed)
+                        {
+                            _jPressed = detected;
+                            keyCode = VirtualKeyCode.VK_J;
+                        }
+                    }
+                }
+                else if (pixelPoint.X > _tileWidth * 3)
+                {
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    {
+                        if (!_oPressed)
+                        {
+                            _oPressed = detected;
+                            keyCode = VirtualKeyCode.VK_O;
+                        }
+                    }
+                    else
+                    {
+                        if (!_lPressed)
+                        {
+                            _lPressed = detected;
+                            keyCode = VirtualKeyCode.VK_L;
+                        }
+                    }
+                }
+
+                if (keyCode == VirtualKeyCode.RETURN)
+                    continue;
+
+                if (detected)
+                    DoKeyDown(keyCode);
+                else
+                {
+                    if (keyCode == VirtualKeyCode.VK_A && !_aPressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_E && !_ePressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_Q && !_qPressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_D && !_dPressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_U && !_uPressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_J && !_jPressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_O && !_oPressed)
+                        DoKeyUp(keyCode);
+                    else if (keyCode == VirtualKeyCode.VK_L && !_lPressed)
+                        DoKeyUp(keyCode);
+                }
+            }
+        }
+
+        public void DoKeyDown(VirtualKeyCode key)
+        {
+            if (!Keys[key])
+            {
+                Keys[key] = true;
+                _inputSimulator.Keyboard.KeyDown(key);
+            }
+        }
+         
+        public void DoKeyUp(VirtualKeyCode key)
+        {
+            if (Keys[key])
+            {
+                if (key == VirtualKeyCode.VK_A)
+                    _aPressed = false;
+                else if (key == VirtualKeyCode.VK_E)
+                    _ePressed = false;
+                else if (key == VirtualKeyCode.VK_Q)
+                    _qPressed = false;
+                else if (key == VirtualKeyCode.VK_D)
+                    _dPressed = false;
+                else if (key == VirtualKeyCode.VK_U)
+                    _uPressed = false;
+                else if (key == VirtualKeyCode.VK_J)
+                    _jPressed = false;
+                else if (key == VirtualKeyCode.VK_O)
+                    _oPressed = false;
+                else if (key == VirtualKeyCode.VK_L)
+                    _lPressed = false;
+
+                Keys[key] = false;
+                _inputSimulator.Keyboard.KeyUp(key);
             }
         }
 
@@ -163,47 +364,29 @@ namespace DepthTracker.UI
         {
             _depthBitmap.WritePixels(
                 new Int32Rect(0, 0, _depthBitmap.PixelWidth, _depthBitmap.PixelHeight),
-                _depthPixels, _depthBitmap.PixelWidth, 0
+                _depthPixels, 
+                _depthBitmap.PixelWidth, 
+                0
                 );
         }
 
-        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+
+        private string GetActiveWindowTitle()
         {
-            StatusText = _kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
-                : Properties.Resources.SensorNotAvailableStatusText;
-        }
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
 
-        #region sockets
-
-        static List<IWebSocketConnection> _sockets;
-        static bool _initialized = false;
-        private static void InitializeSockets()
-        {
-            _sockets = new List<IWebSocketConnection>();
-
-            var server = new WebSocketServer("ws://localhost:8181");
-
-            server.Start(socket =>
+            if (GetWindowText(handle, Buff, nChars) > 0)
             {
-                socket.OnOpen = () =>
-                {
-                    Console.WriteLine("Connected to " + socket.ConnectionInfo.ClientIpAddress);
-                    _sockets.Add(socket);
-                };
-                socket.OnClose = () =>
-                {
-                    Console.WriteLine("Disconnected from " + socket.ConnectionInfo.ClientIpAddress);
-                    _sockets.Remove(socket);
-                };
-                socket.OnMessage = message =>
-                {
-                    Console.WriteLine(message);
-                };
-            });
-
-            _initialized = true;
-
-            //Console.ReadLine();
+                return Buff.ToString();
+            }
+            return null;
         }
 
         #endregion

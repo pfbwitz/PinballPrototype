@@ -35,6 +35,11 @@ namespace Sketchball
         {
         }
 
+        public void SetCursor(int x, int y)
+        {
+            Cursor.Position = new Point(x, y);
+        }
+
         public PlayForm(PinballMachine pbm, SelectionForm selectionForm)
         {
             InitializeComponent();
@@ -42,7 +47,7 @@ namespace Sketchball
             // Initialize game
             originalMachine = pbm;
             game = new Game(pbm, Environment.UserName);
-            gameView = new GameView(game);
+            gameView = new GameView(this, game);
             gameContainer = new WPFContainer(gameView);
             game.GameOver += onGameOver;
             gameView.MouseUp += onMouseUp;

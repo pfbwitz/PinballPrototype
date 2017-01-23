@@ -133,6 +133,16 @@ namespace Sketchball.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap EditorSchrift2b {
+            get {
+                object obj = ResourceManager.GetObject("EditorSchrift2b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Exit {
             get {
                 object obj = ResourceManager.GetObject("Exit", resourceCulture);
@@ -196,6 +206,16 @@ namespace Sketchball.Properties {
         internal static System.Drawing.Bitmap PlaySchrift1 {
             get {
                 object obj = ResourceManager.GetObject("PlaySchrift1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap PlaySchrift1b {
+            get {
+                object obj = ResourceManager.GetObject("PlaySchrift1b", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -22,6 +22,8 @@ namespace Sketchball.Elements
         private static readonly Size size = new Size(70, 70);
         private static readonly SoundPlayer sound = new SoundPlayer(Properties.Resources.SWormholeExit);
 
+        public bool IsRotated { get; private set; }
+
         [DataMember]
         public Keys Trigger { get; set; }
 
@@ -77,6 +79,7 @@ namespace Sketchball.Elements
 
         public void OnKey(bool keyDown)
         {
+            IsRotated = keyDown;
             if (keyDown)
                 OnKeyDown();
             else
@@ -85,27 +88,30 @@ namespace Sketchball.Elements
 
         public void OnKeyDown()
         {
-            OnKeyDown(null, new KeyEventArgs(Trigger));
-            //if (!Animating)
-            //{
-            //    GameWorld.Sfx.Play(sound);
-            //    Animating = true;
+            IsRotated = true;
+            //OnKeyDown(null, new KeyEventArgs(Trigger));
+            if (!Animating)
+            {
+                GameWorld.Sfx.Play(sound);
+                Animating = true;
 
-            //    Action endRot = () => {
-            //        this.Rotate(-Rotation, origin, 0.05f, () => { Animating = false; });
-            //    };
+                Action endRot = () =>
+                {
+                    this.Rotate(-Rotation, origin, 0.05f, () => { Animating = false; });
+                };
 
-            //    this.Rotate(RotationRange, origin, 0.05f, null);
-            //}
+                this.Rotate(RotationRange, origin, 0.05f, null);
+            }
         }
 
         public void OnKeyUp()
         {
-            OnKeyUp(null, new KeyEventArgs(Trigger));
-            //if (Animating)
-            //{
-            //    this.Rotate(-Rotation, origin, 0.1f, () => { Animating = false; });
-            //}
+            IsRotated = false;
+            //OnKeyUp(null, new KeyEventArgs(Trigger));
+            if (Animating)
+            {
+                this.Rotate(-Rotation, origin, 0.1f, () => { Animating = false; });
+            }
         }
 
         protected override Size BaseSize

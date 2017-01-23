@@ -1,24 +1,18 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace DepthTracker.Hands
+namespace DepthTracker.Tiles
 {
     public static class TileSerializer
     {
         public static string Serialize(this List<Tile> tiles)
         {
-            var serializer = new DataContractJsonSerializer(tiles.GetType());
-
             using (var ms = new MemoryStream())
             {
-                serializer.WriteObject(ms, tiles);
-
+                new DataContractJsonSerializer(tiles.GetType()).WriteObject(ms, tiles);
                 return Encoding.Default.GetString(ms.ToArray());
             }
         }
@@ -26,6 +20,21 @@ namespace DepthTracker.Hands
         public static List<Tile> Deserialize(this string json)
         {
             var coll = JsonConvert.DeserializeObject<List<Tile>>(json);
+            return coll;
+        }
+
+        public static string Serialize(this Tile tile)
+        {
+            using (var ms = new MemoryStream())
+            {
+                new DataContractJsonSerializer(tile.GetType()).WriteObject(ms, tile);
+                return Encoding.Default.GetString(ms.ToArray());
+            }
+        }
+
+        public static Tile DeserializeTile(this string json)
+        {
+            var coll = JsonConvert.DeserializeObject<Tile>(json);
             return coll;
         }
     }

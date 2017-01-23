@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DepthTracker
+namespace DepthTracker.Tiles
 {
     public class MouseOperations
     {
@@ -49,12 +49,15 @@ namespace DepthTracker
 
         public static void MouseEvent(MouseEventFlags value)
         {
-            var position = GetCursorPosition();
+            MouseEvent(value, GetCursorPosition());
+        }
 
+        public static void MouseEvent(MouseEventFlags value, MousePoint mousePoint)
+        {
             mouse_event
                 ((int)value,
-                 position.X,
-                 position.Y,
+                 mousePoint.X,
+                 mousePoint.Y,
                  0,
                  0)
                 ;

@@ -1,14 +1,11 @@
-﻿using DepthTracker.Hands;
-using Fleck;
+﻿using DepthTracker.Tiles;
 using Sketchball.Elements;
 using Sketchball.GameComponents;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -16,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace Sketchball.Controls
 {
@@ -24,6 +23,8 @@ namespace Sketchball.Controls
     /// </summary>
     class GameView : PinballControl
     {
+
+   
 
         /// <summary>
         /// Arbitrarily chosen FPS number that controls the update interval. We only have lose control over the visual update process
@@ -47,18 +48,19 @@ namespace Sketchball.Controls
         public Game Game;
         private System.Windows.Forms.Timer timer;
 
+        private PlayForm _playform;
+
         /// <summary>
         /// Creates a new PinballGameControl based on a machine template.
         /// </summary>
         /// <param name="machine">Template for the game machine.</param>
-        public GameView(Game game)
+        public GameView(PlayForm form, Game game)
             : base()
         {
-            InitializeSockets();
+            _playform = form;
+            _running = true;
+            StartServer();
 
-            foreach(var s in _sockets)
-                s.OnMessage += HandleWebSocketInput;
-            
             Game = game;
             gameWorld = new GameWorld(Game);
             HUD = new GameHUD(Game);
@@ -89,6 +91,9 @@ namespace Sketchball.Controls
             // Let's draw with high quality
             SetValue(RenderOptions.BitmapScalingModeProperty, BitmapScalingMode.HighQuality);
         }
+
+
+      
 
         private void GameView_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -143,52 +148,59 @@ namespace Sketchball.Controls
             }
         }
 
-        #region sockets
-
-        static List<IWebSocketConnection> _sockets;
-        static bool _initialized = false;
-        private void InitializeSockets()
+        private bool _running;
+        private void StartServer()
         {
-            _sockets = new List<IWebSocketConnection>();
-
-            var server = new WebSocketServer("ws://localhost:8181");
-
-            server.Start(socket =>
+            Task.Run(() =>
             {
-                socket.OnOpen = () =>
+                var server = new NamedPipeServerStream("DephTrackerPipe");
+                server.WaitForConnection();
+                
+                var reader = new StreamReader(server);
+                var writer = new StreamWriter(server);
+
+                while (_running)
                 {
-                    Console.WriteLine("Connected to " + socket.ConnectionInfo.ClientIpAddress);
-                    _sockets.Add(socket);
-                };
-                socket.OnClose = () =>
-                {
-                    Console.WriteLine("Disconnected from " + socket.ConnectionInfo.ClientIpAddress);
-                    _sockets.Remove(socket);
-                };
-                socket.OnMessage += HandleWebSocketInput;
+                    try
+                    {
+                        if (!server.IsConnected)
+                            break;
+                        
+                        var json = reader.ReadLine();
+                        if (string.IsNullOrEmpty(json))
+                            continue;
+
+                        var tiles = TileSerializer.Deserialize(json);
+
+                        if (tiles != null)
+                            _playform.BeginInvoke(new MethodInvoker(() => HandleWebSocketInput(tiles)));
+                        writer.Flush();
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.Write(ex.ToString());
+                    }
+                }
+                if(_running)
+                    _playform.BeginInvoke(new MethodInvoker(StartServer));
             });
-
-            _initialized = true;
-
-            //Console.ReadLine();
         }
 
-        private void HandleWebSocketInput(string input)
+        private void HandleWebSocketInput(List<Tile> tiles)
         {
-            var tiles = TileSerializer.Deserialize(input);
-            var tileWidth = Width / (Program.IsFourPlayerMode ? 4 : 2);
-            var tileHeight = Height / 2;
-            foreach (var t in tiles)
-            {
-                //the middle of a tile
-                var point = new Point((t.Col - 1) * tileWidth + (tileWidth / 2), (t.Row - 1) * tileHeight + (tileHeight / 2));
-                var flipper = GetFlipper(point);
+            var inputSimulator = new InputSimulator();
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_Q);
 
-                flipper.OnKey(t.Touch);
-            }
+            //var tetsd = System.Windows.Application.Current;
+            //var tileWidth = Width / (Program.IsFourPlayerMode ? 4 : 2);
+            //var tileHeight = Height / 2;
+
+            ////the middle of a tile
+            //var point = new Point((tile.Col - 1) * tileWidth + (tileWidth / 2), (tile.Row - 1) * tileHeight + (tileHeight / 2));
+            //var flipper = GetFlipper(point);
+
+            //flipper.OnKey(tile.Touch);
         }
-
-        #endregion
 
         private void ResizeCamera(object sender, SizeChangedEventArgs e)
         {
@@ -229,6 +241,8 @@ namespace Sketchball.Controls
 
         protected override void OnDispose()
         {
+            _running = false;
+
             // ElementHost sometimes fails to properly remove all references to a WPF control,
             // which is why we set all our own references to NULL so that at least those aren't kept alive forever.
             timer.Dispose();
