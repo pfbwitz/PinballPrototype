@@ -5,18 +5,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Kinect;
 using System.Collections.Generic;
-using DepthTracker.Tiles;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.IO.Pipes;
-using System.IO;
-using DepthTracker.Connection;
-using System.Threading;
-using System.Text;
-using System.Windows.Input;
 using WindowsInput;
 using WindowsInput.Native;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace DepthTracker.UI
 {
@@ -25,9 +18,37 @@ namespace DepthTracker.UI
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
+        public MainWindow(Rectangle r)
+        {
+            Rectangle = r;
+            _zWall = 0;// z;
+            //these should be 1. should still work if not
+
+            InitSensor();
+            InitReader();
+            InitDepthAndBitmap();
+
+            _kinectSensor.Open();
+
+            double factorX = (double)_depthFrameDescription.Width / (double)CalibrationWindow.DimensionsWidth;
+            double factorY = (double)_depthFrameDescription.Height / (double)CalibrationWindow.DimensionsHeight;
+            Rectangle = new Rectangle(
+                Convert.ToInt32(r.X* factorX),
+                Convert.ToInt32(r.Y * factorY),
+                Convert.ToInt32(r.Width * factorX),
+                Convert.ToInt32(r.Height * factorY)
+                );
+
+            DataContext = this;
+
+            InitializeComponent();
+
+            Sensor_IsAvailableChanged(null, null);
+        }
+
         #region attr
 
-        private PipeClient _pipeClient;
+        private float _zWall;
 
         public ImageSource ImageSource { get { return _depthBitmap; } }
 
@@ -44,7 +65,11 @@ namespace DepthTracker.UI
             }
         }
 
-        private List<Tile> _tiles;
+        private int _tileWidth;
+
+        private int _tileHeight;
+
+        InputSimulator _inputSimulator;
 
         private const int MapDepthToByte = 8000 / 256; // Map depth range to byte range
 
@@ -62,33 +87,41 @@ namespace DepthTracker.UI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public Rectangle Rectangle { get; private set; }
+
+        public Dictionary<VirtualKeyCode, bool> Keys = new Dictionary<VirtualKeyCode, bool> {
+            { VirtualKeyCode.VK_Q, false},
+            { VirtualKeyCode.VK_A, false},
+            { VirtualKeyCode.VK_E, false},
+            { VirtualKeyCode.VK_D, false},
+            { VirtualKeyCode.VK_U, false},
+            { VirtualKeyCode.VK_J, false},
+            { VirtualKeyCode.VK_O, false},
+            { VirtualKeyCode.VK_L, false},
+        };
+
+        private bool _qPressed = false;
+
+        private bool _aPressed = false;
+
+        private bool _ePressed = false;
+
+        private bool _dPressed = false;
+
+        private bool _jPressed = false;
+
+        private bool _oPressed = false;
+
+        private bool _uPressed = false;
+
+        private bool _lPressed = false;
+
         #endregion
-
-        public MainWindow()
-        {
-            InitSensor();
-            InitReader();
-            InitDepthAndBitmap();
-
-            _kinectSensor.Open();
-
-            DataContext = this;
-
-            InitializeComponent();
-
-            Sensor_IsAvailableChanged(null, null);
-        }
 
         #region handlers
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            _tiles.Clear();
-            if (_pipeClient != null)
-            {
-                _pipeClient.Dispose();
-                _pipeClient = null;
-            }
             if (_depthFrameReader != null)
             {
                 _depthFrameReader.Dispose();
@@ -149,14 +182,9 @@ namespace DepthTracker.UI
             _depthFrameDescription = _kinectSensor.DepthFrameSource.FrameDescription;
 
             _inputSimulator = new InputSimulator();
-            _tileWidth = _depthFrameDescription.Width / 4;
-            _tileHeight = _depthFrameDescription.Height / 2;
-
+            _tileWidth = Rectangle.Width / 4;//_depthFrameDescription.Width / 4;
+            _tileHeight = Rectangle.Height / 2;//_depthFrameDescription.Height / 2;
         }
-
-        private int _tileWidth;
-        private int _tileHeight;
-        InputSimulator _inputSimulator;
 
         private void InitDepthAndBitmap()
         {
@@ -169,8 +197,6 @@ namespace DepthTracker.UI
             StatusText = _kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText :
               Properties.Resources.NoSensorStatusText;
         }
-
-        Dictionary<System.Drawing.Point, byte> pixels = new Dictionary<System.Drawing.Point, byte>();
 
         private unsafe void ProcessDepthFrameData(IntPtr depthFrameData, uint depthFrameDataSize, ushort minDepth, ushort maxDepth)
         {
@@ -190,40 +216,19 @@ namespace DepthTracker.UI
             _lPressed = false;
         }
 
-
-        public Dictionary<VirtualKeyCode, bool> Keys = new Dictionary<VirtualKeyCode, bool> {
-            { VirtualKeyCode.VK_Q, false},
-            { VirtualKeyCode.VK_A, false},
-            { VirtualKeyCode.VK_E, false},
-            { VirtualKeyCode.VK_D, false},
-            { VirtualKeyCode.VK_U, false},
-            { VirtualKeyCode.VK_J, false},
-            { VirtualKeyCode.VK_O, false},
-            { VirtualKeyCode.VK_L, false},
-        };
-
-        private bool _qPressed = false;
-        private bool _aPressed = false;
-        private bool _ePressed = false;
-        private bool _dPressed = false;
-        private bool _jPressed = false;
-        private bool _oPressed = false;
-        private bool _uPressed = false;
-        private bool _lPressed = false;
-
         private unsafe void Loop(int depthFrameDataSize, uint bytesPerPixel, ushort* frameData, ushort minDepth, ushort maxDepth)
         {
             for (int i = 0; i < (int)(depthFrameDataSize / bytesPerPixel); ++i)
             {
                 ushort pixelDepth = frameData[i];
-                var detected = pixelDepth >= minDepth && pixelDepth <= maxDepth;
+                var pixelPoint = new System.Drawing.Point(i % _depthFrameDescription.Width, i / _depthFrameDescription.Height);
+                var detected = pixelDepth >= minDepth && pixelDepth <= maxDepth && Rectangle.Contains(pixelPoint);
                 _depthPixels[i] = (byte)(detected ? 255 : 0);
 
-                var pixelPoint = new System.Drawing.Point(i % _depthFrameDescription.Width, i / _depthFrameDescription.Height);
                 VirtualKeyCode keyCode = VirtualKeyCode.RETURN;
-                if (pixelPoint.X > 0 && pixelPoint.X <= _tileWidth)
+                if (pixelPoint.X > 0 && pixelPoint.X <= _tileWidth + Rectangle.X)
                 {
-                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight + Rectangle.Y)
                     {
                         if(!_qPressed)
                         {
@@ -240,9 +245,9 @@ namespace DepthTracker.UI
                         }
                     }
                 }
-                else if (pixelPoint.X > _tileWidth && pixelPoint.X < _tileWidth * 2)
+                else if (pixelPoint.X > _tileWidth + Rectangle.X && pixelPoint.X < _tileWidth * 2 + Rectangle.X)
                 {
-                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight + Rectangle.Y)
                     {
                         if (!_ePressed)
                         {
@@ -259,9 +264,9 @@ namespace DepthTracker.UI
                         }
                     }
                 }
-                else if (pixelPoint.X > _tileWidth * 2 && pixelPoint.X < _tileWidth * 3)
+                else if (pixelPoint.X > _tileWidth * 2 + Rectangle.X && pixelPoint.X < _tileWidth * 3 + Rectangle.X)
                 {
-                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight + Rectangle.Y)
                     {
                         if (!_uPressed)
                         {
@@ -278,9 +283,9 @@ namespace DepthTracker.UI
                         }
                     }
                 }
-                else if (pixelPoint.X > _tileWidth * 3)
+                else if (pixelPoint.X > _tileWidth * 3 + Rectangle.X)
                 {
-                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight)
+                    if(pixelPoint.Y >= 0 && pixelPoint.Y <= _tileHeight + Rectangle.Y)
                     {
                         if (!_oPressed)
                         {
@@ -356,7 +361,11 @@ namespace DepthTracker.UI
                     _lPressed = false;
 
                 Keys[key] = false;
-                _inputSimulator.Keyboard.KeyUp(key);
+
+                Task.Run(async() => {
+                    await Task.Delay(100);
+                    await Dispatcher.BeginInvoke(new Action(() => _inputSimulator.Keyboard.KeyUp(key)));
+                });
             }
         }
 
@@ -368,25 +377,6 @@ namespace DepthTracker.UI
                 _depthBitmap.PixelWidth, 
                 0
                 );
-        }
-
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
-        private string GetActiveWindowTitle()
-        {
-            const int nChars = 256;
-            StringBuilder Buff = new StringBuilder(nChars);
-            IntPtr handle = GetForegroundWindow();
-
-            if (GetWindowText(handle, Buff, nChars) > 0)
-            {
-                return Buff.ToString();
-            }
-            return null;
         }
 
         #endregion
