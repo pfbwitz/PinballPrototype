@@ -1,4 +1,4 @@
-﻿using DepthTracker.Tiles;
+﻿//using DepthTracker.Tiles;
 using Sketchball.Elements;
 using Sketchball.GameComponents;
 using System;
@@ -58,8 +58,8 @@ namespace Sketchball.Controls
             : base()
         {
             _playform = form;
-            _running = true;
-            StartServer();
+            //_running = true;
+            //StartServer();
 
             Game = game;
             gameWorld = new GameWorld(Game);
@@ -148,59 +148,59 @@ namespace Sketchball.Controls
             }
         }
 
-        private bool _running;
-        private void StartServer()
-        {
-            Task.Run(() =>
-            {
-                var server = new NamedPipeServerStream("DephTrackerPipe");
-                server.WaitForConnection();
+        //private bool _running;
+        //private void StartServer()
+        //{
+        //    Task.Run(() =>
+        //    {
+        //        var server = new NamedPipeServerStream("DephTrackerPipe");
+        //        server.WaitForConnection();
                 
-                var reader = new StreamReader(server);
-                var writer = new StreamWriter(server);
+        //        var reader = new StreamReader(server);
+        //        var writer = new StreamWriter(server);
 
-                while (_running)
-                {
-                    try
-                    {
-                        if (!server.IsConnected)
-                            break;
+        //        while (_running)
+        //        {
+        //            try
+        //            {
+        //                if (!server.IsConnected)
+        //                    break;
                         
-                        var json = reader.ReadLine();
-                        if (string.IsNullOrEmpty(json))
-                            continue;
+        //                var json = reader.ReadLine();
+        //                if (string.IsNullOrEmpty(json))
+        //                    continue;
 
-                        var tiles = TileSerializer.Deserialize(json);
+        //                var tiles = TileSerializer.Deserialize(json);
 
-                        if (tiles != null)
-                            _playform.BeginInvoke(new MethodInvoker(() => HandleWebSocketInput(tiles)));
-                        writer.Flush();
-                    }
-                    catch(Exception ex)
-                    {
-                        Console.Write(ex.ToString());
-                    }
-                }
-                if(_running)
-                    _playform.BeginInvoke(new MethodInvoker(StartServer));
-            });
-        }
+        //                if (tiles != null)
+        //                    _playform.BeginInvoke(new MethodInvoker(() => HandleWebSocketInput(tiles)));
+        //                writer.Flush();
+        //            }
+        //            catch(Exception ex)
+        //            {
+        //                Console.Write(ex.ToString());
+        //            }
+        //        }
+        //        if(_running)
+        //            _playform.BeginInvoke(new MethodInvoker(StartServer));
+        //    });
+        //}
 
-        private void HandleWebSocketInput(List<Tile> tiles)
-        {
-            var inputSimulator = new InputSimulator();
-            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_Q);
+        //private void HandleWebSocketInput(List<Tile> tiles)
+        //{
+        //    var inputSimulator = new InputSimulator();
+        //    inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_Q);
 
-            //var tetsd = System.Windows.Application.Current;
-            //var tileWidth = Width / (Program.IsFourPlayerMode ? 4 : 2);
-            //var tileHeight = Height / 2;
+        //    //var tetsd = System.Windows.Application.Current;
+        //    //var tileWidth = Width / (Program.IsFourPlayerMode ? 4 : 2);
+        //    //var tileHeight = Height / 2;
 
-            ////the middle of a tile
-            //var point = new Point((tile.Col - 1) * tileWidth + (tileWidth / 2), (tile.Row - 1) * tileHeight + (tileHeight / 2));
-            //var flipper = GetFlipper(point);
+        //    ////the middle of a tile
+        //    //var point = new Point((tile.Col - 1) * tileWidth + (tileWidth / 2), (tile.Row - 1) * tileHeight + (tileHeight / 2));
+        //    //var flipper = GetFlipper(point);
 
-            //flipper.OnKey(tile.Touch);
-        }
+        //    //flipper.OnKey(tile.Touch);
+        //}
 
         private void ResizeCamera(object sender, SizeChangedEventArgs e)
         {
@@ -241,7 +241,7 @@ namespace Sketchball.Controls
 
         protected override void OnDispose()
         {
-            _running = false;
+            //_running = false;
 
             // ElementHost sometimes fails to properly remove all references to a WPF control,
             // which is why we set all our own references to NULL so that at least those aren't kept alive forever.

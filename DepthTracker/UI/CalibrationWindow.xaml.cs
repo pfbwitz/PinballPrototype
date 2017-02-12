@@ -8,7 +8,7 @@ using Microsoft.Kinect;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using DepthTracker.EmuCV;
+//using DepthTracker.EmuCV;
 using System.Windows.Input;
 using System.Windows.Forms;
 
@@ -127,16 +127,16 @@ namespace DepthTracker.UI
 
                         Rectangle? r;
                        
-                        while(DateTime.Now <= dt.AddSeconds(5))
-                        {
-                            var result = ShapeHelper.GetRectangle(_colorBitmap, out r);
-                            if(result && r.HasValue)
-                            {
-                                new MainWindow(r.Value).Show();
-                                Close();
-                                break;
-                            }
-                        }
+                        //while(DateTime.Now <= dt.AddSeconds(5))
+                        //{
+                        //    var result = ShapeHelper.GetRectangle(_colorBitmap, out r);
+                        //    if(result && r.HasValue)
+                        //    {
+                        //        new MainWindow(r.Value).Show();
+                        //        Close();
+                        //        break;
+                        //    }
+                        //}
 
                         //while (!ShapeHelper.GetRectangle(_colorBitmap, out r))
                         //{

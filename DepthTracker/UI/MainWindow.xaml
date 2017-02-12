@@ -18,6 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -25,8 +26,38 @@
         <Viewbox Grid.Row="0" HorizontalAlignment="Center">
       <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
     </Viewbox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Label Content="X" Grid.Column="1" />
+            <Button Content="OFF" x:Name="BtnSwitch" Click="BtnSwitch_Click" Grid.Column="0"/>
+            <TextBox TextChanged="TextBox_TextChanged" x:Name="xText" Grid.Column="2" />
+            <Label Content="Y" Grid.Column="3" />
+            <TextBox TextChanged="TextBox_TextChanged" x:Name="yText" Grid.Column="4" />
+            <Label Content="Width" Grid.Column="5" />
+            <TextBox TextChanged="TextBox_TextChanged" x:Name="widthText" Grid.Column="6" />
+            <Label Content="Height" Grid.Column="7" />
+            <TextBox TextChanged="TextBox_TextChanged" x:Name="heightText" Grid.Column="8" />
+            <Label Content="Z lower bounds" Grid.Column="9" />
+            <TextBox TextChanged="TextBox_TextChanged" x:Name="zMinText" Grid.Column="10" />
+            <Label Content="Z upper bounds" Grid.Column="11" />
+            <TextBox TextChanged="TextBox_TextChanged" x:Name="zMaxText" Grid.Column="12" />
       
-    <StatusBar Grid.Row="1" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
+        </Grid>
+        <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
       <StatusBarItem Content="{Binding StatusText}" />
     </StatusBar>
   </Grid>
