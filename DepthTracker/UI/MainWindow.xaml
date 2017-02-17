@@ -41,6 +41,7 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <Label Content="X" Grid.Column="1" />
             <Button Content="OFF" x:Name="BtnSwitch" Click="BtnSwitch_Click" Grid.Column="0"/>
@@ -55,7 +56,7 @@
             <TextBox TextChanged="TextBox_TextChanged" x:Name="zMinText" Grid.Column="10" />
             <Label Content="Z upper bounds" Grid.Column="11" />
             <TextBox TextChanged="TextBox_TextChanged" x:Name="zMaxText" Grid.Column="12" />
-      
+            <Button Content="FLIP ON" x:Name="BtnFlip" Click="BtnFlip_Click" Grid.Column="13"/>
         </Grid>
         <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
       <StatusBarItem Content="{Binding StatusText}" />

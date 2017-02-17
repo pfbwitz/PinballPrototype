@@ -82,7 +82,7 @@ namespace DepthTracker.UI
             InitReader();
             InitDepthAndBitmap();
 
-            Rectangle = new Rectangle(168, 118, 200, 140);
+            Rectangle = new Rectangle(200, 140, 200, 140);
 
             _kinectSensor.Open();
 
@@ -317,80 +317,178 @@ namespace DepthTracker.UI
 
         private void PushButtons(int x, int y, bool detected)
         {
+            //if (_flip)
+            //{
+            //    //x = _depthFrameDescription.Width - x;
+            //    y = _depthFrameDescription.Height - y;
+            //}
+
             VirtualKeyCode keyCode = VirtualKeyCode.RETURN;
             if (x > Rectangle.X && x <= _tileWidth + Rectangle.X)
             {
-                if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
+                if (_flip)
                 {
-                    if (!_qPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _qPressed = detected;
-                        keyCode = VirtualKeyCode.VK_Q;
+                        if (!_aPressed)
+                        {
+                            _aPressed = detected;
+                            keyCode = VirtualKeyCode.VK_A;
+                        }
+                       
+                    }
+                    else
+                    {
+                        if (!_qPressed)
+                        {
+                            _qPressed = detected;
+                            keyCode = VirtualKeyCode.VK_Q;
+                        }
                     }
                 }
                 else
                 {
-                    if (!_aPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _aPressed = detected;
-                        keyCode = VirtualKeyCode.VK_A;
+                        if (!_qPressed)
+                        {
+                            _qPressed = detected;
+                            keyCode = VirtualKeyCode.VK_Q;
+                        }
+                    }
+                    else
+                    {
+                        if (!_aPressed)
+                        {
+                            _aPressed = detected;
+                            keyCode = VirtualKeyCode.VK_A;
+                        }
                     }
                 }
             }
             else if (x > _tileWidth + Rectangle.X && x < _tileWidth * 2 + Rectangle.X)
             {
-                if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
+                if (_flip)
                 {
-                    if (!_ePressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _ePressed = detected;
-                        keyCode = VirtualKeyCode.VK_E;
+                       
+                        if (!_dPressed)
+                        {
+                            _dPressed = detected;
+                            keyCode = VirtualKeyCode.VK_D;
+                        }
+                    }
+                    else
+                    {
+                        if (!_ePressed)
+                        {
+                            _ePressed = detected;
+                            keyCode = VirtualKeyCode.VK_E;
+                        }
                     }
                 }
                 else
                 {
-                    if (!_dPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _dPressed = detected;
-                        keyCode = VirtualKeyCode.VK_D;
+                        if (!_ePressed)
+                        {
+                            _ePressed = detected;
+                            keyCode = VirtualKeyCode.VK_E;
+                        }
+                    }
+                    else
+                    {
+                        if (!_dPressed)
+                        {
+                            _dPressed = detected;
+                            keyCode = VirtualKeyCode.VK_D;
+                        }
                     }
                 }
             }
             else if (x > _tileWidth * 2 + Rectangle.X && x < _tileWidth * 3 + Rectangle.X)
             {
-                if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
+                if (_flip)
                 {
-                    if (!_uPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _uPressed = detected;
-                        keyCode = VirtualKeyCode.VK_U;
+                        if (!_jPressed)
+                        {
+                            _jPressed = detected;
+                            keyCode = VirtualKeyCode.VK_J;
+                        }
+                    }
+                    else
+                    {
+                        if (!_uPressed)
+                        {
+                            _uPressed = detected;
+                            keyCode = VirtualKeyCode.VK_U;
+                        }
+                       
                     }
                 }
                 else
                 {
-                    if (!_jPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _jPressed = detected;
-                        keyCode = VirtualKeyCode.VK_J;
+                        if (!_uPressed)
+                        {
+                            _uPressed = detected;
+                            keyCode = VirtualKeyCode.VK_U;
+                        }
+                    }
+                    else
+                    {
+                        if (!_jPressed)
+                        {
+                            _jPressed = detected;
+                            keyCode = VirtualKeyCode.VK_J;
+                        }
                     }
                 }
             }
             else if (x > _tileWidth * 3 + Rectangle.X)
             {
-                if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
+                if (_flip)
                 {
-                    if (!_oPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _oPressed = detected;
-                        keyCode = VirtualKeyCode.VK_O;
+                        if (!_lPressed)
+                        {
+                            _lPressed = detected;
+                            keyCode = VirtualKeyCode.VK_L;
+                        }
+                    }
+                    else
+                    {
+                        if (!_oPressed)
+                        {
+                            _oPressed = detected;
+                            keyCode = VirtualKeyCode.VK_O;
+                        }
+                       
                     }
                 }
                 else
                 {
-                    if (!_lPressed)
+                    if (y >= Rectangle.Y && y <= _tileHeight + Rectangle.Y)
                     {
-                        _lPressed = detected;
-                        keyCode = VirtualKeyCode.VK_L;
+                        if (!_oPressed)
+                        {
+                            _oPressed = detected;
+                            keyCode = VirtualKeyCode.VK_O;
+                        }
+                    }
+                    else
+                    {
+                        if (!_lPressed)
+                        {
+                            _lPressed = detected;
+                            keyCode = VirtualKeyCode.VK_L;
+                        }
                     }
                 }
             }
@@ -471,8 +569,9 @@ namespace DepthTracker.UI
         {
           //  return true;
             var radius = 5;
-            var limit = 7;
+            var limit = radius + 2;
             var count = 0;
+
             var upperXBound = x + radius <= _upperXBound ? x + radius : _upperXBound;
             var lowerXBound = x - radius >= _lowerXBound ? x - radius : Rectangle.X;
 
@@ -501,18 +600,11 @@ namespace DepthTracker.UI
             for (var y1 = lowerYBound; y1 <= upperYBound; y1++)
                 for (var x1 = lowerXBound; x1 <= upperXBound; x1++)
                 {
-                    try
+                    var m = _mapping[x1, y1];
+                    if (m != null)
                     {
-                        var m = _mapping[x1, y1];
-                        if(m != null)
-                        {
-                            m.ByteValue = 0;
-                            _depthPixels[m.Index] = 0;
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-
+                        m.ByteValue = 0;
+                        _depthPixels[m.Index] = 0;
                     }
                 }
 
@@ -534,10 +626,7 @@ namespace DepthTracker.UI
                 }
                 catch (Exception ex)
                 {
-
                 }
-
-                
             }
         }
 
@@ -647,10 +736,19 @@ namespace DepthTracker.UI
         }
 
         bool _run;
+        bool _flip;
         private void BtnSwitch_Click(object sender, RoutedEventArgs e)
         {
             _run = !_run;
             BtnSwitch.Content = _run ? "ON" : "OFF";
+        }
+
+        private void BtnFlip_Click(object sender, RoutedEventArgs e)
+        {
+            _flip = !_flip;
+
+            var b = (Button)sender;
+            b.Content = _flip ? "FLIP OFF" : "FLIP ON";
         }
     }
 }
