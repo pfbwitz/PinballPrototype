@@ -7,10 +7,6 @@ using Sketchball.Properties;
 
 namespace Sketchball
 {
-   
-    /// <summary>
-    /// Entry form that gives the user some choices and acts as the parent window of all following windows.
-    /// </summary>
     public partial class SelectionForm : Form
     {
         private PrivateFontCollection fontCollection = new PrivateFontCollection();
