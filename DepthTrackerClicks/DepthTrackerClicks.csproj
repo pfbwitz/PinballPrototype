@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B814AEE7-0717-4BF4-BACB-150E8AA91633}</ProjectGuid>
+    <ProjectGuid>{1714E136-9541-4698-B17C-A0075160AB60}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DepthTracker</RootNamespace>
@@ -80,14 +80,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="UI\CalibrationTemplateWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\CalibrationWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,14 +89,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ButtonDirection.cs" />
+    <Compile Include="MouseOperations.cs" />
     <Compile Include="PixelMap.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="UI\CalibrationTemplateWindow.xaml.cs">
-      <DependentUpon>CalibrationTemplateWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\CalibrationWindow.xaml.cs">
-      <DependentUpon>CalibrationWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

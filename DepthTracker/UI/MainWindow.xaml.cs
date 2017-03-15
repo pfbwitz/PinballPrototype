@@ -10,6 +10,7 @@ using WindowsInput;
 using WindowsInput.Native;
 using System.Drawing;
 using System.Windows.Controls;
+using System.Threading.Tasks;
 
 namespace DepthTracker.UI
 {
@@ -17,10 +18,12 @@ namespace DepthTracker.UI
     {
         #region attr
 
+        //private PipeClient _pipeClient;
+
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
-        private const int _buttonTrigger = 2;
+        private const int _buttonTrigger = 3;
 
         private int _upCount;
 
@@ -141,10 +144,10 @@ namespace DepthTracker.UI
             _tileHeight = Rectangle.Height / 2;
 
             _depthPixels = new byte[_depthFrameDescription.Width * _depthFrameDescription.Height];
-            _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height, 
+            _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height,
                 96.0, 96.0, PixelFormats.Gray8, null);
 
-            Rectangle = new Rectangle(200, 140, 200, 140);
+            Rectangle = new Rectangle(Settings.X, Settings.Y, Settings.Width, Settings.Height);
 
             _kinectSensor.Open();
 
@@ -154,12 +157,15 @@ namespace DepthTracker.UI
 
             xText.Text = Rectangle.X.ToString();
             yText.Text = Rectangle.Y.ToString();
-            zMinText.Text = 1000.ToString();
-            zMaxText.Text = 1100.ToString();
+            zMinText.Text = Settings.ZMin.ToString();
+            zMaxText.Text = Settings.ZMax.ToString();
             widthText.Text = Rectangle.Width.ToString();
             heightText.Text = Rectangle.Height.ToString();
 
             Sensor_IsAvailableChanged(null, null);
+
+            //_pipeClient = new PipeClient();
+            //_pipeClient.StartPipeClient();
         }
 
         #region handlers
@@ -174,23 +180,31 @@ namespace DepthTracker.UI
                 switch (box.Name)
                 {
                     case "xText":
+                        Settings.X = value;
                         Rectangle.X = value;
                         _lowerXBound = value;
                         break;
                     case "yText":
+                        Settings.Y = value;
                         Rectangle.Y = value;
                         _lowerYBound = value;
                         break;
                     case "widthText":
+                        Settings.Width = value;
                         Rectangle.Width = value;
                         _upperXBound = Rectangle.X + value;
                         break;
                     case "heightText":
+                        Settings.Height = value;
                         Rectangle.Height = value;
                         _upperYBound = Rectangle.Y + value;
                         break;
                     case "zMinText":
+                        Settings.ZMin = value;
+                        zCalibrated = true;
+                        break;
                     case "zMaxText":
+                        Settings.ZMax = value;
                         zCalibrated = true;
                         break;
                 }
@@ -216,6 +230,11 @@ namespace DepthTracker.UI
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
+            //if (_pipeClient != null)
+            //{
+            //    _pipeClient.Dispose();
+            //    _pipeClient = null;
+            //}
             if (_depthFrameReader != null)
             {
                 _depthFrameReader.Dispose();
@@ -242,7 +261,7 @@ namespace DepthTracker.UI
                             (_depthFrameDescription.Width == _depthBitmap.PixelWidth) && (_depthFrameDescription.Height == _depthBitmap.PixelHeight))
                         {
                             ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, bounds[0], bounds[1]);
-                            
+
                             depthFrameProcessed = true;
                         }
                     }
@@ -285,7 +304,7 @@ namespace DepthTracker.UI
             {
                 Loop((int)depthFrameDataSize, _depthFrameDescription.BytesPerPixel, frameData, minDepth, maxDepth);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var result = MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace, "Error");
             }
@@ -326,6 +345,8 @@ namespace DepthTracker.UI
                 if (!zCalibrated && contains)
                 {
                     zCalibrated = true;
+                    Settings.ZMax = Convert.ToInt32(pixelDepth);
+                    Settings.ZMax = Convert.ToInt32(pixelDepth - 5);
                     zMaxText.Text = Convert.ToInt32(pixelDepth).ToString();
                     zMinText.Text = Convert.ToInt32(pixelDepth - 5).ToString();
                 }
@@ -348,7 +369,7 @@ namespace DepthTracker.UI
                             b = 100;
                     }
                 }
-                 _depthPixels[i] = b;
+                _depthPixels[i] = b;
             }
         }
 
@@ -369,10 +390,10 @@ namespace DepthTracker.UI
             var recW = Rectangle.Width;
             var recH = Rectangle.Height;
 
-           //loop through the pixels withing the rectangle
-           for(var y = recY; y < recY + recH; y++)
+            //loop through the pixels withing the rectangle
+            for (var y = recY; y < recY + recH; y++)
             {
-                for(var x = recX;x < recX + recW;x++)
+                for (var x = recX; x < recX + recW; x++)
                 {
                     var pixel = _mapping[x, y];
                     if (pixel == null)
@@ -384,13 +405,13 @@ namespace DepthTracker.UI
                     }
                 }
             }
-          
+
             for (var y = recY; y < recY + recH; y++)
             {
-                for(var x = recX; x < recX + recW; x++)
+                for (var x = recX; x < recX + recW; x++)
                 {
                     var pixel = _mapping[x, y];
-                    if(pixel != null)
+                    if (pixel != null)
                         PushButtons(x, y, pixel.ByteValue == 255);
                 }
             }
@@ -400,7 +421,7 @@ namespace DepthTracker.UI
 
         private bool IsPositiveInPixelArea(int x, int y)
         {
-          //  return true;
+            //  return true;
             var radius = 5;
             var limit = radius + 2;
             var count = 0;
@@ -411,9 +432,9 @@ namespace DepthTracker.UI
             var upperYBound = y + radius <= _upperYBound ? y + radius : _upperYBound;
             var lowerYBound = y - radius >= _lowerYBound ? y - radius : _lowerYBound;
 
-            for(var y1 = lowerYBound;y1 <= upperYBound; y1++)
+            for (var y1 = lowerYBound; y1 <= upperYBound; y1++)
             {
-                for(var x1 = lowerXBound;x1<=upperXBound;x1++)
+                for (var x1 = lowerXBound; x1 <= upperXBound; x1++)
                 {
                     var mapping = _mapping[x1, y1];
                     if (mapping == null)
@@ -651,6 +672,9 @@ namespace DepthTracker.UI
 
             try
             {
+                if (_downCount == int.MaxValue)
+                    _downCount = 0;
+
                 _downCount = checked(_downCount + 1);
             }
             catch (OverflowException)
@@ -662,47 +686,48 @@ namespace DepthTracker.UI
                 return;
 
             //if (!Keys[key])
-                PushButton(key, ButtonDirection.Down);
+            PushButton(key, ButtonDirection.Down);
         }
 
         public void DoKeyUp(VirtualKeyCode key)
         {
-            if (!_run)
-                return;
+            return;
+            //if (!_run)
+            //    return;
 
-            try
-            {
-                _upCount = checked(_upCount + 1);
-            }
-            catch (OverflowException)
-            {
-                _upCount = 0;
-            }
+            //try
+            //{
+            //    _upCount = checked(_upCount + 1);
+            //}
+            //catch (OverflowException)
+            //{
+            //    _upCount = 0;
+            //}
 
-            if (_upCount % _buttonTrigger != 0)
-                return;
+            //if (_upCount % _buttonTrigger != 0)
+            //    return;
 
-            if (Keys[key])
-            {
-                if (key == VirtualKeyCode.VK_A)
-                    _aHandled = false;
-                else if (key == VirtualKeyCode.VK_E)
-                    _eHandled = false;
-                else if (key == VirtualKeyCode.VK_Q)
-                    _qHandled = false;
-                else if (key == VirtualKeyCode.VK_D)
-                    _dHandled = false;
-                else if (key == VirtualKeyCode.VK_U)
-                    _uHandled = false;
-                else if (key == VirtualKeyCode.VK_J)
-                    _jHandled = false;
-                else if (key == VirtualKeyCode.VK_O)
-                    _oHandled = false;
-                else if (key == VirtualKeyCode.VK_L)
-                    _lHandled = false;
+            //if (Keys[key])
+            //{
+            //    if (key == VirtualKeyCode.VK_A)
+            //        _aHandled = false;
+            //    else if (key == VirtualKeyCode.VK_E)
+            //        _eHandled = false;
+            //    else if (key == VirtualKeyCode.VK_Q)
+            //        _qHandled = false;
+            //    else if (key == VirtualKeyCode.VK_D)
+            //        _dHandled = false;
+            //    else if (key == VirtualKeyCode.VK_U)
+            //        _uHandled = false;
+            //    else if (key == VirtualKeyCode.VK_J)
+            //        _jHandled = false;
+            //    else if (key == VirtualKeyCode.VK_O)
+            //        _oHandled = false;
+            //    else if (key == VirtualKeyCode.VK_L)
+            //        _lHandled = false;
 
-                PushButton(key, ButtonDirection.Up);
-            }
+            //    PushButton(key, ButtonDirection.Up);
+            //}
         }
 
         public void PushButton(VirtualKeyCode key, ButtonDirection buttonDirection)
@@ -716,11 +741,20 @@ namespace DepthTracker.UI
                         //_upCount = 0;
                         Keys[key] = false;
                         _inputSimulator.Keyboard.KeyUp(key);
+                        //_pipeClient.SendJson(key.ToString().Replace("VK_", "") + "_" + buttonDirection.ToString().ToUpper());
                         break;
                     case ButtonDirection.Down:
                         //_upCount = 0;
-                        Keys[key] = true;
+                        //Keys[key] = true;
+                        //_pipeClient.SendJson(key.ToString().Replace("VK_", "") + "_" + buttonDirection.ToString().ToUpper());
                         _inputSimulator.Keyboard.KeyDown(key);
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(200);
+                            await Dispatcher.BeginInvoke(new Action(() => {
+                                _inputSimulator.Keyboard.KeyUp(key);
+                            }));
+                        });
                         break;
                 }
             }
