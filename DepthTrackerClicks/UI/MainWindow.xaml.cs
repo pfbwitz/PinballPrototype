@@ -246,8 +246,8 @@ namespace DepthTrackerClicks.UI
 
         public void SetStatusText()
         {
-            StatusText = _kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText :
-              Properties.Resources.NoSensorStatusText;
+            StatusText = _kinectSensor.IsAvailable ? "Running" :
+              "Not connected";
         }
 
         private unsafe void ProcessDepthFrameData(IntPtr depthFrameData, uint depthFrameDataSize, ushort minDepth, ushort maxDepth)
