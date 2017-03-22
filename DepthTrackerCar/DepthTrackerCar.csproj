@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B814AEE7-0717-4BF4-BACB-150E8AA91633}</ProjectGuid>
+    <ProjectGuid>{A16D2B59-A6D6-4DFE-8DD7-4A520E6AE51A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DepthTracker</RootNamespace>
