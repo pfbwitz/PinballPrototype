@@ -1,7 +1,7 @@
 ﻿<Window x:Class="DepthTrackerClicks.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Depth Tracker" 
+        Title="Depth Tracker Clicks" 
         Height="600" Width="650" 
         Padding="0"
         Closing="MainWindow_Closing"> 

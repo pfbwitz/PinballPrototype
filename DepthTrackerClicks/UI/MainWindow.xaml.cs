@@ -10,6 +10,8 @@ using WindowsInput;
 using WindowsInput.Native;
 using System.Drawing;
 using System.Windows.Controls;
+using System.Threading.Tasks;
+using DepthTrackerClicks.Properties;
 
 namespace DepthTrackerClicks.UI
 {
@@ -119,7 +121,7 @@ namespace DepthTrackerClicks.UI
             _depthBitmap = new WriteableBitmap(_depthFrameDescription.Width, _depthFrameDescription.Height, 
                 96.0, 96.0, PixelFormats.Gray8, null);
 
-            Rectangle = new Rectangle(200, 140, 200, 140);
+            Rectangle = new Rectangle(Settings.X, Settings.Y, Settings.Width, Settings.Height);
 
             _kinectSensor.Open();
 
@@ -129,8 +131,8 @@ namespace DepthTrackerClicks.UI
 
             xText.Text = Rectangle.X.ToString();
             yText.Text = Rectangle.Y.ToString();
-            zMinText.Text = 1000.ToString();
-            zMaxText.Text = 1100.ToString();
+            zMinText.Text = Settings.ZMin.ToString();
+            zMaxText.Text = Settings.ZMax.ToString();
             widthText.Text = Rectangle.Width.ToString();
             heightText.Text = Rectangle.Height.ToString();
 
@@ -149,24 +151,28 @@ namespace DepthTrackerClicks.UI
                 switch (box.Name)
                 {
                     case "xText":
-                        Rectangle.X = value;
+                        Settings.X = value;
                         _lowerXBound = value;
                         break;
                     case "yText":
-                        Rectangle.Y = value;
+                        Settings.Y = value;
                         _lowerYBound = value;
                         break;
                     case "widthText":
-                        Rectangle.Width = value;
+                        Settings.Width = value;
                         _upperXBound = Rectangle.X + value;
                         break;
                     case "heightText":
-                        Rectangle.Height = value;
+                        Settings.Height = value;
                         _upperYBound = Rectangle.Y + value;
                         break;
                     case "zMinText":
+                        Settings.ZMin = value;
+                        //zCalibrated = true;
+                        break;
                     case "zMaxText":
-                        zCalibrated = true;
+                        Settings.ZMax = value;
+                        //zCalibrated = true;
                         break;
                 }
             }
@@ -294,6 +300,8 @@ namespace DepthTrackerClicks.UI
                 if (!zCalibrated && contains)
                 {
                     zCalibrated = true;
+                    Settings.ZMax = Convert.ToInt32(pixelDepth);
+                    Settings.ZMax = Convert.ToInt32(pixelDepth - 5);
                     zMaxText.Text = Convert.ToInt32(pixelDepth).ToString();
                     zMinText.Text = Convert.ToInt32(pixelDepth - 5).ToString();
                 }
@@ -458,12 +466,12 @@ namespace DepthTrackerClicks.UI
 
             if(!_mouseDown)
             {
-                SetCursorPos(_x, _y);
+                //SetCursorPos(_x, _y);
                 PushButton(ButtonDirection.Down);
             }
             else
             {
-                SetCursorPos(_x, _y);
+                //SetCursorPos(_x, _y);
             }
         }
 
@@ -475,7 +483,10 @@ namespace DepthTrackerClicks.UI
                 return;
 
             if(_mouseDown)
+            {
                 PushButton(ButtonDirection.Up);
+            }
+              
         }
 
         public void PushButton(ButtonDirection buttonDirection)
@@ -485,8 +496,12 @@ namespace DepthTrackerClicks.UI
                 switch (buttonDirection)
                 {
                     case ButtonDirection.Up:
-                        _mouseDown = false;
+                        //_mouseDown = false;
                         MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftUp);
+                        Task.Run(async() => {
+                            await Task.Delay(1000);
+                            await Dispatcher.BeginInvoke(new Action(() => _mouseDown = false));
+                        });
                         break;
                     case ButtonDirection.Down:
                         _mouseDown = true;
