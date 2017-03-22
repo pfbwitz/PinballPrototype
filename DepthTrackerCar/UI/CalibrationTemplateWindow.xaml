@@ -1,0 +1,13 @@
+﻿<Window x:Class="DepthTracker.UI.CalibrationTemplateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Color Basics" 
+        Height="600" Width="700" 
+        Background="Red"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        >
+
+</Window>
