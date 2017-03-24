@@ -1,4 +1,4 @@
-﻿namespace DepthTracker
+﻿namespace DepthTracker.Common
 {
     public class PixelMap
     {

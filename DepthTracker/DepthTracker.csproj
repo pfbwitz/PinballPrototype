@@ -80,15 +80,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="UI\CalibrationTemplateWindow.xaml">
-      <SubType>Designer</SubType>
+    <Compile Include="Common\MouseOperations.cs" />
+    <Compile Include="Settings\CarSettings.cs" />
+    <Compile Include="Settings\ISettings.cs" />
+    <Compile Include="Settings\ClicksSettings.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SettingsHelper.cs" />
+    <Compile Include="UI\CarTracker.xaml.cs">
+      <DependentUpon>CarTracker.xaml</DependentUpon>
+    </Compile>
+    <Page Include="UI\ClicksTracker.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\CalibrationWindow.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\MainWindow.xaml">
+    <Page Include="UI\PinballTracker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -96,19 +101,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ButtonDirection.cs" />
-    <Compile Include="PixelMap.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="UI\CalibrationTemplateWindow.xaml.cs">
-      <DependentUpon>CalibrationTemplateWindow.xaml</DependentUpon>
+    <Compile Include="Common\ButtonDirection.cs" />
+    <Compile Include="Common\PixelMap.cs" />
+    <Compile Include="Settings\PinballSettings.cs" />
+    <Compile Include="UI\ClicksTracker.xaml.cs">
+      <DependentUpon>ClicksTracker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\CalibrationWindow.xaml.cs">
-      <DependentUpon>CalibrationWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="UI\PinballTracker.xaml.cs">
+      <DependentUpon>PinballTracker.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\CarTracker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -142,6 +148,7 @@
   <ItemGroup>
     <Resource Include="Images\Kinect.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

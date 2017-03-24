@@ -10,15 +10,16 @@ using WindowsInput;
 using WindowsInput.Native;
 using System.Drawing;
 using System.Windows.Controls;
-using System.Threading.Tasks;
+using DepthTracker.Settings;
+using DepthTracker.Common;
 
 namespace DepthTracker.UI
 {
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class CarTracker : Window, INotifyPropertyChanged
     {
         #region attr
 
-        //private PipeClient _pipeClient;
+        public readonly ISettings Settings = SettingsHelper<PinballSettings>.GetInstance();
 
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
@@ -44,14 +45,14 @@ namespace DepthTracker.UI
         }
 
         public Dictionary<VirtualKeyCode, bool> Keys = new Dictionary<VirtualKeyCode, bool> {
-            { VirtualKeyCode.VK_Q, false},
-            { VirtualKeyCode.VK_A, false},
-            { VirtualKeyCode.VK_E, false},
-            { VirtualKeyCode.VK_D, false},
-            { VirtualKeyCode.VK_U, false},
-            { VirtualKeyCode.VK_J, false},
-            { VirtualKeyCode.VK_O, false},
-            { VirtualKeyCode.VK_L, false},
+            //{ VirtualKeyCode.RETURN, false},
+            { VirtualKeyCode.LEFT, false},
+            { VirtualKeyCode.RETURN, false},
+            //{ VirtualKeyCode.RETURN, false},
+            //{ VirtualKeyCode.RETURN, false},
+            //{ VirtualKeyCode.RETURN, false},
+            //{ VirtualKeyCode.RETURN, false},
+            { VirtualKeyCode.RIGHT, false},
         };
 
         private bool _qHandled = false;
@@ -69,6 +70,8 @@ namespace DepthTracker.UI
         private bool _uHandled = false;
 
         private bool _lHandled = false;
+
+        private bool Housamfix = false;
 
         bool zCalibrated = false;
 
@@ -128,7 +131,7 @@ namespace DepthTracker.UI
 
         #endregion
 
-        public MainWindow()
+        public CarTracker()
         {
             _kinectSensor = KinectSensor.GetDefault();
             _kinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
@@ -159,7 +162,7 @@ namespace DepthTracker.UI
             yText.Text = Rectangle.Y.ToString();
             zMinText.Text = Settings.ZMin.ToString();
             zMaxText.Text = Settings.ZMax.ToString();
-            widthText.Text = Rectangle.Width.ToString();
+            widthText.Text = Settings.Width.ToString();
             heightText.Text = Rectangle.Height.ToString();
 
             Sensor_IsAvailableChanged(null, null);
@@ -469,7 +472,7 @@ namespace DepthTracker.UI
         {
             #region determine button
 
-            VirtualKeyCode keyCode = VirtualKeyCode.RETURN;
+            VirtualKeyCode keyCode = VirtualKeyCode.VK_0;
             if (x > Rectangle.X && x <= _tileWidth + Rectangle.X)
             {
                 if (_flip)
@@ -479,7 +482,7 @@ namespace DepthTracker.UI
                         if (!_aHandled)
                         {
                             _aHandled = detected;
-                            keyCode = VirtualKeyCode.VK_A;
+                            keyCode = VirtualKeyCode.LEFT;
                         }
                     }
                     else
@@ -487,7 +490,7 @@ namespace DepthTracker.UI
                         if (!_qHandled)
                         {
                             _qHandled = detected;
-                            keyCode = VirtualKeyCode.VK_Q;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
@@ -498,7 +501,7 @@ namespace DepthTracker.UI
                         if (!_qHandled)
                         {
                             _qHandled = detected;
-                            keyCode = VirtualKeyCode.VK_Q;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
@@ -506,7 +509,7 @@ namespace DepthTracker.UI
                         if (!_aHandled)
                         {
                             _aHandled = detected;
-                            keyCode = VirtualKeyCode.VK_A;
+                            keyCode = VirtualKeyCode.LEFT;
                         }
                     }
                 }
@@ -520,7 +523,7 @@ namespace DepthTracker.UI
                         if (!_dHandled)
                         {
                             _dHandled = detected;
-                            keyCode = VirtualKeyCode.VK_D;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
@@ -528,7 +531,7 @@ namespace DepthTracker.UI
                         if (!_eHandled)
                         {
                             _eHandled = detected;
-                            keyCode = VirtualKeyCode.VK_E;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
@@ -539,7 +542,7 @@ namespace DepthTracker.UI
                         if (!_eHandled)
                         {
                             _eHandled = detected;
-                            keyCode = VirtualKeyCode.VK_E;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
@@ -547,7 +550,7 @@ namespace DepthTracker.UI
                         if (!_dHandled)
                         {
                             _dHandled = detected;
-                            keyCode = VirtualKeyCode.VK_D;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
@@ -561,7 +564,7 @@ namespace DepthTracker.UI
                         if (!_jHandled)
                         {
                             _jHandled = detected;
-                            keyCode = VirtualKeyCode.VK_J;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
@@ -569,7 +572,7 @@ namespace DepthTracker.UI
                         if (!_uHandled)
                         {
                             _uHandled = detected;
-                            keyCode = VirtualKeyCode.VK_U;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
@@ -580,7 +583,7 @@ namespace DepthTracker.UI
                         if (!_uHandled)
                         {
                             _uHandled = detected;
-                            keyCode = VirtualKeyCode.VK_U;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
@@ -588,7 +591,7 @@ namespace DepthTracker.UI
                         if (!_jHandled)
                         {
                             _jHandled = detected;
-                            keyCode = VirtualKeyCode.VK_J;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
@@ -602,7 +605,7 @@ namespace DepthTracker.UI
                         if (!_lHandled)
                         {
                             _lHandled = detected;
-                            keyCode = VirtualKeyCode.VK_L;
+                            keyCode = VirtualKeyCode.RIGHT;
                         }
                     }
                     else
@@ -610,7 +613,7 @@ namespace DepthTracker.UI
                         if (!_oHandled)
                         {
                             _oHandled = detected;
-                            keyCode = VirtualKeyCode.VK_O;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
@@ -621,7 +624,7 @@ namespace DepthTracker.UI
                         if (!_oHandled)
                         {
                             _oHandled = detected;
-                            keyCode = VirtualKeyCode.VK_O;
+                            keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
@@ -629,7 +632,7 @@ namespace DepthTracker.UI
                         if (!_lHandled)
                         {
                             _lHandled = detected;
-                            keyCode = VirtualKeyCode.VK_L;
+                            keyCode = VirtualKeyCode.RIGHT;
                         }
                     }
                 }
@@ -637,7 +640,7 @@ namespace DepthTracker.UI
 
             #endregion
 
-            if (keyCode == VirtualKeyCode.RETURN)
+            if (keyCode == VirtualKeyCode.VK_0)
                 return;
 
             if (detected)
@@ -646,21 +649,27 @@ namespace DepthTracker.UI
             }
             else
             {
-                if (keyCode == VirtualKeyCode.VK_A && !_aHandled)
+                //if (keyCode == VirtualKeyCode.LEFT && !_aHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RETURN && !_eHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RETURN && !_qHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RETURN && !_dHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RETURN && !_uHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RETURN && !_jHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RETURN && !_oHandled)
+                //    DoKeyUp(keyCode);
+                //else if (keyCode == VirtualKeyCode.RIGHT && !_lHandled)
+                //    DoKeyUp(keyCode);
+                if (keyCode == VirtualKeyCode.LEFT && !detected)
                     DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_E && !_eHandled)
+                else if (keyCode == VirtualKeyCode.RETURN && !detected)
                     DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_Q && !_qHandled)
-                    DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_D && !_dHandled)
-                    DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_U && !_uHandled)
-                    DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_J && !_jHandled)
-                    DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_O && !_oHandled)
-                    DoKeyUp(keyCode);
-                else if (keyCode == VirtualKeyCode.VK_L && !_lHandled)
+                else if (keyCode == VirtualKeyCode.RIGHT && !detected)
                     DoKeyUp(keyCode);
             }
         }
@@ -691,7 +700,8 @@ namespace DepthTracker.UI
 
         public void DoKeyUp(VirtualKeyCode key)
         {
-            return;
+            PushButton(key, ButtonDirection.Up);
+            //return;
             //if (!_run)
             //    return;
 
@@ -709,21 +719,21 @@ namespace DepthTracker.UI
 
             //if (Keys[key])
             //{
-            //    if (key == VirtualKeyCode.VK_A)
+            //    if (key == VirtualKeyCode.LEFT)
             //        _aHandled = false;
-            //    else if (key == VirtualKeyCode.VK_E)
+            //    else if (key == VirtualKeyCode.RETURN)
             //        _eHandled = false;
-            //    else if (key == VirtualKeyCode.VK_Q)
+            //    else if (key == VirtualKeyCode.RETURN)
             //        _qHandled = false;
-            //    else if (key == VirtualKeyCode.VK_D)
+            //    else if (key == VirtualKeyCode.RETURN)
             //        _dHandled = false;
-            //    else if (key == VirtualKeyCode.VK_U)
+            //    else if (key == VirtualKeyCode.RETURN)
             //        _uHandled = false;
-            //    else if (key == VirtualKeyCode.VK_J)
+            //    else if (key == VirtualKeyCode.RETURN)
             //        _jHandled = false;
-            //    else if (key == VirtualKeyCode.VK_O)
+            //    else if (key == VirtualKeyCode.RETURN)
             //        _oHandled = false;
-            //    else if (key == VirtualKeyCode.VK_L)
+            //    else if (key == VirtualKeyCode.RIGHT)
             //        _lHandled = false;
 
             //    PushButton(key, ButtonDirection.Up);
@@ -748,13 +758,13 @@ namespace DepthTracker.UI
                         //Keys[key] = true;
                         //_pipeClient.SendJson(key.ToString().Replace("VK_", "") + "_" + buttonDirection.ToString().ToUpper());
                         _inputSimulator.Keyboard.KeyDown(key);
-                        Task.Run(async () =>
-                        {
-                            await Task.Delay(200);
-                            await Dispatcher.BeginInvoke(new Action(() => {
-                                _inputSimulator.Keyboard.KeyUp(key);
-                            }));
-                        });
+                        //Task.Run(async () =>
+                        //{
+                        //    await Task.Delay(200);
+                        //    await Dispatcher.BeginInvoke(new Action(() => {
+                        //        _inputSimulator.Keyboard.KeyUp(key);
+                        //    }));
+                        //});
                         break;
                 }
             }
