@@ -73,30 +73,6 @@ namespace DepthTracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int ZMinPinball {
-            get {
-                return ((int)(this["ZMinPinball"]));
-            }
-            set {
-                this["ZMinPinball"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1100")]
-        public int ZMaxPinball {
-            get {
-                return ((int)(this["ZMaxPinball"]));
-            }
-            set {
-                this["ZMaxPinball"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int XCar {
             get {
@@ -140,30 +116,6 @@ namespace DepthTracker.Properties {
             }
             set {
                 this["HeightCar"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int ZMinCar {
-            get {
-                return ((int)(this["ZMinCar"]));
-            }
-            set {
-                this["ZMinCar"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1100")]
-        public int ZMaxCar {
-            get {
-                return ((int)(this["ZMaxCar"]));
-            }
-            set {
-                this["ZMaxCar"] = value;
             }
         }
         
@@ -217,25 +169,49 @@ namespace DepthTracker.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int ZMinClicks {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Flip {
             get {
-                return ((int)(this["ZMinClicks"]));
+                return ((bool)(this["Flip"]));
             }
             set {
-                this["ZMinClicks"] = value;
+                this["Flip"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int ZMin {
+            get {
+                return ((int)(this["ZMin"]));
+            }
+            set {
+                this["ZMin"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1100")]
-        public int ZMaxClicks {
+        public int ZMax {
             get {
-                return ((int)(this["ZMaxClicks"]));
+                return ((int)(this["ZMax"]));
             }
             set {
-                this["ZMaxClicks"] = value;
+                this["ZMax"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Run {
+            get {
+                return ((bool)(this["Run"]));
+            }
+            set {
+                this["Run"] = value;
             }
         }
     }

@@ -14,12 +14,6 @@
     <Setting Name="HeightPinball" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">140</Value>
     </Setting>
-    <Setting Name="ZMinPinball" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="ZMaxPinball" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1100</Value>
-    </Setting>
     <Setting Name="XCar" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
     </Setting>
@@ -31,12 +25,6 @@
     </Setting>
     <Setting Name="HeightCar" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">140</Value>
-    </Setting>
-    <Setting Name="ZMinCar" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="ZMaxCar" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1100</Value>
     </Setting>
     <Setting Name="XClicks" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">200</Value>
@@ -50,11 +38,17 @@
     <Setting Name="HeightClicks" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">140</Value>
     </Setting>
-    <Setting Name="ZMinClicks" Type="System.Int32" Scope="User">
+    <Setting Name="Flip" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ZMin" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
     </Setting>
-    <Setting Name="ZMaxClicks" Type="System.Int32" Scope="User">
+    <Setting Name="ZMax" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1100</Value>
+    </Setting>
+    <Setting Name="Run" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

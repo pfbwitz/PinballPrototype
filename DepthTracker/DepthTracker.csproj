@@ -89,6 +89,8 @@
     <Compile Include="UI\CarTracker.xaml.cs">
       <DependentUpon>CarTracker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ITracker.cs" />
+    <Compile Include="UI\TrackerProperties.cs" />
     <Page Include="UI\ClicksTracker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

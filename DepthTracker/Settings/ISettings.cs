@@ -14,6 +14,10 @@
 
         int ZMax { get; set; }
 
+        bool Flip { get; set; }
+
+        bool Run { get; set; }
+
         void Save();
     }
 }

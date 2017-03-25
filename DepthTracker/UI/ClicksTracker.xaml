@@ -4,7 +4,7 @@
         Title="Depth Tracker Clicks" 
         Height="600" Width="650" 
         Padding="0"
-        Closing="MainWindow_Closing"> 
+        > 
   <Window.Resources>
     <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
     <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
@@ -44,19 +44,19 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <Label Content="X" Grid.Column="1" />
-            <Button Content="OFF" x:Name="BtnSwitch" Click="BtnSwitch_Click" Grid.Column="0"/>
-            <TextBox TextChanged="TextBox_TextChanged" x:Name="xText" Grid.Column="2" />
+            <Button Content="OFF" x:Name="BtnSwitch" Grid.Column="0"/>
+            <TextBox x:Name="xText" Grid.Column="2" />
             <Label Content="Y" Grid.Column="3" />
-            <TextBox TextChanged="TextBox_TextChanged" x:Name="yText" Grid.Column="4" />
+            <TextBox x:Name="yText" Grid.Column="4" />
             <Label Content="Width" Grid.Column="5" />
-            <TextBox TextChanged="TextBox_TextChanged" x:Name="widthText" Grid.Column="6" />
+            <TextBox x:Name="widthText" Grid.Column="6" />
             <Label Content="Height" Grid.Column="7" />
-            <TextBox TextChanged="TextBox_TextChanged" x:Name="heightText" Grid.Column="8" />
+            <TextBox x:Name="heightText" Grid.Column="8" />
             <Label Content="Z lower bounds" Grid.Column="9" />
-            <TextBox TextChanged="TextBox_TextChanged" x:Name="zMinText" Grid.Column="10" />
+            <TextBox x:Name="zMinText" Grid.Column="10" />
             <Label Content="Z upper bounds" Grid.Column="11" />
-            <TextBox TextChanged="TextBox_TextChanged" x:Name="zMaxText" Grid.Column="12" />
-            <Button Content="FLIP ON" x:Name="BtnFlip" Click="BtnFlip_Click" Grid.Column="13"/>
+            <TextBox x:Name="zMaxText" Grid.Column="12" />
+            <Button Content="FLIP ON" x:Name="BtnFlip" Grid.Column="13"/>
         </Grid>
         <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
       <StatusBarItem Content="{Binding StatusText}" />

@@ -11,7 +11,7 @@
 
         private const string HeightKey = "HeightCar";
 
-        private const string ZMinKey = "ZMinCar;";
+        private const string ZMinKey = "ZMinCar";
 
         private const string ZMaxKey = "ZMaxCar";
 
@@ -65,31 +65,31 @@
 
         public int ZMin
         {
-            get
-            {
-                return GetIntByKey(ZMinKey);
-            }
-            set
-            {
-                SaveSettingByKey(ZMinKey, value);
-            }
+            get { return GeneralZMin; }
+            set { GeneralZMin = value; }
         }
 
         public int ZMax
         {
-            get
-            {
-                return GetIntByKey(ZMaxKey);
-            }
-            set
-            {
-                SaveSettingByKey(ZMaxKey, value);
-            }
+            get { return GeneralZMax; }
+            set { GeneralZMax = value; }
+        }
+
+        public bool Run
+        {
+            get { return GeneralRun; }
+            set { GeneralRun = value; }
         }
 
         public void Save()
         {
             SaveSettings();
+        }
+
+        public bool Flip
+        {
+            get { return GeneralFlip; }
+            set { GeneralFlip = value; }
         }
     }
 }
