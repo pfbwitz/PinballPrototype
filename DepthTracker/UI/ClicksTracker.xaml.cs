@@ -427,8 +427,20 @@ namespace DepthTrackerClicks.UI
 
         private void PushButtons(int x, int y, bool detected)
         {
-            var posXPercentage = (x - Rectangle.X) / Rectangle.Width * 100;
-            var posYPercentage = (y - Rectangle.Y) / Rectangle.Height * 100;
+            //var posXPercentage = (x - Rectangle.X) / Rectangle.Width * 100;
+            //var posYPercentage = (y - Rectangle.Y) / Rectangle.Height * 100;
+            //var c = false;
+            //if (_flip)
+            //{
+            //    posXPercentage = 100 - posXPercentage;
+            //    posYPercentage = 100 - posYPercentage;
+            //}
+
+            //_x = Convert.ToInt32(posXPercentage / 100 * SystemParameters.PrimaryScreenWidth);
+            //_y = Convert.ToInt32(posYPercentage / 100 * SystemParameters.PrimaryScreenHeight);
+
+            var posXPercentage = (x - Rectangle.X) * 100 / Rectangle.Width;
+            var posYPercentage = (y - Rectangle.Y) * 100 / Rectangle.Height;
             var c = false;
             if (_flip)
             {
@@ -436,8 +448,8 @@ namespace DepthTrackerClicks.UI
                 posYPercentage = 100 - posYPercentage;
             }
 
-            _x = Convert.ToInt32(posXPercentage / 100 * SystemParameters.PrimaryScreenWidth);
-            _y = Convert.ToInt32(posYPercentage / 100 * SystemParameters.PrimaryScreenHeight);
+            _x = Convert.ToInt32(posXPercentage * SystemParameters.PrimaryScreenWidth / 100);
+            _y = Convert.ToInt32(posYPercentage * SystemParameters.PrimaryScreenHeight / 100);
 
             if (!_clickHandled)
             {
@@ -468,12 +480,12 @@ namespace DepthTrackerClicks.UI
 
             if(!_mouseDown)
             {
-                //SetCursorPos(_x, _y);
+                SetCursorPos(_x, _y);
                 PushButton(ButtonDirection.Down);
             }
             else
             {
-                //SetCursorPos(_x, _y);
+                SetCursorPos(_x, _y);
             }
         }
 
