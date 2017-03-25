@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -62,6 +63,29 @@ namespace Sketchball
 
             if (Program.ReleaseMode)
                 enterFullscreen();
+
+            var timer = new System.Timers.Timer(1000 * 60 * 3);
+            var timer2 = new System.Timers.Timer(1000);
+            var t = string.Empty;
+            timer.Elapsed += (sender, e) => {
+                game.Pause();
+                timer.Stop();
+                timer2.Stop();
+                gameView.ScoreString = t + Environment.NewLine + "Player 1: " + game.Score1 + Environment.NewLine +
+                    "Player 2: " + game.Score2 + Environment.NewLine +
+                    "Player 3: " + game.Score3 + Environment.NewLine +
+                    "Player 4: " + game.Score4 + Environment.NewLine;
+                    gameView.MouseDown += (s, a) => selectionForm.OpenGame(originalMachine, fileName);
+            };
+            timer.Start();
+            var seconds = 0;
+            timer2.Elapsed += (s, a) =>
+            {
+                seconds++;
+                var timespan = TimeSpan.FromSeconds(seconds);
+                t = new DateTime(timespan.Ticks).AddSeconds(1).ToString("mm:ss");
+            };
+            timer2.Start();
         }
 
         /// <summary>

@@ -18,11 +18,13 @@ namespace Sketchball
 #if DEBUG
             Program.ReleaseMode = false;
 #else
-            //BackgroundImage = null;
-            //foreach(var control in Controls)
-            //    ((Control)control).Visible = false;
-            picBGame.BackgroundImage = Resources.PlaySchrift1b;
-            picBEditor.BackgroundImage = Resources.EditorSchrift2b;
+            BackgroundImage = null;
+            foreach (var control in Controls)
+                ((Control)control).Visible = false;
+            //picBGame.BackgroundImage = Resources.PlaySchrift1b;
+            //picBEditor.BackgroundImage = Resources.EditorSchrift2b;
+
+            picBEditor_Click(null, null);
 #endif
 
         }
@@ -82,10 +84,6 @@ namespace Sketchball
                     }
                 }
             }
-
-
-           
-            
         }
 
         private void picBEditor_Click(object sender, EventArgs e)
@@ -93,7 +91,7 @@ namespace Sketchball
             if (Program.ReleaseMode)
             {
                 Program.IsFourPlayerMode = true;
-                var filename = "4playermachine";
+                var filename = "4playermachine2017";
                 var file = new DirectoryInfo(Path.Combine(Application.ExecutablePath, "..", "Machines")).FullName + "\\" + filename + ".pmf";
                 OpenGame(PinballMachine.FromFile(file), file);
             }
@@ -160,7 +158,7 @@ namespace Sketchball
             childForm.FormClosed += onChildClose;
         }
 
-        private void onChildClose(object sender, FormClosedEventArgs e)
+        public void onChildClose(object sender, FormClosedEventArgs e)
         {
             this.Close();
         }

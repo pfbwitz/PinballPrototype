@@ -214,21 +214,21 @@ namespace Sketchball.GameComponents
                 // Wire up event handlers
                 Machine.Collision += OnScore;
                 Machine.GameOver += OnGameOver;
-
-                Machine.IntroduceBall(Machine.Width / 4);
-                
-                Machine.IntroduceBall(Machine.Width);
-
-                if (Program.IsFourPlayerMode)
-                {
-                    Machine.IntroduceBall(Machine.Width - 100);
-                    Machine.IntroduceBall(Machine.Width - 200);
-                }
+                var noOfBalls = 3;
+                for(var i =0;i < noOfBalls;i++)
+                    Machine.IntroduceBall(_randomSpots[new Random().Next(_randomSpots.Length)]);
+                   
                 Lives--;
             }
         }
 
+        int[] _randomSpots = { 50, 60, 80, 120, 410, 670, 700 };
         
+        public void SetGameOver()
+        {
+            Status = GameStatus.GameOver;
+        }
+
         /// <summary>
         /// Add a new ball if needed when ball gets lost.
         /// </summary>
@@ -240,15 +240,12 @@ namespace Sketchball.GameComponents
                 Status = GameStatus.GameOver;
                
                 var handlers = GameOver;
-                if (handlers != null)
-                {
-                    handlers(this, Score1);
-                }
+                handlers(this, Score1);
             }
             else
             {
                 //Lives--;
-                Machine.IntroduceBall(20);
+                Machine.IntroduceBall(_randomSpots[new Random().Next(_randomSpots.Length)]);
             }
         }
 

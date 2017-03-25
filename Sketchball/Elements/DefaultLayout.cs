@@ -65,60 +65,103 @@ namespace Sketchball.Elements
 
 
             var baseLeftX = 134;
-            var baseRightX = 242;
+            var baseRightX = 253;
             var baseTopY = 19;
             var baseBottomtY = 105;
-            var power = 2;
+            float power = 2;
+            var flipperscale = 1.5;
             //Add flippers
             #region left
             Flipper lflipper = new LeftFlipper() { X = baseLeftX, Y = Height - baseBottomtY };
             lflipper.Name = "1";
             lflipper.BounceFactor = power;
-            lflipper.Scale = 1.7;
+            lflipper.Scale = flipperscale;
             _elements.Add(lflipper);
 
             Flipper rflipper = new RightFlipper() { X = baseRightX, Y = Height - baseBottomtY };
             rflipper.Name ="1";
-            rflipper.Scale = 1.7;
+            rflipper.Scale = flipperscale;
             rflipper.BounceFactor = power;
             _elements.Add(rflipper);
 
+            Flipper lflipperSec = new LeftFlipper() { X = baseLeftX + - 60, Y = Height - baseBottomtY * 2 + 20 };
+            lflipperSec.Name = "1";
+            lflipperSec.BounceFactor = power - 0.5f;
+            lflipperSec.Scale = flipperscale * 0.6;
+            _elements.Add(lflipperSec);
+
+            Flipper rflipperSec = new RightFlipper() { X = baseRightX + 115, Y = Height - baseBottomtY * 2 + 20 };
+            rflipperSec.Name = "1";
+            rflipperSec.Scale = flipperscale * 0.6;
+            rflipperSec.BounceFactor = power - 0.5f;
+            _elements.Add(rflipperSec);
+
             Flipper lflipperTop = new LeftFlipper() { X = baseRightX, Y = -baseTopY };
             lflipperTop.Name = "2";
-            lflipperTop.Scale = 1.7;
+            lflipperTop.Scale = flipperscale;
             lflipperTop.BounceFactor = power;
             lflipperTop.BaseRotation = 180;
             lflipperTop.Trigger = System.Windows.Forms.Keys.E;
             _elements.Add(lflipperTop);
 
             Flipper rflipperTop = new RightFlipper() { X = baseLeftX, Y = -baseTopY };
-            rflipperTop.Scale = 1.7;
+            rflipperTop.Scale = flipperscale;
             rflipperTop.Name = "2";
             rflipperTop.BounceFactor = power;
             rflipperTop.BaseRotation = 180;
             rflipperTop.Trigger = System.Windows.Forms.Keys.Q;
             _elements.Add(rflipperTop);
+
+            Flipper lflipperTopSec = new LeftFlipper() { X = baseRightX + 115, Y = -baseTopY * -2.5 + 70 };
+            lflipperTopSec.Name = "2";
+            lflipperTopSec.Scale = flipperscale * 0.6;
+            lflipperTopSec.BounceFactor = power - 0.5f;
+            lflipperTopSec.BaseRotation = 180;
+            lflipperTopSec.Trigger = System.Windows.Forms.Keys.E;
+            _elements.Add(lflipperTopSec);
+
+            Flipper rflipperTopSec = new RightFlipper() { X = baseLeftX - 60, Y = -baseTopY * -2.5 + 70 };
+            rflipperTopSec.Scale = flipperscale * 0.6;
+            rflipperTopSec.Name = "2";
+            rflipperTopSec.BounceFactor = power - 0.5f;
+            rflipperTopSec.BaseRotation = 180;
+            rflipperTopSec.Trigger = System.Windows.Forms.Keys.Q;
+            _elements.Add(rflipperTopSec);
             #endregion
 
             if (Program.IsFourPlayerMode)
             {
                 #region right
                 Flipper lflipper2 = new LeftFlipper() { X = baseLeftX + 997 / 2, Y = Height - baseBottomtY };
-                lflipper2.Scale = 1.7;
+                lflipper2.Scale = flipperscale;
                 lflipper2.Name = "4";
                 lflipper2.BounceFactor = power;
                 lflipper2.Trigger = System.Windows.Forms.Keys.J;
                 _elements.Add(lflipper2);
 
                 Flipper rflipper2 = new RightFlipper() { X = baseRightX + 997 / 2, Y = Height - baseBottomtY };
-                rflipper2.Scale = 1.7;
+                rflipper2.Scale = flipperscale;
                 rflipper2.Name = "4";
                 rflipper2.BounceFactor = power;
                 rflipper2.Trigger = System.Windows.Forms.Keys.L;
                 _elements.Add(rflipper2);
 
+                Flipper lflipper2Sec = new LeftFlipper() { X = baseLeftX + 997 / 2 - 60, Y = Height - baseBottomtY * 2 };
+                lflipper2Sec.Scale = flipperscale * 0.6;
+                lflipper2Sec.Name = "4";
+                lflipper2Sec.BounceFactor = power * 0.5f;
+                lflipper2Sec.Trigger = System.Windows.Forms.Keys.J;
+                _elements.Add(lflipper2Sec);
+
+                Flipper rflipper2Sec = new RightFlipper() { X = baseRightX + 997 / 2 + 115, Y = Height - baseBottomtY * 2 };
+                rflipper2Sec.Scale = flipperscale * 0.6;
+                rflipper2Sec.Name = "4";
+                rflipper2Sec.BounceFactor = power * 0.5f;
+                rflipper2Sec.Trigger = System.Windows.Forms.Keys.L;
+                _elements.Add(rflipper2Sec);
+
                 Flipper lflipperTop2 = new LeftFlipper() { X = baseRightX + 997 / 2, Y = -baseTopY };
-                lflipperTop2.Scale = 1.7;
+                lflipperTop2.Scale = flipperscale;
                 lflipperTop2.Name = "3";
                 lflipperTop2.BounceFactor = power;
                 lflipperTop2.BaseRotation = 180;
@@ -126,12 +169,28 @@ namespace Sketchball.Elements
                 _elements.Add(lflipperTop2);
 
                 Flipper rflipperTop2 = new RightFlipper() { X = baseLeftX + 997 / 2, Y = -baseTopY };
-                rflipperTop2.Scale = 1.7;
+                rflipperTop2.Scale = flipperscale;
                 rflipperTop2.Name = "3";
                 rflipperTop2.BounceFactor = power;
                 rflipperTop2.BaseRotation = 180;
                 rflipperTop2.Trigger = System.Windows.Forms.Keys.U;
                 _elements.Add(rflipperTop2);
+
+                Flipper lflipperTop2Sec = new LeftFlipper() { X = baseRightX + 997 / 2 + 115, Y = -baseTopY * -2.5 + 70 };
+                lflipperTop2Sec.Scale = flipperscale * 0.6;
+                lflipperTop2Sec.Name = "3";
+                lflipperTop2Sec.BounceFactor = power * 0.5f;
+                lflipperTop2Sec.BaseRotation = 180;
+                lflipperTop2Sec.Trigger = System.Windows.Forms.Keys.O;
+                _elements.Add(lflipperTop2Sec);
+
+                Flipper rflipperTop2Sec = new RightFlipper() { X = baseLeftX + 997 / 2 - 60, Y = -baseTopY * -2.5 + 70 };
+                rflipperTop2Sec.Scale = flipperscale * 0.6;
+                rflipperTop2Sec.Name = "3";
+                rflipperTop2Sec.BounceFactor = power * 0.5f;
+                rflipperTop2Sec.BaseRotation = 180;
+                rflipperTop2Sec.Trigger = System.Windows.Forms.Keys.U;
+                _elements.Add(rflipperTop2Sec);
                 #endregion
             }
         }

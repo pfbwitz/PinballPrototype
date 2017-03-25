@@ -276,7 +276,7 @@ namespace Sketchball.Controls
                 }
                 else if (Game.Status == GameStatus.Paused)
                 {
-                    DrawOverlay(g, Colors.DarkBlue, "PAUSED", "Press [ENTER] to resume.");
+                    DrawOverlay(g, Colors.AntiqueWhite, "GAME OVER", ScoreString);
                 }
 
             }
@@ -287,6 +287,7 @@ namespace Sketchball.Controls
             }
        }
 
+        public string ScoreString = string.Empty;
         
         private void DrawOverlay(DrawingContext g, Color color, string title, string msg)
         {
