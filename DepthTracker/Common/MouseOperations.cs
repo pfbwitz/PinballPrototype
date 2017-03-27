@@ -86,14 +86,19 @@ namespace DepthTrackerClicks.Common
                     case ButtonDirection.Up:
                         //w.TrackerMouseDown = false;
                         MouseEvent(MouseEventFlags.LeftUp);
-                        Task.Run(async () => {
-                            await Task.Delay(1000);
-                            await w.Dispatcher.BeginInvoke(new Action(() => w.TrackerMouseDown = false));
-                        });
+                        //Task.Run(async () => {
+                        //    await Task.Delay(1000);
+                        //    await w.Dispatcher.BeginInvoke(new Action(() => w.TrackerMouseDown = false));
+                        //});
                         break;
                     case ButtonDirection.Down:
                         w.TrackerMouseDown = true;
                         MouseEvent(MouseEventFlags.LeftDown);
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(1000);
+                            await w.Dispatcher.BeginInvoke(new Action(() => w.TrackerMouseDown = false));
+                        });
                         break;
                 }
             }
