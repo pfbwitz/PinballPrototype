@@ -26,7 +26,7 @@ namespace DepthTracker.Common
 
         MessageBoxResult ShowMessage(string message, string title);
 
-        void PushButtons(int x, int y, bool detected);
+        void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY);
 
         Window Instance { get; }
 

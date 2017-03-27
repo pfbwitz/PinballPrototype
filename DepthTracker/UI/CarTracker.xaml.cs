@@ -8,6 +8,7 @@ using DepthTracker.Common;
 using DepthTracker.Settings;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Kinect;
 
 namespace DepthTracker.UI
 {
@@ -69,12 +70,64 @@ namespace DepthTracker.UI
 
         #endregion
 
+        public KinectSensor KinectSensor = null;
+
+        public DepthFrameReader DepthFrameReader = null;
+
+        public FrameDescription DepthFrameDescription = null;
+
         public CarTracker()
         {
+            //KinectSensor = KinectSensor.GetDefault();
+            //KinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
+
+            //DepthFrameReader = KinectSensor.DepthFrameSource.OpenReader();
+            //DepthFrameReader.FrameArrived += Reader_FrameArrived;
+            //DepthFrameDescription = KinectSensor.DepthFrameSource.FrameDescription;
+
             _trackerWorker = TrackerWorker<CarSettings>.GetInstance(this);
         }
 
-        public void PushButtons(int x, int y, bool detected)
+        public void Reader_FrameArrived(object sender, DepthFrameArrivedEventArgs e)
+        {
+            var bounds = _trackerWorker.ZBounds;
+            var depthFrameProcessed = false;
+            using (var depthFrame = e.FrameReference.AcquireFrame())
+            {
+                if (depthFrame != null)
+                {
+                    using (var depthBuffer = depthFrame.LockImageBuffer())
+                    {
+                        if (((DepthFrameDescription.Width * DepthFrameDescription.Height) == (depthBuffer.Size / DepthFrameDescription.BytesPerPixel)) &&
+                            (DepthFrameDescription.Width == DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == DepthBitmap.PixelHeight))
+                        {
+                            _trackerWorker.ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, bounds[0], bounds[1]);
+
+                            depthFrameProcessed = true;
+                        }
+                    }
+                }
+            }
+
+            foreach (var b in _trackerWorker.DepthPixels)
+            {
+                if (b > 100)
+                    ShowMessage("b", b.ToString());
+                break;
+            }
+
+            if (depthFrameProcessed)
+            {
+                DepthBitmap.WritePixels(
+                     new Int32Rect(0, 0, DepthBitmap.PixelWidth, DepthBitmap.PixelHeight),
+                     _trackerWorker.DepthPixels,
+                     DepthBitmap.PixelWidth,
+                     0
+                );
+            }
+        }
+
+        public void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY)
         {
             #region determine button
 

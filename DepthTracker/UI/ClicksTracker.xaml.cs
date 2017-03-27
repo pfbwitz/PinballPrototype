@@ -77,7 +77,7 @@ namespace DepthTracker.UI
             _trackerWorker = TrackerWorker<ClicksSettings>.GetInstance(this);
         }
 
-        public void PushButtons(int x, int y, bool detected)
+        public void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY)
         {
             var posXPercentage = (x - _trackerWorker.Rectangle.X) * 100 / _trackerWorker.Rectangle.Width;
             var posYPercentage = (y - _trackerWorker.Rectangle.Y) * 100 / _trackerWorker.Rectangle.Height;
@@ -105,13 +105,12 @@ namespace DepthTracker.UI
                 if (!_trackerWorker.Run)
                     return;
 
-                if (!TrackerMouseDown)
-                {
-                    SetCursorPos(_x, _y);
-                    MouseOperations.PushButton(ButtonDirection.Down, this);
-                }
-                else
-                    SetCursorPos(_x, _y);
+                //if(_x == lowestX || _x == highestX || _y == lowestY || _y == highestY)
+                //{
+                    //SetCursorPos(_x, _y);
+                    if (!TrackerMouseDown)
+                        MouseOperations.PushButton(ButtonDirection.Down, this);
+                //}
             }
             else
             {

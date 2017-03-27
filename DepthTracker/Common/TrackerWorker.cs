@@ -62,13 +62,13 @@ namespace DepthTracker.Common
 
         public Rectangle Rectangle;
 
-        public int LowerXBound;
+        public int LowerXBound { get; set; }
 
-        public int UpperXBound;
+        public int UpperXBound { get; set; }
 
-        public int LowerYBound;
+        public int LowerYBound { get; set; }
 
-        public int UpperYBound;
+        public int UpperYBound { get; set; }
 
         public bool Run
         {
@@ -153,7 +153,7 @@ namespace DepthTracker.Common
 
         public TrackerWorker<T> Setup()
         {
-            Window.Instance.DataContext = this;
+            Window.Instance.DataContext = Window.Instance;
 
             Window.XText.Text = Rectangle.X.ToString();
             Window.YText.Text = Rectangle.Y.ToString();
@@ -178,6 +178,11 @@ namespace DepthTracker.Common
             Window.FlipButton.Content = Flip ? "FLIP OFF" : "FLIP ON";
             Window.SwitchButton.Content = Run ? "ON" : "OFF";
 
+            LowerXBound = Settings.X;
+            LowerYBound = Settings.Y;
+            UpperXBound = Settings.X + Settings.Width;
+            UpperYBound = Settings.Y + Settings.Height;
+
             return this;
         }
 
@@ -196,23 +201,36 @@ namespace DepthTracker.Common
                         if (((DepthFrameDescription.Width * DepthFrameDescription.Height) == (depthBuffer.Size / DepthFrameDescription.BytesPerPixel)) &&
                             (DepthFrameDescription.Width == Window.DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == Window.DepthBitmap.PixelHeight))
                         {
+                            
                             ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, bounds[0], bounds[1]);
-
+                          
                             depthFrameProcessed = true;
+
+                            Window.DepthBitmap.WritePixels(
+                                 new Int32Rect(0, 0, Window.DepthBitmap.PixelWidth, Window.DepthBitmap.PixelHeight),
+                                 DepthPixels,
+                                 Window.DepthBitmap.PixelWidth,
+                                 0
+                            );
                         }
                     }
                 }
             }
 
-            if (depthFrameProcessed)
-            {
-                Window.DepthBitmap.WritePixels(
-                     new Int32Rect(0, 0, Window.DepthBitmap.PixelWidth, Window.DepthBitmap.PixelHeight),
-                     DepthPixels,
-                     Window.DepthBitmap.PixelWidth,
-                     0
-                );
-            }
+            //Window.ShowMessage("4", "4");
+
+            //if (depthFrameProcessed)
+            //{
+
+            //    Window.ShowMessage("5", "5");
+
+            //    Window.DepthBitmap.WritePixels(
+            //         new Int32Rect(0, 0, Window.DepthBitmap.PixelWidth, Window.DepthBitmap.PixelHeight),
+            //         DepthPixels,
+            //         Window.DepthBitmap.PixelWidth,
+            //         0
+            //    );
+            //}
         }
 
         public void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
@@ -235,7 +253,7 @@ namespace DepthTracker.Common
                     case "xText":
                         Settings.X = value;
                         Rectangle.X = value;
-                        LowerYBound = value;
+                        LowerXBound = value;
                         break;
                     case "yText":
                         Settings.Y = value;
@@ -245,7 +263,7 @@ namespace DepthTracker.Common
                     case "widthText":
                         Settings.Width = value;
                         Rectangle.Width = value;
-                        UpperYBound = Rectangle.X + value;
+                        UpperXBound = Rectangle.X + value;
                         break;
                     case "heightText":
                         Settings.Height = value;
@@ -306,6 +324,8 @@ namespace DepthTracker.Common
             try
             {
                 Loop((int)depthFrameDataSize, DepthFrameDescription.BytesPerPixel, frameData, minDepth, maxDepth);
+              
+             
             }
             catch (Exception ex)
             {
@@ -342,10 +362,18 @@ namespace DepthTracker.Common
                 var detected = pixelDepth > 0 && pixelDepth > minDepth && pixelDepth < maxDepth; //is depth within our depth-margin
 
                 //if true, pixel is within bounding rectangle
+
+                
+
                 var contains = x >= Rectangle.X &&
                     x <= Rectangle.X + Rectangle.Width &&
                     y >= Rectangle.Y &&
                     y <= Rectangle.Y + Rectangle.Height;
+
+                if (contains && detected)
+                {
+                    var badsd = "asds";
+                }
 
                 //determine z-coordinate of the surface (possibly unreliable)
                 if (!ZCalibrated && contains)
@@ -358,7 +386,14 @@ namespace DepthTracker.Common
 
                 if (detected)
                 {
+                  
                     b = (byte)(contains ? 255 : 0); //pixel within depth-margin (z) and withing rectangle (x and y) should be white
+                    var distance = 9999;
+                    if(b == 255)
+                    {
+
+                    }
+
                     Mapping[x, y] = new PixelMap { ByteValue = b, Index = i };
                 }
                 else
@@ -403,6 +438,7 @@ namespace DepthTracker.Common
                 for (var x = recX; x < recX + recW; x++)
                 {
                     var pixel = Mapping[x, y];
+
                     if (pixel == null)
                         continue;
                     if (pixel.ByteValue == 255 && !IsPositiveInPixelArea(x, y))
@@ -413,13 +449,51 @@ namespace DepthTracker.Common
                 }
             }
 
+            var @break = false;
+
+            var highestX = 0;
+            var highestY = 0;
+            var lowestX = 9999;
+            var lowestY = 9999;
+
             for (var y = recY; y < recY + recH; y++)
             {
                 for (var x = recX; x < recX + recW; x++)
                 {
                     var pixel = Mapping[x, y];
+
+                    if (pixel != null && pixel.ByteValue == 255)
+                    {
+                        if (pixel.X > highestX)
+                            highestX = pixel.X;
+                        if (pixel.Y > highestY)
+                            highestY = pixel.Y;
+                        if (pixel.X < lowestX)
+                            lowestX = pixel.X;
+                        if (pixel.Y < lowestY)
+                            lowestY = pixel.Y;
+                    }
+                }
+            }
+
+            for (var y = recY; y < recY + recH; y++)
+            {
+                if (@break)
+                    break;
+                for (var x = recX; x < recX + recW; x++)
+                {
+                    if (@break)
+                        break;
+                    var pixel = Mapping[x, y];
+
                     if (pixel != null)
-                        Window.PushButtons(x, y, pixel.ByteValue == 255);
+                    {
+                        Window.PushButtons(x, y, pixel.ByteValue == 255, lowestX, highestX, lowestY, highestY);
+                        if(pixel.ByteValue == 255)
+                        {
+                            @break = true;
+                        }
+                    }
                 }
             }
 
@@ -428,7 +502,6 @@ namespace DepthTracker.Common
 
         public bool IsPositiveInPixelArea(int x, int y)
         {
-            //  return true;
             var radius = 5;
             var limit = radius + 2;
             var count = 0;

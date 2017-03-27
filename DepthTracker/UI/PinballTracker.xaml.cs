@@ -90,7 +90,7 @@ namespace DepthTracker.UI
             _trackerWorker = TrackerWorker<PinballSettings>.GetInstance(this);
         }
 
-        public void PushButtons(int x, int y, bool detected)
+        public void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY)
         {
             #region determine button
 
