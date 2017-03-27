@@ -337,6 +337,9 @@ namespace DepthTracker.UI
 
         public void PushButton(VirtualKeyCode key, ButtonDirection buttonDirection)
         {
+            if(key != VirtualKeyCode.RETURN && key != VirtualKeyCode.LEFT && key != VirtualKeyCode.RIGHT)
+                return;
+            
             switch (buttonDirection)
             {
                 case ButtonDirection.Up:
