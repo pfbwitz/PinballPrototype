@@ -4,19 +4,32 @@ using System.Windows;
 using System.Windows.Media;
 using System.Runtime.InteropServices;
 using System.Windows.Controls;
-using System.Threading.Tasks;
 using DepthTracker.Common;
 using DepthTracker.Settings;
 using DepthTrackerClicks.Common;
-using DepthTracker.UI;
+using System.Windows.Media.Imaging;
 
-namespace DepthTrackerClicks.UI
+namespace DepthTracker.UI
 {
     public partial class ClicksTracker : Window, INotifyPropertyChanged, ITracker
     {
         #region properties 
 
-        public ImageSource ImageSource { get { return _prop?.DepthBitmap; } }
+        public WriteableBitmap DepthBitmap { get; set; }
+
+        public bool TrackerMouseDown;
+
+        private int _x;
+
+        private int _y;
+
+        public Window Instance { get { return this; } }
+
+        public Button FlipButton { get { return BtnFlip; } }
+
+        public Button SwitchButton { get { return BtnSwitch; } }
+
+        public ImageSource ImageSource { get { return DepthBitmap; } }
 
         [DllImport("User32.dll")]
         public static extern bool SetCursorPos(int X, int Y);
@@ -33,9 +46,9 @@ namespace DepthTrackerClicks.UI
 
         public TextBox HeightText { get { return heightText; } }
 
-        private readonly TrackerProperties<ClicksSettings> _prop;
+        private readonly TrackerWorker<ClicksSettings> _trackerWorker;
 
-        public string _statusText = null;
+        public string _statusText = string.Empty;
         public string StatusText
         {
             get { return _statusText; }
@@ -44,7 +57,8 @@ namespace DepthTrackerClicks.UI
                 if (_statusText != value)
                 {
                     _statusText = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
+                    if(PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
                 }
             }
         }
@@ -60,103 +74,15 @@ namespace DepthTrackerClicks.UI
 
         public ClicksTracker()
         {
-            _prop = new TrackerProperties<ClicksSettings>(this);
-
-            _prop.Setup();
-
-            DataContext = this;
-
-            InitializeComponent();
-
-            xText.Text = _prop.Rectangle.X.ToString();
-            yText.Text = _prop.Rectangle.Y.ToString();
-            zMinText.Text = _prop.Settings.ZMin.ToString();
-            zMaxText.Text = _prop.Settings.ZMax.ToString();
-            widthText.Text = _prop.Settings.Width.ToString();
-            heightText.Text = _prop.Rectangle.Height.ToString();
-
-            _prop.Sensor_IsAvailableChanged(null, null);
-
-            Closing += _prop.Window_Closing;
-            BtnFlip.Click += _prop.BtnFlip_Click;
-            BtnSwitch.Click += _prop.BtnSwitch_Click;
-
-            xText.TextChanged += _prop.TextBox_TextChanged;
-            yText.TextChanged += _prop.TextBox_TextChanged;
-            widthText.TextChanged += _prop.TextBox_TextChanged;
-            heightText.TextChanged += _prop.TextBox_TextChanged;
-            zMinText.TextChanged += _prop.TextBox_TextChanged;
-            zMaxText.TextChanged += _prop.TextBox_TextChanged;
-
-            BtnFlip.Content = _prop.Flip ? "FLIP OFF" : "FLIP ON";
-            BtnSwitch.Content = _prop.Run ? "ON" : "OFF";
+            _trackerWorker = TrackerWorker<ClicksSettings>.GetInstance(this);
         }
-
-        #region handlers
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var box = (TextBox)sender;
-            int value;
-            _prop.ZCalibrated = false;
-            if (int.TryParse(box.Text, out value))
-            {
-                switch (box.Name)
-                {
-                    case "xText":
-                        _prop.Settings.X = value;
-                        _prop.LowerXBound = value;
-                        break;
-                    case "yText":
-                        _prop.Settings.Y = value;
-                        _prop.LowerYBound = value;
-                        break;
-                    case "widthText":
-                        _prop.Settings.Width = value;
-                        _prop.UpperXBound = _prop.Rectangle.X + value;
-                        break;
-                    case "heightText":
-                        _prop.Settings.Height = value;
-                        _prop.UpperYBound = _prop.Rectangle.Y + value;
-                        break;
-                    case "zMinText":
-                        _prop.Settings.ZMin = value;
-                        //zCalibrated = true;
-                        break;
-                    case "zMaxText":
-                        _prop.Settings.ZMax = value;
-                        _prop.ZCalibrated = true;
-                        break;
-                }
-            }
-
-            _prop.TileWidth = _prop.Rectangle.Width / 4;
-            _prop.TileHeight = _prop.Rectangle.Height / 2;
-        }
-
-        #endregion
-
-        #region methods
-
-        public void SetTitle(string title)
-        {
-            Title = title;
-        }
-
-        public void SetStatusText()
-        {
-            StatusText = _prop.KinectSensor.IsAvailable ? "Running" : "Not connected";
-        }
-
-        private int _x;
-        private int _y;
 
         public void PushButtons(int x, int y, bool detected)
         {
-            var posXPercentage = (x - _prop.Rectangle.X) * 100 / _prop.Rectangle.Width;
-            var posYPercentage = (y - _prop.Rectangle.Y) * 100 / _prop.Rectangle.Height;
+            var posXPercentage = (x - _trackerWorker.Rectangle.X) * 100 / _trackerWorker.Rectangle.Width;
+            var posYPercentage = (y - _trackerWorker.Rectangle.Y) * 100 / _trackerWorker.Rectangle.Height;
             var c = false;
-            if (_prop.Flip)
+            if (_trackerWorker.Flip)
             {
                 posXPercentage = 100 - posXPercentage;
                 posYPercentage = 100 - posYPercentage;
@@ -165,9 +91,9 @@ namespace DepthTrackerClicks.UI
             _x = Convert.ToInt32(posXPercentage * SystemParameters.PrimaryScreenWidth / 100);
             _y = Convert.ToInt32(posYPercentage * SystemParameters.PrimaryScreenHeight / 100);
 
-            if (!_prop.ClickHandled)
+            if (!_trackerWorker.ClickHandled)
             {
-                _prop.ClickHandled = detected;
+                _trackerWorker.ClickHandled = detected;
                 c = true;
             }
 
@@ -175,63 +101,26 @@ namespace DepthTrackerClicks.UI
                 return;
 
             if (detected)
-                DoKeyDown();
-            else
-                DoKeyUp();
-        }
-
-        public void DoKeyDown()
-        {
-            if (!_prop.Run)
-                return;
-
-            if(!_mouseDown)
             {
-                SetCursorPos(_x, _y);
-                PushButton(ButtonDirection.Down);
-            }
-            else
-            {
-                SetCursorPos(_x, _y);
-            }
-        }
+                if (!_trackerWorker.Run)
+                    return;
 
-        private bool _mouseDown;
-
-        public void DoKeyUp()
-        {
-            if (!_prop.Run)
-                return;
-
-            if(_mouseDown)
-                PushButton(ButtonDirection.Up);
-        }
-
-        public void PushButton(ButtonDirection buttonDirection)
-        {
-            try
-            {
-                switch (buttonDirection)
+                if (!TrackerMouseDown)
                 {
-                    case ButtonDirection.Up:
-                        //_mouseDown = false;
-                        MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftUp);
-                        Task.Run(async() => {
-                            await Task.Delay(1000);
-                            await Dispatcher.BeginInvoke(new Action(() => _mouseDown = false));
-                        });
-                        break;
-                    case ButtonDirection.Down:
-                        _mouseDown = true;
-                        MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.LeftDown);
-                        break;
+                    SetCursorPos(_x, _y);
+                    MouseOperations.PushButton(ButtonDirection.Down, this);
                 }
+                else
+                    SetCursorPos(_x, _y);
             }
-            catch (Exception ex)
+            else
             {
+                if (!_trackerWorker.Run)
+                    return;
+
+                if (TrackerMouseDown)
+                    MouseOperations.PushButton(ButtonDirection.Up, this);
             }
         }
-
-        #endregion
     }
 }

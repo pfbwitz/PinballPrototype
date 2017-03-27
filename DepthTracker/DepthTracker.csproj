@@ -86,11 +86,18 @@
     <Compile Include="Settings\ClicksSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsHelper.cs" />
+    <Compile Include="UI\TrackerPicker.xaml.cs">
+      <DependentUpon>TrackerPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\CarTracker.xaml.cs">
       <DependentUpon>CarTracker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ITracker.cs" />
-    <Compile Include="UI\TrackerProperties.cs" />
+    <Compile Include="Common\ITracker.cs" />
+    <Compile Include="Common\TrackerWorker.cs" />
+    <Page Include="UI\TrackerPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ClicksTracker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -7,14 +7,23 @@ using System.Windows.Controls;
 using DepthTracker.Common;
 using DepthTracker.Settings;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace DepthTracker.UI
 {
-    public partial class CarTracker : Window, ITracker, INotifyPropertyChanged
+    public partial class CarTracker : ITracker, INotifyPropertyChanged
     {
         #region properties 
 
-        public ImageSource ImageSource { get { return _prop?.DepthBitmap; } }
+        public WriteableBitmap DepthBitmap { get; set; }
+
+        public Window Instance { get { return this; } }
+
+        public Button FlipButton { get { return BtnFlip; } }
+
+        public Button SwitchButton { get { return BtnSwitch; } }
+
+        public ImageSource ImageSource { get { return DepthBitmap; } }
 
         public TextBox XText { get { return xText; } }
 
@@ -28,9 +37,9 @@ namespace DepthTracker.UI
 
         public TextBox HeightText { get { return heightText; } }
 
-        private readonly TrackerProperties<CarSettings> _prop;
+        private readonly TrackerWorker<CarSettings> _trackerWorker;
 
-        public string _statusText = null;
+        public string _statusText = string.Empty;
         public string StatusText
         {
             get { return _statusText; }
@@ -39,7 +48,8 @@ namespace DepthTracker.UI
                 if (_statusText != value)
                 {
                     _statusText = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
+                    if (PropertyChanged != null)
+                        PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
                 }
             }
         }
@@ -61,91 +71,7 @@ namespace DepthTracker.UI
 
         public CarTracker()
         {
-            _prop = new TrackerProperties<CarSettings>(this);
-
-            _prop.Setup();
-
-            DataContext = this;
-
-            InitializeComponent();
-
-            xText.Text = _prop.Rectangle.X.ToString();
-            yText.Text = _prop.Rectangle.Y.ToString();
-            zMinText.Text = _prop.Settings.ZMin.ToString();
-            zMaxText.Text = _prop.Settings.ZMax.ToString();
-            widthText.Text = _prop.Settings.Width.ToString();
-            heightText.Text = _prop.Rectangle.Height.ToString();
-
-            _prop.Sensor_IsAvailableChanged(null, null);
-
-            Closing += _prop.Window_Closing;
-            BtnFlip.Click += _prop.BtnFlip_Click;
-            BtnSwitch.Click += _prop.BtnSwitch_Click;
-
-            xText.TextChanged += _prop.TextBox_TextChanged;
-            yText.TextChanged += _prop.TextBox_TextChanged;
-            widthText.TextChanged += _prop.TextBox_TextChanged;
-            heightText.TextChanged += _prop.TextBox_TextChanged;
-            zMinText.TextChanged += _prop.TextBox_TextChanged;
-            zMaxText.TextChanged += _prop.TextBox_TextChanged;
-
-            BtnFlip.Content = _prop.Flip ? "FLIP OFF" : "FLIP ON";
-            BtnSwitch.Content = _prop.Run ? "ON" : "OFF";
-        }
-
-        #region handlers
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var box = (TextBox)sender;
-            int value;
-            _prop.ZCalibrated = false;
-            if (int.TryParse(box.Text, out value))
-            {
-                switch (box.Name)
-                {
-                    case "xText":
-                        _prop.Settings.X = value;
-                        _prop.Rectangle.X = value;
-                        _prop.LowerXBound = value;
-                        break;
-                    case "yText":
-                        _prop.Settings.Y = value;
-                        _prop.Rectangle.Y = value;
-                        _prop.LowerYBound = value;
-                        break;
-                    case "widthText":
-                        _prop.Settings.Width = value;
-                        _prop.Rectangle.Width = value;
-                        _prop.UpperXBound = _prop.Rectangle.X + value;
-                        break;
-                    case "heightText":
-                        _prop.Settings.Height = value;
-                        _prop.Rectangle.Height = value;
-                        _prop.UpperYBound = _prop.Rectangle.Y + value;
-                        break;
-                    case "zMinText":
-                        _prop.Settings.ZMin = value;
-                        _prop.ZCalibrated = true;
-                        break;
-                    case "zMaxText":
-                        _prop.Settings.ZMax = value;
-                        _prop.ZCalibrated = true;
-                        break;
-                }
-            }
-
-            _prop.TileWidth = _prop.Rectangle.Width / 4;
-            _prop.TileHeight = _prop.Rectangle.Height / 2;
-        }
-
-        #endregion
-
-        #region methods
-
-        public void SetTitle(string title)
-        {
-            Title = title;
+            _trackerWorker = TrackerWorker<CarSettings>.GetInstance(this);
         }
 
         public void PushButtons(int x, int y, bool detected)
@@ -153,165 +79,165 @@ namespace DepthTracker.UI
             #region determine button
 
             VirtualKeyCode keyCode = VirtualKeyCode.VK_0;
-            if (x > _prop.Rectangle.X && x <= _prop.TileWidth + _prop.Rectangle.X)
+            if (x > _trackerWorker.Rectangle.X && x <= _trackerWorker.TileWidth + _trackerWorker.Rectangle.X)
             {
-                if (_prop.Flip)
+                if (_trackerWorker.Flip)
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.AHandled)
+                        if (!_trackerWorker.AHandled)
                         {
-                            _prop.AHandled = detected;
+                            _trackerWorker.AHandled = detected;
                             keyCode = VirtualKeyCode.LEFT;
                         }
                     }
                     else
                     {
-                        if (!_prop.QHandled)
+                        if (!_trackerWorker.QHandled)
                         {
-                            _prop.QHandled = detected;
+                            _trackerWorker.QHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
                 else
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.QHandled)
+                        if (!_trackerWorker.QHandled)
                         {
-                            _prop.QHandled = detected;
+                            _trackerWorker.QHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
                     {
-                        if (!_prop.AHandled)
+                        if (!_trackerWorker.AHandled)
                         {
-                            _prop.AHandled = detected;
+                            _trackerWorker.AHandled = detected;
                             keyCode = VirtualKeyCode.LEFT;
                         }
                     }
                 }
             }
-            else if (x > _prop.TileWidth + _prop.Rectangle.X && x < _prop.TileWidth * 2 + _prop.Rectangle.X)
+            else if (x > _trackerWorker.TileWidth + _trackerWorker.Rectangle.X && x < _trackerWorker.TileWidth * 2 + _trackerWorker.Rectangle.X)
             {
-                if (_prop.Flip)
+                if (_trackerWorker.Flip)
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.DHandled)
+                        if (!_trackerWorker.DHandled)
                         {
-                            _prop.DHandled = detected;
+                            _trackerWorker.DHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
                     {
-                        if (!_prop.EHandled)
+                        if (!_trackerWorker.EHandled)
                         {
-                            _prop.EHandled = detected;
+                            _trackerWorker.EHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
                 else
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.EHandled)
+                        if (!_trackerWorker.EHandled)
                         {
-                            _prop.EHandled = detected;
+                            _trackerWorker.EHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
                     {
-                        if (!_prop.DHandled)
+                        if (!_trackerWorker.DHandled)
                         {
-                            _prop.DHandled = detected;
+                            _trackerWorker.DHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
             }
-            else if (x > _prop.TileWidth * 2 + _prop.Rectangle.X && x < _prop.TileWidth * 3 + _prop.Rectangle.X)
+            else if (x > _trackerWorker.TileWidth * 2 + _trackerWorker.Rectangle.X && x < _trackerWorker.TileWidth * 3 + _trackerWorker.Rectangle.X)
             {
-                if (_prop.Flip)
+                if (_trackerWorker.Flip)
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.JHandled)
+                        if (!_trackerWorker.JHandled)
                         {
-                            _prop.JHandled = detected;
+                            _trackerWorker.JHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
                     {
-                        if (!_prop.UHandled)
+                        if (!_trackerWorker.UHandled)
                         {
-                            _prop.UHandled = detected;
+                            _trackerWorker.UHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
                 else
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.UHandled)
+                        if (!_trackerWorker.UHandled)
                         {
-                            _prop.UHandled = detected;
+                            _trackerWorker.UHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
                     {
-                        if (!_prop.JHandled)
+                        if (!_trackerWorker.JHandled)
                         {
-                            _prop.JHandled = detected;
+                            _trackerWorker.JHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
             }
-            else if (x > _prop.TileWidth * 3 + _prop.Rectangle.X)
+            else if (x > _trackerWorker.TileWidth * 3 + _trackerWorker.Rectangle.X)
             {
-                if (_prop.Flip)
+                if (_trackerWorker.Flip)
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.LHandled)
+                        if (!_trackerWorker.LHandled)
                         {
-                            _prop.LHandled = detected;
+                            _trackerWorker.LHandled = detected;
                             keyCode = VirtualKeyCode.RIGHT;
                         }
                     }
                     else
                     {
-                        if (!_prop.OHandled)
+                        if (!_trackerWorker.OHandled)
                         {
-                            _prop.OHandled = detected;
+                            _trackerWorker.OHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                 }
                 else
                 {
-                    if (y >= _prop.Rectangle.Y && y <= _prop.TileHeight + _prop.Rectangle.Y)
+                    if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
-                        if (!_prop.OHandled)
+                        if (!_trackerWorker.OHandled)
                         {
-                            _prop.OHandled = detected;
+                            _trackerWorker.OHandled = detected;
                             keyCode = VirtualKeyCode.RETURN;
                         }
                     }
                     else
                     {
-                        if (!_prop.LHandled)
+                        if (!_trackerWorker.LHandled)
                         {
-                            _prop.LHandled = detected;
+                            _trackerWorker.LHandled = detected;
                             keyCode = VirtualKeyCode.RIGHT;
                         }
                     }
@@ -324,44 +250,36 @@ namespace DepthTracker.UI
                 return;
 
             if (detected)
-                DoKeyDown(keyCode);
+            {
+                if (!_trackerWorker.Run)
+                    return;
+
+                try
+                {
+                    if (_trackerWorker.DownCount == int.MaxValue)
+                        _trackerWorker.DownCount = 0;
+
+                    _trackerWorker.DownCount = checked(_trackerWorker.DownCount + 1);
+                }
+                catch (OverflowException)
+                {
+                    _trackerWorker.DownCount = 0;
+                }
+
+                if (_trackerWorker.DownCount % _trackerWorker.ButtonTrigger != 0)
+                    return;
+
+                PushButton(keyCode, ButtonDirection.Down);
+            }
             else
             {
                 if (keyCode == VirtualKeyCode.LEFT && !detected)
-                    DoKeyUp(keyCode);
+                    PushButton(keyCode, ButtonDirection.Up);
                 else if (keyCode == VirtualKeyCode.RETURN && !detected)
-                    DoKeyUp(keyCode);
+                    PushButton(keyCode, ButtonDirection.Up);
                 else if (keyCode == VirtualKeyCode.RIGHT && !detected)
-                    DoKeyUp(keyCode);
+                    PushButton(keyCode, ButtonDirection.Up);
             }
-        }
-
-        public void DoKeyDown(VirtualKeyCode key)
-        {
-            if (!_prop.Run)
-                return;
-
-            try
-            {
-                if (_prop.DownCount == int.MaxValue)
-                    _prop.DownCount = 0;
-
-                _prop.DownCount = checked(_prop.DownCount + 1);
-            }
-            catch (OverflowException)
-            {
-                _prop.DownCount = 0;
-            }
-
-            if (_prop.DownCount % _prop.ButtonTrigger != 0)
-                return;
-
-            PushButton(key, ButtonDirection.Down);
-        }
-
-        public void DoKeyUp(VirtualKeyCode key)
-        {
-            PushButton(key, ButtonDirection.Up);
         }
 
         public void PushButton(VirtualKeyCode key, ButtonDirection buttonDirection)
@@ -370,14 +288,12 @@ namespace DepthTracker.UI
             {
                 case ButtonDirection.Up:
                     Keys[key] = false;
-                    _prop.InputSimulator.Keyboard.KeyUp(key);
+                    _trackerWorker.InputSimulator.Keyboard.KeyUp(key);
                     break;
                 case ButtonDirection.Down:
-                    _prop.InputSimulator.Keyboard.KeyDown(key);
+                    _trackerWorker.InputSimulator.Keyboard.KeyDown(key);
                     break;
             }
         }
-
-        #endregion
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
-namespace DepthTracker.UI
+namespace DepthTracker.Common
 {
     public interface ITracker
     {
@@ -17,12 +18,18 @@ namespace DepthTracker.UI
 
         TextBox HeightText { get; }
 
+        Button FlipButton { get; }
+
+        Button SwitchButton { get; }
+
         string StatusText { get; set; }
 
         MessageBoxResult ShowMessage(string message, string title);
 
         void PushButtons(int x, int y, bool detected);
 
-        void SetTitle(string title);
+        Window Instance { get; }
+
+        WriteableBitmap DepthBitmap { get; set; }
     }
 }

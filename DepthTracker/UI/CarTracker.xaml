@@ -4,8 +4,8 @@
         Title="Depth Tracker" 
         Height="600" Width="650" 
         Padding="0"
-        > 
-  <Window.Resources>
+        >
+    <Window.Resources>
     <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
     <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
     <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />

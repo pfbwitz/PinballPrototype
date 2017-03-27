@@ -59,7 +59,7 @@
             <Button Content="FLIP ON" x:Name="BtnFlip" Grid.Column="13"/>
         </Grid>
         <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
-      <StatusBarItem Content="{Binding StatusText}" />
+      <StatusBarItem x:Name="Status" Content="{Binding StatusText}" />
     </StatusBar>
   </Grid>
 </Window>

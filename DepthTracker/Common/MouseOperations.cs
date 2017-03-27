@@ -1,5 +1,8 @@
-﻿using System;
+﻿using DepthTracker.Common;
+using DepthTracker.UI;
+using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace DepthTrackerClicks.Common
 {
@@ -73,5 +76,30 @@ namespace DepthTrackerClicks.Common
             }
         }
 
+        public static void PushButton(ButtonDirection buttonDirection, ITracker window)
+        {
+            try
+            {
+                var w = (ClicksTracker)window.Instance;
+                switch (buttonDirection)
+                {
+                    case ButtonDirection.Up:
+                        //w.TrackerMouseDown = false;
+                        MouseEvent(MouseEventFlags.LeftUp);
+                        Task.Run(async () => {
+                            await Task.Delay(1000);
+                            await w.Dispatcher.BeginInvoke(new Action(() => w.TrackerMouseDown = false));
+                        });
+                        break;
+                    case ButtonDirection.Down:
+                        w.TrackerMouseDown = true;
+                        MouseEvent(MouseEventFlags.LeftDown);
+                        break;
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 }
