@@ -2,8 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using DepthTracker.Common.Interface;
-using System.Diagnostics;
-using System.Configuration;
 
 namespace DepthTracker.UI
 {
@@ -19,8 +17,8 @@ namespace DepthTracker.UI
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 #if !DEBUG
-            var process = new Process();
-            process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], 
+            var process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = string.Format(System.Configuration.ConfigurationManager.AppSettings["GameRootPath"], 
                 ((Button)sender).Content.ToString());
             process.Start();
 #endif
