@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Configuration;
 using DepthTracker.Common.Interface;
+using System.Diagnostics;
+using System.Configuration;
 
 namespace DepthTracker.UI
 {
     public partial class TrackerPicker : Window
     {
+        public ITracker Tracker { get; private set; }
+
         public TrackerPicker()
         {
             InitializeComponent();
@@ -18,10 +20,18 @@ namespace DepthTracker.UI
         {
 #if !DEBUG
             var process = new Process();
-            process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], ((Button)sender).Content.ToString());
+            process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], 
+                ((Button)sender).Content.ToString());
             process.Start();
 #endif
-            GetTrackerWindow(((Button)sender).Content.ToString()).Instance.ShowDialog();
+            if (Tracker != null)
+            {
+                Tracker.Instance.Close();
+                Tracker = null;
+            }
+
+            Tracker = GetTrackerWindow(((Button)sender).Content.ToString());
+            Tracker.Instance.ShowDialog();
         }
 
         private ITracker GetTrackerWindow(string content)
@@ -30,12 +40,11 @@ namespace DepthTracker.UI
             {
                 case "Pinball":
                     return new PinballTracker();
-
-                case "Car":
+                case "Racing":
                     return new CarTracker();
                 case "Kings":
                     return new ClicksTracker();
-                case "Never":
+                case "NeverHaveIEver":
                     return new ClicksTracker();
                 default:
                     throw new ArgumentOutOfRangeException();
