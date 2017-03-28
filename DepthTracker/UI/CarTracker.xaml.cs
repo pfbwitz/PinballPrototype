@@ -7,16 +7,16 @@ using System.Windows.Controls;
 using DepthTracker.Common;
 using DepthTracker.Settings;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Microsoft.Kinect;
+using DepthTracker.Common.Interface;
+using DepthTracker.Common.Enum;
+using DepthTracker.Common.Worker;
 
 namespace DepthTracker.UI
 {
-    public partial class CarTracker : ITracker, INotifyPropertyChanged
+    public partial class CarTracker : ITracker, INotifyPropertyChanged, IButtonTrackerWindow
     {
         #region properties 
-
-        public WriteableBitmap DepthBitmap { get; set; }
 
         public Window Instance { get { return this; } }
 
@@ -24,7 +24,7 @@ namespace DepthTracker.UI
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
-        public ImageSource ImageSource { get { return DepthBitmap; } }
+        public ImageSource ImageSource { get { return _trackerWorker.DepthBitmap; } }
 
         public TextBox XText { get { return xText; } }
 
@@ -55,11 +55,7 @@ namespace DepthTracker.UI
             }
         }
 
-        public Dictionary<VirtualKeyCode, bool> Keys = new Dictionary<VirtualKeyCode, bool> {
-            { VirtualKeyCode.LEFT, false},
-            { VirtualKeyCode.RETURN, false},
-            { VirtualKeyCode.RIGHT, false},
-        };
+        public Dictionary<VirtualKeyCode, bool> Keys {get;set;}
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -78,53 +74,12 @@ namespace DepthTracker.UI
 
         public CarTracker()
         {
-            //KinectSensor = KinectSensor.GetDefault();
-            //KinectSensor.IsAvailableChanged += Sensor_IsAvailableChanged;
-
-            //DepthFrameReader = KinectSensor.DepthFrameSource.OpenReader();
-            //DepthFrameReader.FrameArrived += Reader_FrameArrived;
-            //DepthFrameDescription = KinectSensor.DepthFrameSource.FrameDescription;
-
+            Keys = new Dictionary<VirtualKeyCode, bool> {
+                { VirtualKeyCode.LEFT, false},
+                { VirtualKeyCode.RETURN, false},
+                { VirtualKeyCode.RIGHT, false},
+            };
             _trackerWorker = TrackerWorker<CarSettings>.GetInstance(this);
-        }
-
-        public void Reader_FrameArrived(object sender, DepthFrameArrivedEventArgs e)
-        {
-            var bounds = _trackerWorker.ZBounds;
-            var depthFrameProcessed = false;
-            using (var depthFrame = e.FrameReference.AcquireFrame())
-            {
-                if (depthFrame != null)
-                {
-                    using (var depthBuffer = depthFrame.LockImageBuffer())
-                    {
-                        if (((DepthFrameDescription.Width * DepthFrameDescription.Height) == (depthBuffer.Size / DepthFrameDescription.BytesPerPixel)) &&
-                            (DepthFrameDescription.Width == DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == DepthBitmap.PixelHeight))
-                        {
-                            _trackerWorker.ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, bounds[0], bounds[1]);
-
-                            depthFrameProcessed = true;
-                        }
-                    }
-                }
-            }
-
-            foreach (var b in _trackerWorker.DepthPixels)
-            {
-                if (b > 100)
-                    ShowMessage("b", b.ToString());
-                break;
-            }
-
-            if (depthFrameProcessed)
-            {
-                DepthBitmap.WritePixels(
-                     new Int32Rect(0, 0, DepthBitmap.PixelWidth, DepthBitmap.PixelHeight),
-                     _trackerWorker.DepthPixels,
-                     DepthBitmap.PixelWidth,
-                     0
-                );
-            }
         }
 
         public void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY)
@@ -322,33 +277,16 @@ namespace DepthTracker.UI
                 if (_trackerWorker.DownCount % _trackerWorker.ButtonTrigger != 0)
                     return;
 
-                PushButton(keyCode, ButtonDirection.Down);
+                this.PushButton(keyCode, ButtonDirection.Down, _trackerWorker.InputSimulator);
             }
             else
             {
                 if (keyCode == VirtualKeyCode.LEFT && !detected)
-                    PushButton(keyCode, ButtonDirection.Up);
+                    this.PushButton(keyCode, ButtonDirection.Up, _trackerWorker.InputSimulator);
                 else if (keyCode == VirtualKeyCode.RETURN && !detected)
-                    PushButton(keyCode, ButtonDirection.Up);
+                    this.PushButton(keyCode, ButtonDirection.Up, _trackerWorker.InputSimulator);
                 else if (keyCode == VirtualKeyCode.RIGHT && !detected)
-                    PushButton(keyCode, ButtonDirection.Up);
-            }
-        }
-
-        public void PushButton(VirtualKeyCode key, ButtonDirection buttonDirection)
-        {
-            if(key != VirtualKeyCode.RETURN && key != VirtualKeyCode.LEFT && key != VirtualKeyCode.RIGHT)
-                return;
-            
-            switch (buttonDirection)
-            {
-                case ButtonDirection.Up:
-                    Keys[key] = false;
-                    _trackerWorker.InputSimulator.Keyboard.KeyUp(key);
-                    break;
-                case ButtonDirection.Down:
-                    _trackerWorker.InputSimulator.Keyboard.KeyDown(key);
-                    break;
+                    this.PushButton(keyCode, ButtonDirection.Up, _trackerWorker.InputSimulator);
             }
         }
     }

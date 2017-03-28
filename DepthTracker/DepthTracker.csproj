@@ -55,6 +55,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -80,6 +81,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\Worker\ButtonWorker.cs" />
+    <Compile Include="Common\Interface\IButtonTrackerWindow.cs" />
     <Compile Include="Common\MouseOperations.cs" />
     <Compile Include="Settings\CarSettings.cs" />
     <Compile Include="Settings\ISettings.cs" />
@@ -92,8 +95,8 @@
     <Compile Include="UI\CarTracker.xaml.cs">
       <DependentUpon>CarTracker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Common\ITracker.cs" />
-    <Compile Include="Common\TrackerWorker.cs" />
+    <Compile Include="Common\Interface\ITracker.cs" />
+    <Compile Include="Common\Worker\TrackerWorker.cs" />
     <Page Include="UI\TrackerPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,7 +113,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\ButtonDirection.cs" />
+    <Compile Include="Common\Enum\ButtonDirection.cs" />
     <Compile Include="Common\PixelMap.cs" />
     <Compile Include="Settings\PinballSettings.cs" />
     <Compile Include="UI\ClicksTracker.xaml.cs">

@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace DepthTracker.Common
+namespace DepthTracker.Common.Interface
 {
     public interface ITracker
     {
@@ -29,7 +29,5 @@ namespace DepthTracker.Common
         void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY);
 
         Window Instance { get; }
-
-        WriteableBitmap DepthBitmap { get; set; }
     }
 }

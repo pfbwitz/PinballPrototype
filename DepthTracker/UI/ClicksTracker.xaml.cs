@@ -7,15 +7,15 @@ using System.Windows.Controls;
 using DepthTracker.Common;
 using DepthTracker.Settings;
 using DepthTrackerClicks.Common;
-using System.Windows.Media.Imaging;
+using DepthTracker.Common.Worker;
+using DepthTracker.Common.Interface;
+using DepthTracker.Common.Enum;
 
 namespace DepthTracker.UI
 {
     public partial class ClicksTracker : Window, INotifyPropertyChanged, ITracker
     {
         #region properties 
-
-        public WriteableBitmap DepthBitmap { get; set; }
 
         public bool TrackerMouseDown;
 
@@ -29,7 +29,7 @@ namespace DepthTracker.UI
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
-        public ImageSource ImageSource { get { return DepthBitmap; } }
+        public ImageSource ImageSource { get { return _trackerWorker.DepthBitmap; } }
 
         [DllImport("User32.dll")]
         public static extern bool SetCursorPos(int X, int Y);

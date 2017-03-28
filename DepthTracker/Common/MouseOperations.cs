@@ -1,4 +1,6 @@
 ﻿using DepthTracker.Common;
+using DepthTracker.Common.Enum;
+using DepthTracker.Common.Interface;
 using DepthTracker.UI;
 using System;
 using System.Runtime.InteropServices;

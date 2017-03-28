@@ -1,4 +1,5 @@
-﻿using DepthTracker.Settings;
+﻿using DepthTracker.Common.Interface;
+using DepthTracker.Settings;
 using DepthTracker.UI;
 using Microsoft.Kinect;
 using System;
@@ -10,11 +11,13 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WindowsInput;
 
-namespace DepthTracker.Common
+namespace DepthTracker.Common.Worker
 {
     internal class TrackerWorker<T> where T : ISettings, new()
     {
         #region properties
+
+        public WriteableBitmap DepthBitmap { get; set; }
 
         public bool ClickHandled { get; set; }
 
@@ -136,7 +139,7 @@ namespace DepthTracker.Common
             TileHeight = Rectangle.Height / 2;
 
             DepthPixels = new byte[DepthFrameDescription.Width * DepthFrameDescription.Height];
-            Window.DepthBitmap = new WriteableBitmap(DepthFrameDescription.Width, DepthFrameDescription.Height,
+            DepthBitmap = new WriteableBitmap(DepthFrameDescription.Width, DepthFrameDescription.Height,
                 96.0, 96.0, PixelFormats.Gray8, null);
 
             Rectangle = new Rectangle(Settings.X, Settings.Y, Settings.Width, Settings.Height);
@@ -199,38 +202,23 @@ namespace DepthTracker.Common
                     using (var depthBuffer = depthFrame.LockImageBuffer())
                     {
                         if (((DepthFrameDescription.Width * DepthFrameDescription.Height) == (depthBuffer.Size / DepthFrameDescription.BytesPerPixel)) &&
-                            (DepthFrameDescription.Width == Window.DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == Window.DepthBitmap.PixelHeight))
+                            (DepthFrameDescription.Width == DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == DepthBitmap.PixelHeight))
                         {
                             
                             ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, bounds[0], bounds[1]);
                           
                             depthFrameProcessed = true;
 
-                            Window.DepthBitmap.WritePixels(
-                                 new Int32Rect(0, 0, Window.DepthBitmap.PixelWidth, Window.DepthBitmap.PixelHeight),
+                            DepthBitmap.WritePixels(
+                                 new Int32Rect(0, 0, DepthBitmap.PixelWidth, DepthBitmap.PixelHeight),
                                  DepthPixels,
-                                 Window.DepthBitmap.PixelWidth,
+                                 DepthBitmap.PixelWidth,
                                  0
                             );
                         }
                     }
                 }
             }
-
-            //Window.ShowMessage("4", "4");
-
-            //if (depthFrameProcessed)
-            //{
-
-            //    Window.ShowMessage("5", "5");
-
-            //    Window.DepthBitmap.WritePixels(
-            //         new Int32Rect(0, 0, Window.DepthBitmap.PixelWidth, Window.DepthBitmap.PixelHeight),
-            //         DepthPixels,
-            //         Window.DepthBitmap.PixelWidth,
-            //         0
-            //    );
-            //}
         }
 
         public void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)

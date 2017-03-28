@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using DepthTracker.Common;
 using DepthTracker.Settings;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using DepthTracker.Common.Worker;
+using DepthTracker.Common.Interface;
+using DepthTracker.Common.Enum;
 
 namespace DepthTracker.UI
 {
@@ -16,18 +18,13 @@ namespace DepthTracker.UI
     {
         #region properties 
 
-        public WriteableBitmap DepthBitmap { get; set; }
-
         public Window Instance { get { return this; } }
 
         public Button FlipButton { get { return BtnFlip; } }
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
-        public ImageSource ImageSource { get {
-                return DepthBitmap;
-            }
-        }
+        public ImageSource ImageSource { get { return _trackerWorker.DepthBitmap; } }
 
         public TextBox XText { get { return xText; } }
 

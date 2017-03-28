@@ -1,25 +1,13 @@
-﻿using DepthTracker.UI;
+﻿using DepthTracker.Common;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Configuration;
+using DepthTracker.Common.Interface;
 
 namespace DepthTracker.UI
 {
-    /// <summary>
-    /// Interaction logic for TrackerPicker.xaml
-    /// </summary>
     public partial class TrackerPicker : Window
     {
         public TrackerPicker()
@@ -30,35 +18,34 @@ namespace DepthTracker.UI
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var content = ((Button)sender).Content.ToString();
-            Process Pinballgame = new Process();
-            Pinballgame.StartInfo.FileName = @"C:\CLoudabit\Pinball.lnk";
-            Process CarGame = new Process();
-            CarGame.StartInfo.FileName = @"C:\CLoudabit\Racing.lnk";
-            Process KingsGame = new Process();
-            KingsGame.StartInfo.FileName = @"C:\CLoudabit\Kings.lnk";
-            Process NeverGame = new Process();
-            NeverGame.StartInfo.FileName = @"C:\CLoudabit\NeverHaveIEver.lnk";
-
+            Process process = new Process();
+            ITracker window;
+           
             switch (content)
             {
-
                 case "Pinball":
-                    Pinballgame.Start();
-                    new PinballTracker().ShowDialog();
+                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "Pinball");
+                    window = new PinballTracker();
                     break;
                 case "Car":
-                    CarGame.Start();
-                    new CarTracker().ShowDialog();
+                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "Racing");
+                    window = new CarTracker();
                     break;
                 case "Kings":
-                    KingsGame.Start();
-                    new ClicksTracker().ShowDialog();
+                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "Kings");
+                    window = new ClicksTracker();
                     break;
                 case "Never":
-                    NeverGame.Start();
-                    new ClicksTracker().ShowDialog();
+                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "NeverHaveIEver");
+                    window = new ClicksTracker();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+#if !DEBUG
+            process.Start();
+#endif
+            window.Instance.ShowDialog();
         }
     }
 }
