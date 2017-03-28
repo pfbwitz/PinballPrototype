@@ -17,8 +17,6 @@ namespace DepthTracker.Common.Worker
     {
         #region properties
 
-        public WriteableBitmap DepthBitmap { get; set; }
-
         public bool ClickHandled { get; set; }
 
         public ISettings Settings;
@@ -139,7 +137,7 @@ namespace DepthTracker.Common.Worker
             TileHeight = Rectangle.Height / 2;
 
             DepthPixels = new byte[DepthFrameDescription.Width * DepthFrameDescription.Height];
-            DepthBitmap = new WriteableBitmap(DepthFrameDescription.Width, DepthFrameDescription.Height,
+            Window.DepthBitmap = new WriteableBitmap(DepthFrameDescription.Width, DepthFrameDescription.Height,
                 96.0, 96.0, PixelFormats.Gray8, null);
 
             Rectangle = new Rectangle(Settings.X, Settings.Y, Settings.Width, Settings.Height);
@@ -194,7 +192,6 @@ namespace DepthTracker.Common.Worker
         public void Reader_FrameArrived(object sender, DepthFrameArrivedEventArgs e)
         {
             var bounds = ZBounds;
-            var depthFrameProcessed = false;
             using (var depthFrame = e.FrameReference.AcquireFrame())
             {
                 if (depthFrame != null)
@@ -202,17 +199,14 @@ namespace DepthTracker.Common.Worker
                     using (var depthBuffer = depthFrame.LockImageBuffer())
                     {
                         if (((DepthFrameDescription.Width * DepthFrameDescription.Height) == (depthBuffer.Size / DepthFrameDescription.BytesPerPixel)) &&
-                            (DepthFrameDescription.Width == DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == DepthBitmap.PixelHeight))
+                            (DepthFrameDescription.Width == Window.DepthBitmap.PixelWidth) && (DepthFrameDescription.Height == Window.DepthBitmap.PixelHeight))
                         {
                             
                             ProcessDepthFrameData(depthBuffer.UnderlyingBuffer, depthBuffer.Size, bounds[0], bounds[1]);
-                          
-                            depthFrameProcessed = true;
-
-                            DepthBitmap.WritePixels(
-                                 new Int32Rect(0, 0, DepthBitmap.PixelWidth, DepthBitmap.PixelHeight),
+                            Window.DepthBitmap.WritePixels(
+                                 new Int32Rect(0, 0, Window.DepthBitmap.PixelWidth, Window.DepthBitmap.PixelHeight),
                                  DepthPixels,
-                                 DepthBitmap.PixelWidth,
+                                 Window.DepthBitmap.PixelWidth,
                                  0
                             );
                         }
@@ -312,8 +306,6 @@ namespace DepthTracker.Common.Worker
             try
             {
                 Loop((int)depthFrameDataSize, DepthFrameDescription.BytesPerPixel, frameData, minDepth, maxDepth);
-              
-             
             }
             catch (Exception ex)
             {
@@ -350,18 +342,10 @@ namespace DepthTracker.Common.Worker
                 var detected = pixelDepth > 0 && pixelDepth > minDepth && pixelDepth < maxDepth; //is depth within our depth-margin
 
                 //if true, pixel is within bounding rectangle
-
-                
-
                 var contains = x >= Rectangle.X &&
                     x <= Rectangle.X + Rectangle.Width &&
                     y >= Rectangle.Y &&
                     y <= Rectangle.Y + Rectangle.Height;
-
-                if (contains && detected)
-                {
-                    var badsd = "asds";
-                }
 
                 //determine z-coordinate of the surface (possibly unreliable)
                 if (!ZCalibrated && contains)
@@ -371,17 +355,9 @@ namespace DepthTracker.Common.Worker
                 }
 
                 byte b;
-
                 if (detected)
-                {
-                  
+                { 
                     b = (byte)(contains ? 255 : 0); //pixel within depth-margin (z) and withing rectangle (x and y) should be white
-                    var distance = 9999;
-                    if(b == 255)
-                    {
-
-                    }
-
                     Mapping[x, y] = new PixelMap { ByteValue = b, Index = i };
                 }
                 else
@@ -444,25 +420,25 @@ namespace DepthTracker.Common.Worker
             var lowestX = 9999;
             var lowestY = 9999;
 
-            for (var y = recY; y < recY + recH; y++)
-            {
-                for (var x = recX; x < recX + recW; x++)
-                {
-                    var pixel = Mapping[x, y];
+            //for (var y = recY; y < recY + recH; y++)
+            //{
+            //    for (var x = recX; x < recX + recW; x++)
+            //    {
+            //        var pixel = Mapping[x, y];
 
-                    if (pixel != null && pixel.ByteValue == 255)
-                    {
-                        if (pixel.X > highestX)
-                            highestX = pixel.X;
-                        if (pixel.Y > highestY)
-                            highestY = pixel.Y;
-                        if (pixel.X < lowestX)
-                            lowestX = pixel.X;
-                        if (pixel.Y < lowestY)
-                            lowestY = pixel.Y;
-                    }
-                }
-            }
+            //        if (pixel != null && pixel.ByteValue == 255)
+            //        {
+            //            if (pixel.X > highestX)
+            //                highestX = pixel.X;
+            //            if (pixel.Y > highestY)
+            //                highestY = pixel.Y;
+            //            if (pixel.X < lowestX)
+            //                lowestX = pixel.X;
+            //            if (pixel.Y < lowestY)
+            //                lowestY = pixel.Y;
+            //        }
+            //    }
+            //}
 
             for (var y = recY; y < recY + recH; y++)
             {
@@ -478,13 +454,10 @@ namespace DepthTracker.Common.Worker
                     {
                         Window.PushButtons(x, y, pixel.ByteValue == 255, lowestX, highestX, lowestY, highestY);
                         if(pixel.ByteValue == 255)
-                        {
                             @break = true;
-                        }
                     }
                 }
             }
-
             Mapping = new PixelMap[DepthFrameDescription.Width, DepthFrameDescription.Height];
         }
 

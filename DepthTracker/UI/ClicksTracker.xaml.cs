@@ -4,18 +4,20 @@ using System.Windows;
 using System.Windows.Media;
 using System.Runtime.InteropServices;
 using System.Windows.Controls;
-using DepthTracker.Common;
 using DepthTracker.Settings;
 using DepthTrackerClicks.Common;
 using DepthTracker.Common.Worker;
 using DepthTracker.Common.Interface;
 using DepthTracker.Common.Enum;
+using System.Windows.Media.Imaging;
 
 namespace DepthTracker.UI
 {
     public partial class ClicksTracker : Window, INotifyPropertyChanged, ITracker
     {
         #region properties 
+
+        public WriteableBitmap DepthBitmap { get; set; }
 
         public bool TrackerMouseDown;
 
@@ -29,7 +31,7 @@ namespace DepthTracker.UI
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
-        public ImageSource ImageSource { get { return _trackerWorker.DepthBitmap; } }
+        public ImageSource ImageSource { get { return DepthBitmap; } }
 
         [DllImport("User32.dll")]
         public static extern bool SetCursorPos(int X, int Y);
@@ -54,12 +56,9 @@ namespace DepthTracker.UI
             get { return _statusText; }
             set
             {
-                if (_statusText != value)
-                {
-                    _statusText = value;
-                    if(PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
-                }
+                _statusText = value;
+                if (PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
             }
         }
 

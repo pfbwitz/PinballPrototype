@@ -5,6 +5,6 @@ namespace DepthTracker.Common.Interface
 {
     public interface IButtonTrackerWindow
     {
-        Dictionary<VirtualKeyCode, bool> Keys { get; set; }
+        Dictionary<VirtualKeyCode, bool> Keys { get; }
     }
 }

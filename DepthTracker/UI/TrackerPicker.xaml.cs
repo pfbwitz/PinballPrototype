@@ -1,5 +1,4 @@
-﻿using DepthTracker.Common;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,35 +16,30 @@ namespace DepthTracker.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var content = ((Button)sender).Content.ToString();
-            Process process = new Process();
-            ITracker window;
-           
+#if !DEBUG
+            var process = new Process();
+            process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], ((Button)sender).Content.ToString());
+            process.Start();
+#endif
+            GetTrackerWindow(((Button)sender).Content.ToString()).Instance.ShowDialog();
+        }
+
+        private ITracker GetTrackerWindow(string content)
+        {
             switch (content)
             {
                 case "Pinball":
-                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "Pinball");
-                    window = new PinballTracker();
-                    break;
+                    return new PinballTracker();
+
                 case "Car":
-                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "Racing");
-                    window = new CarTracker();
-                    break;
+                    return new CarTracker();
                 case "Kings":
-                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "Kings");
-                    window = new ClicksTracker();
-                    break;
+                    return new ClicksTracker();
                 case "Never":
-                    process.StartInfo.FileName = string.Format(ConfigurationManager.AppSettings["GameRootPath"], "NeverHaveIEver");
-                    window = new ClicksTracker();
-                    break;
+                    return new ClicksTracker();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-#if !DEBUG
-            process.Start();
-#endif
-            window.Instance.ShowDialog();
         }
     }
 }

@@ -29,5 +29,7 @@ namespace DepthTracker.Common.Interface
         void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY);
 
         Window Instance { get; }
+
+        WriteableBitmap DepthBitmap { get; set; }
     }
 }

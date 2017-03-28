@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using WindowsInput.Native;
 using System.Windows.Controls;
 using System.Threading.Tasks;
-using DepthTracker.Common;
 using DepthTracker.Settings;
 using System.Windows.Media;
 using DepthTracker.Common.Worker;
 using DepthTracker.Common.Interface;
 using DepthTracker.Common.Enum;
+using System.Windows.Media.Imaging;
 
 namespace DepthTracker.UI
 {
@@ -18,13 +18,15 @@ namespace DepthTracker.UI
     {
         #region properties 
 
+        public WriteableBitmap DepthBitmap { get; set; }
+
         public Window Instance { get { return this; } }
 
         public Button FlipButton { get { return BtnFlip; } }
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
-        public ImageSource ImageSource { get { return _trackerWorker.DepthBitmap; } }
+        public ImageSource ImageSource { get { return DepthBitmap; } }
 
         public TextBox XText { get { return xText; } }
 
@@ -46,11 +48,9 @@ namespace DepthTracker.UI
             get { return _statusText; }
             set
             {
-                if (_statusText != value)
-                {
-                    _statusText = value;
-                    NotifyPropertyChanged("StatusText");
-                }
+                _statusText = value;
+                if(PropertyChanged != null)
+                    PropertyChanged(this, new PropertyChangedEventArgs("StatusText"));
             }
         }
 
@@ -66,14 +66,6 @@ namespace DepthTracker.UI
         };
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String info)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
-        }
 
         public MessageBoxResult ShowMessage(string message, string title)
         {
