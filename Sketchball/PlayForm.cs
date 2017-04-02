@@ -75,7 +75,14 @@ namespace Sketchball
                     "Player 2: " + game.Score2 + Environment.NewLine +
                     "Player 3: " + game.Score3 + Environment.NewLine +
                     "Player 4: " + game.Score4 + Environment.NewLine;
-                    gameView.MouseDown += (s, a) => selectionForm.OpenGame(originalMachine, fileName);
+                    gameView.MouseDown += (s, a) => Restart();
+
+                Task.Run(async() => {
+                    await Task.Delay(TimeSpan.FromSeconds(10))
+                        .ContinueWith(r => 
+                            BeginInvoke(new MethodInvoker(Restart))
+                            );
+                });
             };
             timer.Start();
             var seconds = 0;
@@ -86,6 +93,11 @@ namespace Sketchball
                 t = new DateTime(timespan.Ticks).AddSeconds(1).ToString("mm:ss");
             };
             timer2.Start();
+        }
+
+        private void Restart()
+        {
+            selectionForm.OpenGame(originalMachine, fileName);
         }
 
         /// <summary>
