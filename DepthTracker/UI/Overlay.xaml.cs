@@ -8,17 +8,8 @@ namespace DepthTracker.UI
 {
     public partial class Overlay : Window
     {
-        public ITracker Tracker { get; private set; }
-
         public Overlay()
         {
-            WindowStyle = WindowStyle.None;
-            IsHitTestVisible = false;
-            Topmost = true;
-            AllowsTransparency = true;
-            
-            Deactivated += Window_Deactivated;
-
             InitializeComponent();
         }
 
@@ -26,11 +17,6 @@ namespace DepthTracker.UI
         {
             base.OnSourceInitialized(e);
             WindowsServices.SetWindowExTransparent(new WindowInteropHelper(this).Handle);
-        }
-
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            ((Window)sender).Topmost = true;
         }
     }
 

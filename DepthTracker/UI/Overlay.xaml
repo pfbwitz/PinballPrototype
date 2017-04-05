@@ -1,15 +1,21 @@
-﻿<Window x:Class="DepthTracker.UI.Overlay"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:DepthTracker"
-      mc:Ignorable="d" 
-      WindowState="Maximized"
-      d:DesignHeight="300" d:DesignWidth="300"
-      Title="TrackerPicker" Icon="/DepthTracker;component/Cloudabit.ico">
+﻿<Window 
+    x:Class="DepthTracker.UI.Overlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:DepthTracker"
+    mc:Ignorable="d" 
+    WindowState="Maximized"
+    WindowStyle="None"
+    Topmost="True"
+    AllowsTransparency="True"
+    IsHitTestVisible="False"
+    d:DesignHeight="300" d:DesignWidth="300"
+    Title="TrackerPicker" Icon="/DepthTracker;component/Cloudabit.ico"
+>
     <Window.Background>
-        <SolidColorBrush Color="Transparent" Opacity="0.5" />
+        <SolidColorBrush Color="Transparent" />
     </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
