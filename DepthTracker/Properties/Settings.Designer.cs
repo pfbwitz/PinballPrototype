@@ -206,12 +206,96 @@ namespace DepthTracker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Run {
+        public bool RunningPinball {
             get {
-                return ((bool)(this["Run"]));
+                return ((bool)(this["RunningPinball"]));
             }
             set {
-                this["Run"] = value;
+                this["RunningPinball"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunningCar {
+            get {
+                return ((bool)(this["RunningCar"]));
+            }
+            set {
+                this["RunningCar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunningClicks {
+            get {
+                return ((bool)(this["RunningClicks"]));
+            }
+            set {
+                this["RunningClicks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Running16Tile {
+            get {
+                return ((bool)(this["Running16Tile"]));
+            }
+            set {
+                this["Running16Tile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipPinball {
+            get {
+                return ((bool)(this["FlipPinball"]));
+            }
+            set {
+                this["FlipPinball"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipCar {
+            get {
+                return ((bool)(this["FlipCar"]));
+            }
+            set {
+                this["FlipCar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipClicks {
+            get {
+                return ((bool)(this["FlipClicks"]));
+            }
+            set {
+                this["FlipClicks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Flip16Tile {
+            get {
+                return ((bool)(this["Flip16Tile"]));
+            }
+            set {
+                this["Flip16Tile"] = value;
             }
         }
     }

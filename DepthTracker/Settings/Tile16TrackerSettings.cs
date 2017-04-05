@@ -1,23 +1,23 @@
 ﻿namespace DepthTracker.Settings
 {
-    public class ClicksSettings : Settings, ISettings
+    public class Tile16TrackerSettings : Settings, ISettings
     {
 
-        private const string XKey = "XClicks";
+        private const string XKey = "X16Tile";
 
-        private const string YKey = "YClicks";
+        private const string YKey = "Y16Tile";
 
-        private const string WidthKey = "WidthClicks";
+        private const string WidthKey = "Width16Tile";
 
-        private const string HeightKey = "HeightClicks";
+        private const string HeightKey = "Height16Tile";
 
-        private const string ZMinKey = "ZMinClicks";
+        private const string ZMinKey = "ZMin16Tile";
 
-        private const string ZMaxKey = "ZMaxClicks";
+        private const string ZMaxKey = "ZMax16Tile";
 
-        private const string RunningKey = "RunningClicks";
+        private const string RunningKey = "Running16Tile";
 
-        private const string FlipKey = "FlipClicks";
+        private const string FlipKey = "Flip16Tile";
 
         public int X
         {

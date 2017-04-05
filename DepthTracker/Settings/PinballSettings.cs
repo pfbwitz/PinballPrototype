@@ -15,6 +15,10 @@
 
         private const string ZMaxKey = "ZMaxPinball";
 
+        private const string RunningKey = "RunningPinball";
+
+        private const string FlipKey = "FlipPinball";
+
         public int X
         {
             get
@@ -77,19 +81,31 @@
 
         public bool Run
         {
-            get { return GeneralRun; }
-            set { GeneralRun = value; }
+            get
+            {
+                return GetBoolByKey(RunningKey);
+            }
+            set
+            {
+                SaveSettingByKey(RunningKey, value);
+            }
+        }
+
+        public bool Flip
+        {
+            get
+            {
+                return GetBoolByKey(FlipKey);
+            }
+            set
+            {
+                SaveSettingByKey(FlipKey, value);
+            }
         }
 
         public void Save()
         {
             SaveSettings();
-        }
-      
-        public bool Flip
-        {
-            get { return GeneralFlip;  }
-            set { GeneralFlip = value; }
         }
     }
 }

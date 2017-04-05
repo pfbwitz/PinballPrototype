@@ -16,6 +16,12 @@ namespace DepthTracker.UI
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var b = (Button)sender;
+            if(b.Content.ToString() == "Open Overlay")
+            {
+                new Overlay().Show();
+                return;
+            }
 #if !DEBUG
             var process = new System.Diagnostics.Process();
             process.StartInfo.FileName = string.Format(System.Configuration.ConfigurationManager.AppSettings["GameRootPath"], 
@@ -28,7 +34,7 @@ namespace DepthTracker.UI
                 Tracker = null;
             }
 
-            Tracker = GetTrackerWindow(((Button)sender).Content.ToString());
+            Tracker = GetTrackerWindow(b.Content.ToString());
             Tracker.Instance.ShowDialog();
         }
 

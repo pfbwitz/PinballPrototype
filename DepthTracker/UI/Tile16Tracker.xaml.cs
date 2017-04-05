@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 
 namespace DepthTracker.UI
 {
-    public partial class PinballTracker : Window, ITracker, INotifyPropertyChanged
+    public partial class Tile16Tracker : Window, ITracker, INotifyPropertyChanged
     {
         #region properties 
 
@@ -40,7 +40,7 @@ namespace DepthTracker.UI
 
         public TextBox HeightText { get { return heightText; } }
 
-        private readonly TrackerWorker<PinballSettings> _trackerWorker;
+        private readonly TrackerWorker<Tile16TrackerSettings> _trackerWorker;
 
         public string _statusText = string.Empty;
         public string StatusText
@@ -74,9 +74,9 @@ namespace DepthTracker.UI
 
         #endregion
 
-        public PinballTracker()
+        public Tile16Tracker()
         {
-            _trackerWorker = TrackerWorker<PinballSettings>.GetInstance(this);
+            _trackerWorker = TrackerWorker<Tile16TrackerSettings>.GetInstance(this, 4);
         }
 
         public void PushButtons(int x, int y, bool detected)

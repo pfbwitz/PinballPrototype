@@ -80,7 +80,7 @@ namespace DepthTracker.UI
             _trackerWorker = TrackerWorker<CarSettings>.GetInstance(this);
         }
 
-        public void PushButtons(int x, int y, bool detected, int lowestX, int highestX, int lowestY, int highestY)
+        public void PushButtons(int x, int y, bool detected)
         {
             #region determine button
 

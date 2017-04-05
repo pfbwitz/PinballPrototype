@@ -87,8 +87,15 @@
     <Compile Include="Settings\CarSettings.cs" />
     <Compile Include="Settings\ISettings.cs" />
     <Compile Include="Settings\ClicksSettings.cs" />
+    <Compile Include="Settings\Tile16TrackerSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\SettingsHelper.cs" />
+    <Compile Include="UI\Overlay.xaml.cs">
+      <DependentUpon>Overlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tile16Tracker.xaml.cs">
+      <DependentUpon>Tile16Tracker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\TrackerPicker.xaml.cs">
       <DependentUpon>TrackerPicker.xaml</DependentUpon>
     </Compile>
@@ -97,6 +104,14 @@
     </Compile>
     <Compile Include="Common\Interface\ITracker.cs" />
     <Compile Include="Common\Worker\TrackerWorker.cs" />
+    <Page Include="UI\Overlay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Tile16Tracker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\TrackerPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

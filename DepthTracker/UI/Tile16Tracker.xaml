@@ -1,0 +1,65 @@
+﻿<Window x:Class="DepthTracker.UI.Tile16Tracker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pinball Tracker 16 tiles" 
+        Height="600" Width="650" 
+        Padding="0" Icon="/DepthTracker;component/Cloudabit.ico"
+       > 
+  <Window.Resources>
+    <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
+    <SolidColorBrush x:Key="KinectPurpleBrush" Color="#ff52318f" />
+    <SolidColorBrush x:Key="KinectBlueBrush" Color="#ff00BCF2" />
+    <Style TargetType="{x:Type Image}">
+      <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+   
+  </Window.Resources>
+  <Grid Margin="0 0 0 0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Viewbox Grid.Row="0" HorizontalAlignment="Center">
+      <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+    </Viewbox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Label Content="X" Grid.Column="1" />
+            <Button Content="OFF" x:Name="BtnSwitch" Grid.Column="0"/>
+            <TextBox x:Name="xText" Grid.Column="2" />
+            <Label Content="Y" Grid.Column="3" />
+            <TextBox x:Name="yText" Grid.Column="4" />
+            <Label Content="Width" Grid.Column="5" />
+            <TextBox x:Name="widthText" Grid.Column="6" />
+            <Label Content="Height" Grid.Column="7" />
+            <TextBox x:Name="heightText" Grid.Column="8" />
+            <Label Content="Z lower bounds" Grid.Column="9" />
+            <TextBox x:Name="zMinText" Grid.Column="10" />
+            <Label Content="Z upper bounds" Grid.Column="11" />
+            <TextBox x:Name="zMaxText" Grid.Column="12" />
+            <Button Content="FLIP ON" x:Name="BtnFlip" Grid.Column="13"/>
+        </Grid>
+        <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
+      <StatusBarItem x:Name="Status" Content="{Binding StatusText}" />
+    </StatusBar>
+  </Grid>
+</Window>

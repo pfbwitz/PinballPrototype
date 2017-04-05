@@ -25,30 +25,6 @@ namespace DepthTracker.Settings
             Properties.Settings.Default.Save();
         }
 
-        public bool GeneralRun
-        {
-            get
-            {
-                return GetBoolByKey("Run");
-            }
-            set
-            {
-                SaveSettingByKey("Run", value);
-            }
-        }
-
-        public bool GeneralFlip
-        {
-            get
-            {
-                return GetBoolByKey("Flip");
-            }
-            set
-            {
-                SaveSettingByKey("Flip", value);
-            }
-        }
-
         public int GeneralZMin
         {
             get

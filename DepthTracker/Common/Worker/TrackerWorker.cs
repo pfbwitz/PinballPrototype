@@ -3,8 +3,10 @@ using DepthTracker.Settings;
 using DepthTracker.UI;
 using Microsoft.Kinect;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,6 +18,10 @@ namespace DepthTracker.Common.Worker
     internal class TrackerWorker<T> where T : ISettings, new()
     {
         #region properties
+
+        //private List<System.Drawing.Point> WhitePoints = new List<System.Drawing.Point>();
+
+        private int _tileHeightFactor = 2;
 
         public bool ClickHandled { get; set; }
 
@@ -107,14 +113,17 @@ namespace DepthTracker.Common.Worker
 
         #endregion
 
-        public static TrackerWorker<T> GetInstance (ITracker window)
+        public static TrackerWorker<T> GetInstance (ITracker window, int? tileHeightFactor = null)
         {
-            var t = new TrackerWorker<T>(window);
+            var t = new TrackerWorker<T>(window, tileHeightFactor);
             return t.Setup();
         }
 
-        private TrackerWorker(ITracker window) 
+        private TrackerWorker(ITracker window, int? tileHeightFactor = null) 
         {
+            if (tileHeightFactor != null && tileHeightFactor.HasValue)
+                _tileHeightFactor = tileHeightFactor.Value;
+
             Window = window;
             Init();
         }
@@ -134,7 +143,7 @@ namespace DepthTracker.Common.Worker
 
             InputSimulator = new InputSimulator();
             TileWidth = Rectangle.Width / 4;
-            TileHeight = Rectangle.Height / 2;
+            TileHeight = Rectangle.Height / _tileHeightFactor;
 
             DepthPixels = new byte[DepthFrameDescription.Width * DepthFrameDescription.Height];
             Window.DepthBitmap = new WriteableBitmap(DepthFrameDescription.Width, DepthFrameDescription.Height,
@@ -264,7 +273,7 @@ namespace DepthTracker.Common.Worker
             }
 
             TileWidth = Rectangle.Width / 4;
-            TileHeight = Rectangle.Height / 2;
+            TileHeight = Rectangle.Height / _tileHeightFactor;
         }
 
         public void BtnSwitch_Click(object sender, RoutedEventArgs e)
@@ -359,6 +368,9 @@ namespace DepthTracker.Common.Worker
                 { 
                     b = (byte)(contains ? 255 : 0); //pixel within depth-margin (z) and withing rectangle (x and y) should be white
                     Mapping[x, y] = new PixelMap { ByteValue = b, Index = i };
+
+                    //if(b == 255)
+                    //    WhitePoints.Add(new System.Drawing.Point(x, y));
                 }
                 else
                 {
@@ -415,31 +427,6 @@ namespace DepthTracker.Common.Worker
 
             var @break = false;
 
-            var highestX = 0;
-            var highestY = 0;
-            var lowestX = 9999;
-            var lowestY = 9999;
-
-            //for (var y = recY; y < recY + recH; y++)
-            //{
-            //    for (var x = recX; x < recX + recW; x++)
-            //    {
-            //        var pixel = Mapping[x, y];
-
-            //        if (pixel != null && pixel.ByteValue == 255)
-            //        {
-            //            if (pixel.X > highestX)
-            //                highestX = pixel.X;
-            //            if (pixel.Y > highestY)
-            //                highestY = pixel.Y;
-            //            if (pixel.X < lowestX)
-            //                lowestX = pixel.X;
-            //            if (pixel.Y < lowestY)
-            //                lowestY = pixel.Y;
-            //        }
-            //    }
-            //}
-
             for (var y = recY; y < recY + recH; y++)
             {
                 if (@break)
@@ -452,13 +439,28 @@ namespace DepthTracker.Common.Worker
 
                     if (pixel != null)
                     {
-                        Window.PushButtons(x, y, pixel.ByteValue == 255, lowestX, highestX, lowestY, highestY);
+                        Window.PushButtons(x, y, pixel.ByteValue == 255);
                         if(pixel.ByteValue == 255)
                             @break = true;
                     }
                 }
             }
             Mapping = new PixelMap[DepthFrameDescription.Width, DepthFrameDescription.Height];
+            //WhitePoints.Clear();
+        }
+
+        //public System.Drawing.Point GetClosestPoint(System.Drawing.Point point)
+        //{
+        //    var center = new System.Drawing.Point(0, 0);
+        //    var closestPoints = WhitePoints.Where(p => p != center).
+        //                               OrderBy(p => NotReallyDistanceButShouldDo(center, p)).
+        //                               Take(20);
+        //    return closestPoints.FirstOrDefault();
+        //}
+
+        private double NotReallyDistanceButShouldDo(System.Drawing.Point source, System.Drawing.Point target)
+        {
+            return Math.Pow(target.X - source.X, 2) + Math.Pow(target.Y - source.Y, 2);
         }
 
         public bool IsPositiveInPixelArea(int x, int y)
