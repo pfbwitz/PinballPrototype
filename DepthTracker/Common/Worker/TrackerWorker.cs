@@ -81,6 +81,8 @@ namespace DepthTracker.Common.Worker
 
         public bool VHandled = false;
 
+        public bool ReturnHandled = false;
+
         public bool ZCalibrated = false;
 
         public Rectangle Rectangle;

@@ -65,14 +65,7 @@ namespace DepthTracker.UI
             { VirtualKeyCode.VK_O, false}, // 0, 3
             { VirtualKeyCode.VK_L, false}, // 1, 3
             //middlerows
-            { VirtualKeyCode.VK_R, false},
-            { VirtualKeyCode.VK_T, false},
-            { VirtualKeyCode.VK_F, false},
-            { VirtualKeyCode.VK_G, false},
-            { VirtualKeyCode.VK_Z, false},
-            { VirtualKeyCode.VK_X, false},
-            { VirtualKeyCode.VK_C, false},
-            { VirtualKeyCode.VK_V, false},
+            { VirtualKeyCode.RETURN, false},
         };
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -93,7 +86,7 @@ namespace DepthTracker.UI
         {
             #region determine button
 
-            VirtualKeyCode keyCode = VirtualKeyCode.RETURN;
+            VirtualKeyCode keyCode = VirtualKeyCode.VK_Y;
             if (x > _trackerWorker.Rectangle.X && x <= _trackerWorker.TileWidth + _trackerWorker.Rectangle.X)
             {
                 if (_trackerWorker.Flip)
@@ -110,11 +103,21 @@ namespace DepthTracker.UI
                         y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         //row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y * 2 + _trackerWorker.TileHeight &&
                         y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -139,11 +142,21 @@ namespace DepthTracker.UI
                         y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         //row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight * 2 &&
                       y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         //row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -170,12 +183,22 @@ namespace DepthTracker.UI
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
                        y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
-                        // row
+                        // row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y * 2 + _trackerWorker.TileHeight &&
                         y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
-                        // row 2
+                        // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -200,11 +223,21 @@ namespace DepthTracker.UI
                        y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         // row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight * 2 &&
                       y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -232,11 +265,21 @@ namespace DepthTracker.UI
                        y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         // row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y * 2 + _trackerWorker.TileHeight &&
                         y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -261,11 +304,21 @@ namespace DepthTracker.UI
                        y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         // row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight * 2 &&
                       y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -293,11 +346,21 @@ namespace DepthTracker.UI
                        y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         // row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y * 2 + _trackerWorker.TileHeight &&
                         y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -322,11 +385,21 @@ namespace DepthTracker.UI
                        y <= _trackerWorker.TileHeight * 2 + _trackerWorker.Rectangle.Y)
                     {
                         // row 2
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight * 2 &&
                       y <= _trackerWorker.TileHeight * 3 + _trackerWorker.Rectangle.Y)
                     {
                         // row 3
+                        if (!_trackerWorker.ReturnHandled)
+                        {
+                            _trackerWorker.ReturnHandled = detected;
+                            keyCode = VirtualKeyCode.RETURN;
+                        }
                     }
                     else
                     {
@@ -341,7 +414,7 @@ namespace DepthTracker.UI
 
             #endregion
 
-            if (keyCode == VirtualKeyCode.RETURN)
+            if (keyCode == VirtualKeyCode.VK_Y)
                 return;
 
             if (detected)
