@@ -19,7 +19,7 @@ namespace DepthTracker.Common.Worker
     {
         #region properties
 
-        //private List<System.Drawing.Point> WhitePoints = new List<System.Drawing.Point>();
+        private List<System.Drawing.Point> WhitePoints = new List<System.Drawing.Point>();
 
         private int _tileHeightFactor = 2;
 
@@ -64,6 +64,22 @@ namespace DepthTracker.Common.Worker
         public bool UHandled = false;
 
         public bool LHandled = false;
+
+        public bool RHandled = false;
+
+        public bool THandled = false;
+
+        public bool FHandled = false;
+
+        public bool GHandled = false;
+
+        public bool ZHandled = false;
+
+        public bool XHandled = false;
+
+        public bool CHandled = false;
+
+        public bool VHandled = false;
 
         public bool ZCalibrated = false;
 
@@ -369,8 +385,8 @@ namespace DepthTracker.Common.Worker
                     b = (byte)(contains ? 255 : 0); //pixel within depth-margin (z) and withing rectangle (x and y) should be white
                     Mapping[x, y] = new PixelMap { ByteValue = b, Index = i };
 
-                    //if(b == 255)
-                    //    WhitePoints.Add(new System.Drawing.Point(x, y));
+                    if (b == 255)
+                        WhitePoints.Add(new System.Drawing.Point(x, y));
                 }
                 else
                 {
@@ -402,6 +418,8 @@ namespace DepthTracker.Common.Worker
         {
             if (Rectangle == null)
                 return;
+
+            var closestPoint = GetClosestPoint(); // white pixel closest to the center of the screen (tip of hand)
 
             var recY = Rectangle.Y;
             var recX = Rectangle.X;
@@ -439,24 +457,28 @@ namespace DepthTracker.Common.Worker
 
                     if (pixel != null)
                     {
-                        Window.PushButtons(x, y, pixel.ByteValue == 255);
-                        if(pixel.ByteValue == 255)
-                            @break = true;
+                        if(x == closestPoint.X && y == closestPoint.Y)
+                        {
+                            Window.PushButtons(x, y, pixel.ByteValue == 255);
+                            if (pixel.ByteValue == 255)
+                                @break = true;
+                        }
                     }
                 }
             }
             Mapping = new PixelMap[DepthFrameDescription.Width, DepthFrameDescription.Height];
-            //WhitePoints.Clear();
+            WhitePoints.Clear();
         }
 
-        //public System.Drawing.Point GetClosestPoint(System.Drawing.Point point)
-        //{
-        //    var center = new System.Drawing.Point(0, 0);
-        //    var closestPoints = WhitePoints.Where(p => p != center).
-        //                               OrderBy(p => NotReallyDistanceButShouldDo(center, p)).
-        //                               Take(20);
-        //    return closestPoints.FirstOrDefault();
-        //}
+        public System.Drawing.Point GetClosestPoint()
+        {
+            var center = new System.Drawing.Point(Rectangle.X + Rectangle.Width / 2, Rectangle.Y + Rectangle.Height / 2);
+
+            var closestPoints = WhitePoints
+                .Where(p => p != center)
+                .OrderBy(p => NotReallyDistanceButShouldDo(center, p));
+            return closestPoints.FirstOrDefault();
+        }
 
         private double NotReallyDistanceButShouldDo(System.Drawing.Point source, System.Drawing.Point target)
         {
