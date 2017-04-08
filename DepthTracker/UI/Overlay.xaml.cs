@@ -18,6 +18,12 @@ namespace DepthTracker.UI
             base.OnSourceInitialized(e);
             WindowsServices.SetWindowExTransparent(new WindowInteropHelper(this).Handle);
         }
+
+        protected override void OnDeactivated(EventArgs e)
+        {
+            base.OnDeactivated(e);
+            IsHitTestVisible = false;
+        }
     }
 
     public static class WindowsServices
