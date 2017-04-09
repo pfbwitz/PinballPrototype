@@ -64,7 +64,7 @@ namespace Sketchball
             if (Program.ReleaseMode)
                 enterFullscreen();
 
-            var timer = new System.Timers.Timer(1000 * 60 * 3);
+            var timer = new System.Timers.Timer(1000 * 60 * 1);
             var timer2 = new System.Timers.Timer(1000);
             var t = string.Empty;
             timer.Elapsed += (sender, e) => {
