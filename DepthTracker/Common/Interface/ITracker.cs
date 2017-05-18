@@ -18,7 +18,9 @@ namespace DepthTracker.Common.Interface
 
         TextBox HeightText { get; }
 
-        Button FlipButton { get; }
+        Button FlipButtonY { get; }
+
+        Button FlipButtonX { get;}
 
         Button SwitchButton { get; }
 

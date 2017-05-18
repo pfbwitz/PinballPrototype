@@ -14,7 +14,9 @@
 
         int ZMax { get; set; }
 
-        bool Flip { get; set; }
+        bool FlipY { get; set; }
+
+        bool FlipX { get; set; }
 
         bool Run { get; set; }
 

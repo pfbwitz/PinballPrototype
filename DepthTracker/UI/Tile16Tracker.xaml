@@ -56,7 +56,8 @@
             <TextBox x:Name="zMinText" Grid.Column="10" />
             <Label Content="Z upper bounds" Grid.Column="11" />
             <TextBox x:Name="zMaxText" Grid.Column="12" />
-            <Button Content="FLIP ON" x:Name="BtnFlip" Grid.Column="13"/>
+            <Button Content="FLIP ON Y" x:Name="BtnFlipY" Grid.Column="13"/>
+            <Button Content="FLIP ON X" x:Name="BtnFlipX" Grid.Column="14"/>
         </Grid>
         <StatusBar Grid.Row="2" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
       <StatusBarItem x:Name="Status" Content="{Binding StatusText}" />

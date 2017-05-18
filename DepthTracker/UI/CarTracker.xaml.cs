@@ -21,7 +21,9 @@ namespace DepthTracker.UI
 
         public Window Instance { get { return this; } }
 
-        public Button FlipButton { get { return BtnFlip; } }
+        public Button FlipButtonY { get { return BtnFlipY; } }
+
+        public Button FlipButtonX { get { return BtnFlipX; } }
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
@@ -87,14 +89,17 @@ namespace DepthTracker.UI
             VirtualKeyCode keyCode = VirtualKeyCode.VK_0;
             if (x > _trackerWorker.Rectangle.X && x <= _trackerWorker.TileWidth + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
                         if (!_trackerWorker.AHandled)
                         {
                             _trackerWorker.AHandled = detected;
-                            keyCode = VirtualKeyCode.LEFT;
+                            if(_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.RIGHT;
+                            else
+                                keyCode = VirtualKeyCode.LEFT;
                         }
                     }
                     else
@@ -121,14 +126,17 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.AHandled)
                         {
                             _trackerWorker.AHandled = detected;
-                            keyCode = VirtualKeyCode.LEFT;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.RIGHT;
+                            else
+                                keyCode = VirtualKeyCode.LEFT;
                         }
                     }
                 }
             }
             else if (x > _trackerWorker.TileWidth + _trackerWorker.Rectangle.X && x < _trackerWorker.TileWidth * 2 + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
@@ -169,7 +177,7 @@ namespace DepthTracker.UI
             }
             else if (x > _trackerWorker.TileWidth * 2 + _trackerWorker.Rectangle.X && x < _trackerWorker.TileWidth * 3 + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
@@ -210,14 +218,17 @@ namespace DepthTracker.UI
             }
             else if (x > _trackerWorker.TileWidth * 3 + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
                         if (!_trackerWorker.LHandled)
                         {
                             _trackerWorker.LHandled = detected;
-                            keyCode = VirtualKeyCode.RIGHT;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.LEFT;
+                            else
+                                keyCode = VirtualKeyCode.RIGHT;
                         }
                     }
                     else
@@ -244,7 +255,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.LHandled)
                         {
                             _trackerWorker.LHandled = detected;
-                            keyCode = VirtualKeyCode.RIGHT;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.LEFT;
+                            else
+                                keyCode = VirtualKeyCode.RIGHT;
                         }
                     }
                 }

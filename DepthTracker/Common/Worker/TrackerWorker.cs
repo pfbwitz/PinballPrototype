@@ -101,11 +101,20 @@ namespace DepthTracker.Common.Worker
             set { Settings.Run = value; }
         }
 
-        public bool Flip
+        public bool FlipY
         {
-            get { return Settings.Flip; }
+            get { return Settings.FlipY; }
             set {
-                Settings.Flip = value;
+                Settings.FlipY = value;
+            }
+        }
+
+        public bool FlipX
+        {
+            get { return Settings.FlipX; }
+            set
+            {
+                Settings.FlipX = value;
             }
         }
 
@@ -193,7 +202,8 @@ namespace DepthTracker.Common.Worker
             Sensor_IsAvailableChanged(null, null);
 
             Window.Instance.Closing += Window_Closing;
-            Window.FlipButton.Click += BtnFlip_Click;
+            Window.FlipButtonY.Click += BtnFlipY_Click;
+            Window.FlipButtonX.Click += BtnFlipX_Click;
             Window.SwitchButton.Click += BtnSwitch_Click;
 
             Window.XText.TextChanged += TextBox_TextChanged;
@@ -203,7 +213,8 @@ namespace DepthTracker.Common.Worker
             Window.ZMinText.TextChanged += TextBox_TextChanged;
             Window.ZMaxText.TextChanged += TextBox_TextChanged;
 
-            Window.FlipButton.Content = Flip ? "FLIP OFF" : "FLIP ON";
+            Window.FlipButtonY.Content = FlipY ? "FLIP OFF Y" : "FLIP ON Y";
+            Window.FlipButtonX.Content = FlipX ? "FLIP OFF X" : "FLIP ON X";
             Window.SwitchButton.Content = Run ? "ON" : "OFF";
 
             LowerXBound = Settings.X;
@@ -300,10 +311,16 @@ namespace DepthTracker.Common.Worker
             ((Button)sender).Content = Run ? "ON" : "OFF";
         }
 
-        public void BtnFlip_Click(object sender, RoutedEventArgs e)
+        public void BtnFlipY_Click(object sender, RoutedEventArgs e)
         {
-            Flip = !Flip;
-            ((Button)sender).Content = Flip ? "FLIP OFF" : "FLIP ON";
+            FlipY = !FlipY;
+            ((Button)sender).Content = FlipY ? "FLIP OFF Y" : "FLIP ON Y";
+        }
+
+        public void BtnFlipX_Click(object sender, RoutedEventArgs e)
+        {
+            FlipX = !FlipX;
+            ((Button)sender).Content = FlipX ? "FLIP OFF X" : "FLIP ON X";
         }
 
         public void Window_Closing(object sender, CancelEventArgs e)

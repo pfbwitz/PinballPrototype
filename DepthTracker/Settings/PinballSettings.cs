@@ -17,7 +17,9 @@
 
         private const string RunningKey = "RunningPinball";
 
-        private const string FlipKey = "FlipPinball";
+        private const string FlipYKey = "FlipYPinball";
+
+        private const string FlipXKey = "FlipXPinball";
 
         public int X
         {
@@ -91,15 +93,28 @@
             }
         }
 
-        public bool Flip
+
+        public bool FlipY
         {
             get
             {
-                return GetBoolByKey(FlipKey);
+                return GetBoolByKey(FlipYKey);
             }
             set
             {
-                SaveSettingByKey(FlipKey, value);
+                SaveSettingByKey(FlipYKey, value);
+            }
+        }
+
+        public bool FlipX
+        {
+            get
+            {
+                return GetBoolByKey(FlipXKey);
+            }
+            set
+            {
+                SaveSettingByKey(FlipXKey, value);
             }
         }
 

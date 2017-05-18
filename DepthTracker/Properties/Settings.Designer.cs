@@ -254,48 +254,96 @@ namespace DepthTracker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FlipPinball {
+        public bool FlipYPinball {
             get {
-                return ((bool)(this["FlipPinball"]));
+                return ((bool)(this["FlipYPinball"]));
             }
             set {
-                this["FlipPinball"] = value;
+                this["FlipYPinball"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FlipCar {
+        public bool FlipYCar {
             get {
-                return ((bool)(this["FlipCar"]));
+                return ((bool)(this["FlipYCar"]));
             }
             set {
-                this["FlipCar"] = value;
+                this["FlipYCar"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool FlipClicks {
+        public bool FlipYClicks {
             get {
-                return ((bool)(this["FlipClicks"]));
+                return ((bool)(this["FlipYClicks"]));
             }
             set {
-                this["FlipClicks"] = value;
+                this["FlipYClicks"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Flip16Tile {
+        public bool FlipY16Tile {
             get {
-                return ((bool)(this["Flip16Tile"]));
+                return ((bool)(this["FlipY16Tile"]));
             }
             set {
-                this["Flip16Tile"] = value;
+                this["FlipY16Tile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipXPinball {
+            get {
+                return ((bool)(this["FlipXPinball"]));
+            }
+            set {
+                this["FlipXPinball"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipXCar {
+            get {
+                return ((bool)(this["FlipXCar"]));
+            }
+            set {
+                this["FlipXCar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipXClicks {
+            get {
+                return ((bool)(this["FlipXClicks"]));
+            }
+            set {
+                this["FlipXClicks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FlipX16Tile {
+            get {
+                return ((bool)(this["FlipX16Tile"]));
+            }
+            set {
+                this["FlipX16Tile"] = value;
             }
         }
     }

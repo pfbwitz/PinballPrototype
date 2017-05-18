@@ -22,7 +22,9 @@ namespace DepthTracker.UI
 
         public Window Instance { get { return this; } }
 
-        public Button FlipButton { get { return BtnFlip; } }
+        public Button FlipButtonY { get { return BtnFlipY; } }
+
+        public Button FlipButtonX { get { return BtnFlipX; } }
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
@@ -89,14 +91,17 @@ namespace DepthTracker.UI
             VirtualKeyCode keyCode = VirtualKeyCode.VK_Y;
             if (x > _trackerWorker.Rectangle.X && x <= _trackerWorker.TileWidth + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
                         if (!_trackerWorker.AHandled)
                         {
                             _trackerWorker.AHandled = detected;
-                            keyCode = VirtualKeyCode.VK_A;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_L;
+                            else
+                                keyCode = VirtualKeyCode.VK_A;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight && 
@@ -124,7 +129,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.QHandled)
                         {
                             _trackerWorker.QHandled = detected;
-                            keyCode = VirtualKeyCode.VK_Q;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_O;
+                            else
+                                keyCode = VirtualKeyCode.VK_Q;
                         }
                     }
                 }
@@ -135,7 +143,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.QHandled)
                         {
                             _trackerWorker.QHandled = detected;
-                            keyCode = VirtualKeyCode.VK_Q;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_O;
+                            else
+                                keyCode = VirtualKeyCode.VK_Q;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight && 
@@ -163,21 +174,27 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.AHandled)
                         {
                             _trackerWorker.AHandled = detected;
-                            keyCode = VirtualKeyCode.VK_A;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_L;
+                            else
+                                keyCode = VirtualKeyCode.VK_A;
                         }
                     }
                 }
             }
             else if (x > _trackerWorker.TileWidth + _trackerWorker.Rectangle.X && x < _trackerWorker.TileWidth * 2 + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
                         if (!_trackerWorker.DHandled)
                         {
                             _trackerWorker.DHandled = detected;
-                            keyCode = VirtualKeyCode.VK_D;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_J;
+                            else
+                                keyCode = VirtualKeyCode.VK_D;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
@@ -205,7 +222,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.EHandled)
                         {
                             _trackerWorker.EHandled = detected;
-                            keyCode = VirtualKeyCode.VK_E;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_U;
+                            else
+                                keyCode = VirtualKeyCode.VK_E;
                         }
                     }
                 }
@@ -216,7 +236,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.EHandled)
                         {
                             _trackerWorker.EHandled = detected;
-                            keyCode = VirtualKeyCode.VK_E;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_U;
+                            else
+                                keyCode = VirtualKeyCode.VK_E;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
@@ -244,21 +267,27 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.DHandled)
                         {
                             _trackerWorker.DHandled = detected;
-                            keyCode = VirtualKeyCode.VK_D;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_J;
+                            else
+                                keyCode = VirtualKeyCode.VK_D;
                         }
                     }
                 }
             }
             else if (x > _trackerWorker.TileWidth * 2 + _trackerWorker.Rectangle.X && x < _trackerWorker.TileWidth * 3 + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
                         if (!_trackerWorker.JHandled)
                         {
                             _trackerWorker.JHandled = detected;
-                            keyCode = VirtualKeyCode.VK_J;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_D;
+                            else
+                                keyCode = VirtualKeyCode.VK_J;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
@@ -286,7 +315,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.UHandled)
                         {
                             _trackerWorker.UHandled = detected;
-                            keyCode = VirtualKeyCode.VK_U;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_E;
+                            else
+                                keyCode = VirtualKeyCode.VK_U;
                         }
                     }
                 }
@@ -297,7 +329,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.UHandled)
                         {
                             _trackerWorker.UHandled = detected;
-                            keyCode = VirtualKeyCode.VK_U;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_E;
+                            else
+                                keyCode = VirtualKeyCode.VK_U;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
@@ -325,21 +360,27 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.JHandled)
                         {
                             _trackerWorker.JHandled = detected;
-                            keyCode = VirtualKeyCode.VK_J;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_D;
+                            else
+                                keyCode = VirtualKeyCode.VK_J;
                         }
                     }
                 }
             }
             else if (x > _trackerWorker.TileWidth * 3 + _trackerWorker.Rectangle.X)
             {
-                if (_trackerWorker.Flip)
+                if (_trackerWorker.FlipY)
                 {
                     if (y >= _trackerWorker.Rectangle.Y && y <= _trackerWorker.TileHeight + _trackerWorker.Rectangle.Y)
                     {
                         if (!_trackerWorker.LHandled)
                         {
                             _trackerWorker.LHandled = detected;
-                            keyCode = VirtualKeyCode.VK_L;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_A;
+                            else
+                                keyCode = VirtualKeyCode.VK_L;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
@@ -367,7 +408,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.OHandled)
                         {
                             _trackerWorker.OHandled = detected;
-                            keyCode = VirtualKeyCode.VK_O;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_Q;
+                            else
+                                keyCode = VirtualKeyCode.VK_O;
                         }
                     }
                 }
@@ -378,7 +422,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.OHandled)
                         {
                             _trackerWorker.OHandled = detected;
-                            keyCode = VirtualKeyCode.VK_O;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_Q;
+                            else
+                                keyCode = VirtualKeyCode.VK_O;
                         }
                     }
                     else if (y >= _trackerWorker.Rectangle.Y + _trackerWorker.TileHeight &&
@@ -406,7 +453,10 @@ namespace DepthTracker.UI
                         if (!_trackerWorker.LHandled)
                         {
                             _trackerWorker.LHandled = detected;
-                            keyCode = VirtualKeyCode.VK_L;
+                            if (_trackerWorker.FlipX)
+                                keyCode = VirtualKeyCode.VK_A;
+                            else
+                                keyCode = VirtualKeyCode.VK_L;
                         }
                     }
                 }

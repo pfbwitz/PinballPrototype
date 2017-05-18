@@ -27,7 +27,9 @@ namespace DepthTracker.UI
 
         public Window Instance { get { return this; } }
 
-        public Button FlipButton { get { return BtnFlip; } }
+        public Button FlipButtonY { get { return BtnFlipY; } }
+
+        public Button FlipButtonX { get { return BtnFlipX; } }
 
         public Button SwitchButton { get { return BtnSwitch; } }
 
@@ -81,10 +83,13 @@ namespace DepthTracker.UI
             var posXPercentage = (x - _trackerWorker.Rectangle.X) * 100 / _trackerWorker.Rectangle.Width;
             var posYPercentage = (y - _trackerWorker.Rectangle.Y) * 100 / _trackerWorker.Rectangle.Height;
             var c = false;
-            if (_trackerWorker.Flip)
+            if (_trackerWorker.FlipY)
+            {
+                posYPercentage = 100 - posYPercentage;
+            }
+            if (_trackerWorker.FlipX)
             {
                 posXPercentage = 100 - posXPercentage;
-                posYPercentage = 100 - posYPercentage;
             }
 
             _x = Convert.ToInt32(posXPercentage * SystemParameters.PrimaryScreenWidth / 100);

@@ -17,7 +17,9 @@
 
         private const string RunningKey = "RunningClicks";
 
-        private const string FlipKey = "FlipClicks";
+        private const string FlipYKey = "FlipYClicks";
+
+        private const string FlipXKey = "FlipXClicks";
 
         public int X
         {
@@ -91,15 +93,27 @@
             }
         }
 
-        public bool Flip
+        public bool FlipY
         {
             get
             {
-                return GetBoolByKey(FlipKey);
+                return GetBoolByKey(FlipYKey);
             }
             set
             {
-                SaveSettingByKey(FlipKey, value);
+                SaveSettingByKey(FlipYKey, value);
+            }
+        }
+
+        public bool FlipX
+        {
+            get
+            {
+                return GetBoolByKey(FlipXKey);
+            }
+            set
+            {
+                SaveSettingByKey(FlipXKey, value);
             }
         }
 
